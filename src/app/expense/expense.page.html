@@ -1,0 +1,35 @@
+<div id="expenses-content">
+  <div class="expenses-list" *ngFor="let item of expenses">
+    <ion-item lines="none"
+      [id]="'open-expense-update-dialog_'+item.id"
+      color="light">
+      <ion-grid>
+        <ion-row class="ion-justify-content-start">
+          <ion-col size="1.5" class="ion-align-self-center">
+            <div [class]="getBackgroundBankName(item.cardTypeId)">
+              {{getCardType(item.cardTypeId)}}</div>
+          </ion-col>
+          <ion-col size="6">
+            <ion-label class="cat_name"
+              color="secondary">{{getCategory(item.categoryId)}}</ion-label>
+            <ion-label class="expense_dt"
+              *ngIf="item.fullDate!==undefined&&item.fullDate!==null"
+              color="medium">
+              {{item.fullDate |date:'medium'}}
+            </ion-label>
+          </ion-col>
+          <ion-col class="ion-text-end">
+            <ion-label class="expense_amount" color="secondary"> &#8377;
+              {{item.amount}}</ion-label>
+            <ion-label class="expense_is_include" color="tertiary">
+              {{item.isInclude?'':'Excluded'}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <app-update-expense
+      [categories]="categories"
+      [cardDetails]="cardDetails"
+      [inputSelectedItemId]="item.id"></app-update-expense>
+  </div>
+</div>

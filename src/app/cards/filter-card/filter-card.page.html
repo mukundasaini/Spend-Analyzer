@@ -1,0 +1,72 @@
+ <ion-popover color="light" #popoverCardFilter side="bottom"
+  alignment="start"
+  trigger="cards-filter-trigger" triggerAction="click">
+  <ng-template>
+    <ion-content color="light">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item color="light" class="ion-no-padding">
+              <ion-checkbox
+                (ionChange)="onAllBankNamesChange($event)"
+                [checked]="isAllBankNamesChecked"
+                justify="start" labelPlacement="end">
+                Select All
+              </ion-checkbox>
+            </ion-item>
+            <div id="banknames">
+              <ion-item color="light" class="ion-no-padding"
+                *ngFor="let item of bankNames">
+                <ion-checkbox
+                  (ionChange)="onBankNameChange($event)"
+                  [value]="item.value"
+                  [checked]="item.checked"
+                  justify="start"
+                  labelPlacement="end">
+                  {{item.value}}
+                </ion-checkbox>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item color="light">
+              <ion-checkbox
+                (ionChange)="onAllCardTypesChange($event)"
+                [checked]="isAllCardTypesChecked"
+                justify="start" class="ion-no-padding"
+                labelPlacement="end">
+                Select All
+              </ion-checkbox>
+            </ion-item>
+            <div id="cardtypes">
+              <ion-item color="light" *ngFor="let item of cardTypes"
+                class="ion-no-padding">
+                <ion-checkbox
+                  (ionChange)="onCardTypeChange($event)"
+                  [value]="item.value"
+                  [checked]="item.checked"
+                  justify="start"
+                  labelPlacement="end">
+                  {{item.value}}
+                </ion-checkbox>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <ion-button
+        [disabled]="(slectedBankNames.length==0)&&(slectedCardTypes.length==0)"
+        (click)="onApplyFilters();popoverCardFilter.dismiss()" size="small"
+        fill="full"
+        color="secondary">
+        Apply
+      </ion-button>
+      <ion-button
+        (click)="onClearFilter();popoverCardFilter.dismiss()" size="small"
+        fill="full"
+        color="primary">
+        Clear
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-popover>

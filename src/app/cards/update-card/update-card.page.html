@@ -1,0 +1,52 @@
+<ion-modal #updateCardModal
+  [trigger]="'open-cards-dialog_' +inputSelectedItemId"
+  [initialBreakpoint]="0.40"
+  [breakpoints]="[0,0.40, 0.75,0.90]"
+  handleBehavior="cycle" (willPresent)="onGetCardDetails(inputSelectedItemId)">
+  <ng-template>
+    <ion-content color="light" class="ion-padding">
+      <form [formGroup]="updateCardFG">
+        <ion-toolbar color="light">
+          <ion-title size="small" color="primary">Card
+            Details</ion-title>
+          <ion-buttons slot="end">
+            <ion-button size="small" shape="round"
+              color="primary"
+              (click)="onDelete(inputSelectedItemId);updateCardModal.dismiss()">Remove</ion-button>
+            <ion-button size="small" shape="round"
+              color="primary"
+              (click)="onUpdateSubmit(inputSelectedItemId);updateCardModal.dismiss()">Save</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-item color="light">
+          <ion-input
+            label="Bank Short Name *"
+            labelPlacement="stacked"
+            [counter]="true"
+            formControlName="bankName" type="text"
+            class="ion-text-uppercase"
+            maxlength="6" minlength="3" required></ion-input>
+        </ion-item>
+        <ion-item color="light">
+          <ion-input type="number"
+            label="Card Last Four Digits *"
+            formControlName="cardNumber"
+            maxlength="4" minlength="4"
+            labelPlacement="stacked"
+            [counter]="true"
+            class="ion-text-uppercase"
+            (keypress)="onKeyPress()" required></ion-input>
+        </ion-item>
+        <ion-item color="light">
+          <ion-input
+            label="Type*"
+            labelPlacement="stacked"
+            [counter]="true"
+            formControlName="type" type="text"
+            class="ion-text-uppercase"
+            maxlength="6" minlength="2" required></ion-input>
+        </ion-item>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

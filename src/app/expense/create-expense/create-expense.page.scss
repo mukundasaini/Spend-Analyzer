@@ -1,0 +1,27 @@
+#emi-toggle{
+    font-size: 12px;
+}
+
+ion-toggle {
+    padding: 12px;
+  
+    --track-background: #ddd;
+    --track-background-checked: #ddd;
+  
+    --handle-background: var(--ion-color-primary);
+    --handle-background-checked:var(--ion-color-secondary);
+  
+    --handle-width: 16px;
+    --handle-height: 16px;
+    --handle-max-height: auto;
+    --handle-spacing: 6px;
+  
+    --handle-border-radius: 50%;
+    --handle-box-shadow: none;
+  }
+  
+  ion-toggle::part(track) {
+    height: 5px;
+    width: 40px;
+    overflow: visible;
+  }

@@ -1,0 +1,98 @@
+<ion-modal #updateExpenseModal
+  [trigger]="'open-expense-update-dialog_' +inputSelectedItemId"
+  [initialBreakpoint]="0.65"
+  [breakpoints]="[0,0.65, 0.75,0.90]"
+  handleBehavior="cycle" (willPresent)="onGetExpense(inputSelectedItemId)">
+  <ng-template>
+    <ion-content color="light" class="ion-padding">
+      <form [formGroup]="updateExpenseFG">
+        <ion-toolbar color="light">
+          <ion-button size="small" fill="clear" shape="round"
+            color="primary"
+            (click)="updateExpenseModal.dismiss();onDelete(inputSelectedItemId);">Remove</ion-button>
+          <!-- <ion-title size="small" color="primary">Expense
+            Details</ion-title> -->
+          <ion-buttons slot="end">
+
+            <ion-button size="small" shape="round" color="primary"
+              (click)="updateExpenseModal.dismiss();onUpdateSubmit(inputSelectedItemId);">Save</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-item color="light">
+          <ion-select
+            label="Card Type *"
+            ngDefaultControl
+            formControlName="cardTypeId"
+            (ionChange)="onCardTypeChange($event)"
+            labelPlacement="stacked"
+            interface="popover" required>
+            <ion-select-option
+              *ngFor="let item of cardDetails;"
+              [value]="item.id">
+              {{item.bankName+'-'+item.type}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item color="light">
+          <ion-select
+            label="Category *"
+            ngDefaultControl
+            formControlName="categoryId"
+            (ionChange)="onCategoryChange($event)"
+            labelPlacement="stacked" interface="popover"
+            required>
+            <ion-select-option
+              *ngFor="let item of categories;"
+              [value]="item.id">
+              {{item.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item color="light">
+          <ion-input type="number"
+            label="Amount *"
+            formControlName="amount" (keypress)="onKeyPress()"
+            required
+            labelPlacement="stacked"></ion-input>
+          <ion-toggle id="isInclude" ngDefaultControl
+            formControlName="isInclude"
+            (ionChange)="onIsIncludedChange($event)">Include</ion-toggle>
+        </ion-item>
+        <ion-item color="light">
+          <ion-datetime-button
+            datetime="datetime"></ion-datetime-button>
+
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="datetime"
+                presentation="date-time"
+                formControlName="fulldate"
+                [formatOptions]="{
+                        date: {
+                          weekday: 'short',
+                          month: 'long',
+                          day: '2-digit',
+                        },
+                        time: {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        },
+                      }"></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+        <ion-item color="light">
+          <ion-input type="text"
+            label="Note" ngDefaultControl
+            formControlName="note"
+            class="ion-text-uppercase"
+            minlength="0"
+            [counter]="true"
+            maxlength="100"
+            labelPlacement="stacked"></ion-input>
+        </ion-item>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

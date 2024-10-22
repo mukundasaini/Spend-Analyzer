@@ -1,0 +1,41 @@
+<ion-popover #popoverCategoryFilter side="bottom" alignment="start"
+  trigger="category-filter-trigger" triggerAction="click">
+  <ng-template>
+    <ion-content color="light" class="ion-padding">
+      <ion-item color="light">
+        <ion-checkbox
+          (ionChange)="onAllCateryNameChange($event)"
+          [checked]="isAllCategoriesChecked"
+          justify="start"
+          labelPlacement="end">
+          Select All
+        </ion-checkbox>
+      </ion-item>
+      <div id="categorynames">
+        <ion-item *ngFor="let item of categoryNames"
+          color="light">
+          <ion-checkbox
+            (ionChange)="onCateryNameChange($event)"
+            justify="start"
+            labelPlacement="end"
+            [value]="item.value"
+            [checked]="item.checked">
+            {{item.value}}
+          </ion-checkbox>
+        </ion-item>
+      </div>
+      <ion-button [disabled]="!(slectedCategories.length>0)"
+        (click)="onApplyFilters();popoverCategoryFilter.dismiss()" size="small"
+        fill="full"
+        color="primary">
+        Apply
+      </ion-button>
+      <ion-button
+        (click)="onClearFilter();popoverCategoryFilter.dismiss()" size="small"
+        fill="full"
+        color="primary">
+        Clear
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-popover>

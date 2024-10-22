@@ -1,0 +1,62 @@
+// lsit content start
+#cards-list {
+  max-height: 15em;
+  overflow-y: scroll;
+}
+
+ion-item-sliding ion-item ion-text h6 {
+  font-size: 12px;
+}
+
+ion-item-sliding {
+  padding-bottom: 0.7dvh;
+  padding-top: 0;
+}
+
+ion-card ion-card-content {
+  padding: 0.7dvh;
+}
+
+ion-chip {
+  background-image: linear-gradient(to right, red, orange);
+  --color: #fefae0;
+  font-size: small;
+  padding:1dvh;
+  min-height: 2.5dvh;
+  vertical-align: middle;
+}
+
+// lsit content end
+
+// Filter Pop Over content Start
+ion-popover::part(content) {
+  min-width: 300px;
+  padding: 5px;
+}
+
+ion-popover ion-content ion-list{
+  max-height: 220px;
+  overflow-y: scroll;
+}
+
+ion-popover ion-content ion-list ion-item {
+  padding: 0px;
+}
+
+ion-popover ion-content ion-list ion-item::part(native) {
+  padding: 0px;
+  min-height: 16px;
+}
+
+ion-popover ion-content ion-checkbox {
+  --size: 14px;
+  font-size: 14px;
+  padding: 0px;
+  color: #606c38;
+}
+
+// Filter Pop Over content end
+
+
+
+

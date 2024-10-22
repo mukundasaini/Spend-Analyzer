@@ -1,0 +1,38 @@
+ion-popover::part(content) {
+  min-width: 60dvw;
+}
+
+ion-popover {
+  ion-content {
+    ion-item {
+      ion-checkbox {
+        font-size: 12px;
+        --size: 12px;
+        --checkbox-background: var(--ion-color-light);
+        padding: 0;
+      }
+
+      ion-checkbox::part(container) {
+        border-radius: 2px;
+        border: 2px solid var(--ion-color-primary);
+      }
+    }
+
+    ion-item::part(native) {
+      padding: 0px;
+      min-height: 14px;
+      color: var(--ion-color-secondary);
+    }
+
+    div#banknames,
+    div#cardtypes {
+      max-height: 30dvh;
+      overflow-y: scroll;
+    }
+
+    ion-button {
+      --background: var(--ion-color-light);
+      color: var(--ion-color-primary);
+    }
+  }
+}

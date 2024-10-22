@@ -1,0 +1,10 @@
+<div id="app-category">
+  <ion-button *ngFor="let item of categories" class="ion-no-padding"
+    shape="round"
+    [id]="'open-category-dialog_'+item.id">
+    <ion-chip id="categoryname">
+      {{item.name}}
+    </ion-chip>
+    <app-update-category [inputSelectedItemId]="item.id"></app-update-category>
+  </ion-button>
+</div>

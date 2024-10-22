@@ -1,0 +1,174 @@
+<ion-modal color="light" #popover side="bottom" alignment="start"
+    trigger="expense-filter-trigger" triggerAction="click">
+    <ng-template>
+        <ion-header>
+            <ion-toolbar color="primary">
+                <ion-button (click)="popover.dismiss();" size="small"
+                    fill="clear"
+                    color="light" class="ion-float-start">
+                    Close
+                </ion-button>
+                <ion-button class="ion-float-end"
+                    (click)="onClearFilter(popover)" size="small"
+                    fill="clear"
+                    color="light">
+                    Clear
+                </ion-button>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content color="light">
+            <ion-grid class="ion-no-padding">
+                <ion-row>
+                    <ion-col size="4">
+                        <ion-segment value="years" class="ion-text-left" color="primary">
+                            <ion-list lines="full">
+                                <ion-segment-button 
+                                    value="years"
+                                    (click)="onItemClick('years')">
+                                    Years
+                                </ion-segment-button>
+                                <ion-segment-button 
+                                    value="months"
+                                    (click)="onItemClick('months')">
+                                    Months
+                                </ion-segment-button>
+                                <ion-segment-button value="banks"
+                                    (click)="onItemClick('banks')">
+                                    Banks
+                                </ion-segment-button>
+                                <ion-segment-button value="ct"
+                                    (click)="onItemClick('ct')">
+                                    Card Types
+                                </ion-segment-button>
+                                <ion-segment-button value="cats"
+                                    (click)="onItemClick('cats')">
+                                    Categories
+                                </ion-segment-button>
+                            </ion-list>
+                        </ion-segment>
+                    </ion-col>
+                    <ion-col class="ion-padding">
+                        <div *ngIf="selectedTab=='banks'">
+                            <ion-item color="light">
+                                <ion-checkbox justify="start"
+                                    (ionChange)="onAllBankNamesChange($event)"
+                                    [checked]="isAllBankNamesChecked"
+                                    labelPlacement="end">
+                                    Select All
+                                </ion-checkbox>
+                            </ion-item>
+                            <div id="bankNames">
+                                <ion-item color="light"
+                                    *ngFor="let item of cardBankNames">
+                                    <ion-checkbox
+                                        [value]="item.value"
+                                        [checked]="item.checked"
+                                        (ionChange)="onBankCheckBoxChange($event)"
+                                        justify="start" labelPlacement="end">
+                                        {{item.value}}
+                                    </ion-checkbox>
+                                </ion-item>
+                            </div>
+                        </div>
+
+                        <div *ngIf="selectedTab=='ct'">
+                            <ion-item color="light">
+                                <ion-checkbox
+                                    (ionChange)="onAllCardsChange($event)"
+                                    [checked]="isAllCardsChecked"
+                                    justify="start" labelPlacement="end">
+                                    Select All
+                                </ion-checkbox>
+                            </ion-item>
+                            <div id="cardTypes">
+                                <ion-item color="light"
+                                    *ngFor="let item of cardTypes">
+                                    <ion-checkbox
+                                        [checked]="item.checked"
+                                        (ionChange)="onCardTypeCheckBoxChange($event)"
+                                        [value]="item.value" justify="start"
+                                        labelPlacement="end">
+                                        {{item.value}}
+                                    </ion-checkbox>
+                                </ion-item>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedTab=='years'">
+                            <ion-item color="light">
+                                <ion-checkbox justify="start"
+                                    labelPlacement="end"
+                                    (ionChange)="onAllYearsChange($event)"
+                                    [checked]="isAllyearsChecked">
+                                    Select All
+                                </ion-checkbox>
+                            </ion-item>
+                            <div id="years">
+                                <ion-item color="light"
+                                    *ngFor="let item of years">
+                                    <ion-checkbox justify="start"
+                                        (ionChange)="onYearCheckBoxChange($event)"
+                                        [value]="item.value"
+                                        [checked]="item.checked"
+                                        labelPlacement="end">
+                                        {{item.value}}
+                                    </ion-checkbox>
+                                </ion-item>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedTab=='months'">
+                            <ion-item color="light">
+                                <ion-checkbox
+                                    (ionChange)="onAllMonthsChange($event)"
+                                    [checked]="isAllMonthsChecked"
+                                    justify="start" labelPlacement="end">
+                                    Select All
+                                </ion-checkbox>
+                            </ion-item>
+                            <div id="months">
+                                <ion-item color="light"
+                                    *ngFor="let item of months">
+                                    <ion-checkbox justify="start"
+                                        labelPlacement="end"
+                                        [value]="item.value"
+                                        [checked]="item.checked"
+                                        (ionChange)="onMonthCheckBoxChange($event)">
+                                        {{item.name}}
+                                    </ion-checkbox>
+                                </ion-item>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedTab=='cats'">
+                            <ion-item color="light">
+                                <ion-checkbox justify="start"
+                                    (ionChange)="onAllCategoriesChange($event)"
+                                    [checked]="isAllCategoriesChecked"
+                                    labelPlacement="end">
+                                    Select All
+                                </ion-checkbox>
+                            </ion-item>
+                            <div id="categories">
+                                <ion-item color="light"
+                                    *ngFor="let item of categories">
+                                    <ion-checkbox
+                                        [checked]="item.checked"
+                                        (ionChange)="onCategoryCheckBoxChange($event)"
+                                        [value]="item.value" justify="start"
+                                        labelPlacement="end">
+                                        {{item.name}}
+                                    </ion-checkbox>
+                                </ion-item>
+                            </div>
+                        </div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-content>
+        <ion-toolbar color="primary" class="ion-text-center">
+            <ion-button (click)="onApplyFilters(popover)" size="small"
+                fill="clear"
+                color="light">
+                Apply
+            </ion-button>
+        </ion-toolbar>
+    </ng-template>
+</ion-modal>

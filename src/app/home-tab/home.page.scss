@@ -1,0 +1,58 @@
+#expenses-list {
+  overflow-y: scroll;
+}
+
+ion-header {
+  padding-bottom: 0;
+}
+
+ion-content::part(scroll) {
+  padding-top: 50px;
+  background: var(--ion-color-primary);
+}
+
+ion-item-sliding {
+  padding-bottom: 0.2dvh;
+}
+
+ion-col ion-button {
+  --padding: 0;
+}
+
+ion-badge {
+  font-size: 8px;
+  position: absolute;
+  margin-left: 25px;
+  margin-top: -15px;
+
+}
+
+// Filter Pop Over content Start
+ion-popover::part(content) {
+  min-width: 300px;
+  padding: 5px;
+  // background-color: var(--color);
+}
+
+ion-popover ion-content ion-list {
+  max-height: 220px;
+  overflow-y: scroll;
+}
+
+ion-popover ion-content ion-list ion-item {
+  padding: 0px;
+}
+
+ion-popover ion-content ion-list ion-item::part(native) {
+  padding: 0px;
+  min-height: 16px;
+}
+
+ion-popover ion-content ion-checkbox {
+  --size: 14px;
+  font-size: 14px;
+  padding: 0px;
+  color: #606c38;
+}
+
+// Filter Pop Over content end

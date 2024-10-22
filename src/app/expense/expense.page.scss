@@ -1,0 +1,106 @@
+#expenses-content {
+    margin-top: 0.6dvh;
+    margin-bottom: 8.6dvh;
+    background: var(--ion-color-primary);
+    overflow-y: scroll;
+}
+
+.expenses-list {
+    background: var(--ion-color-light);
+}
+
+.ICICI_BG {
+    background: linear-gradient(135deg, rgba(176, 42, 48, 1) 15%, rgba(245, 130, 32, 1) 100%);
+    color: var(--ion-color-light);
+    font-size: 20px;
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    text-align: center;
+    align-content: center;
+}
+
+.SBI_BG {
+    background: linear-gradient(135deg, rgba(17, 102, 221, 1) 15%, rgba(86, 18, 234, 1) 100%);
+    color: var(--ion-color-light);
+    font-size: 20px;
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    text-align: center;
+    align-content: center;
+}
+
+.HDFC_BG {
+    background: linear-gradient(135deg, rgba(237, 26, 34, 1) 15%, rgba(0, 75, 140, 1) 100%);
+    color: var(--ion-color-light);
+    font-size: 20px;
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    text-align: center;
+    align-content: center;
+}
+
+.TEST_BG {
+    background: linear-gradient(135deg, rgba(237, 26, 34, 1) 15%, rgba(0, 75, 140, 1) 100%);
+    color: var(--ion-color-light);
+    font-size: 20px;
+    border-radius: 50%;
+    height: 42px;
+    width: 42px;
+    text-align: center;
+    align-content: center;
+}
+
+ion-item {
+    font-size: 14px;
+    --padding-right: unset;
+
+    ion-grid {
+        padding-top: 5px;
+        padding-bottom: unset;
+        padding-right: unset;
+
+        ion-row {
+            ion-col {
+                padding-inline-start: 0px;
+
+                ion-label {
+                    &.cat_name {
+                        font-size: 16px;
+                        padding-bottom: 8px;
+                    }
+
+                    &.expense_dt {
+                        font-size: 14px;
+                        color: var(--ion-color-tertiary);
+                    }
+
+                    &.expense_note {
+                        font-size: 8px;
+                        font-style: italic;
+                    }
+
+                    &.expense_amount {
+                        font-size: 16px;
+                        padding-bottom: 8px;
+                    }
+
+                    &.expense_emi {
+                        font-size: 8px;
+                    }
+
+                    &.expense_is_include {
+                        font-size: 14px;
+                        color: var(--ion-color-tertiary);
+                    }
+                }
+            }
+        }
+    }
+}
+
+ion-item::part(native) {
+    padding-left: 2dvw;
+}

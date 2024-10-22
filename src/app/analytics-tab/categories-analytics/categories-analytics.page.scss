@@ -1,0 +1,23 @@
+ion-item#card-select::part(native) {
+    width: 200px;
+}
+
+ion-item#card-select {
+    width: 200px;
+    position: relative;
+    left: 58dvw;
+    top: -54dvh;
+    z-index: 10;
+}
+
+ion-select::part(placeholder) {
+    color: var(--ion-color-secondary);
+}
+
+ion-select::part(icon) {
+    color: var(--ion-color-secondary);
+}
+
+ion-select::part(label) {
+    color: var(--ion-color-secondary);
+}

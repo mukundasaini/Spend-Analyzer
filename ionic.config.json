@@ -1,0 +1,7 @@
+{
+  "name": "Spend Analyzer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

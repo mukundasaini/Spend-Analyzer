@@ -1,0 +1,49 @@
+<canvas appCatBarChartPage
+  [labels]="inputLabels"
+  [backgroundColor]="inputBackgroundColor"
+  [data]="inputData"
+  width="300" height="300"></canvas>
+
+<ion-item color="light" id="card-select">
+  <ion-select
+    class="ion-no-padding"
+    id="cardId"
+    label="Select Card"
+    placeholder="ALL"
+    interface="popover"
+    (ionChange)="onCardTypeChange($event)">
+    <ion-select-option value="ALL">ALL</ion-select-option>
+    <ion-select-option *ngFor="let item of cards;"
+      [value]="item.id">
+      {{item.bankName+'-'+item.type}}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item lines="full" color="light">
+  <ion-button fill="clear" color="tertiary"
+    (click)="setShowTransactions()">
+    <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
+  <ion-label class="ion-text-end" color="secondary">Total:
+    Rs.{{catsTotal}}</ion-label>
+</ion-item>
+
+<div *ngIf="showTransactions">
+  <ion-accordion-group *ngFor="let cat of categoriesExpenses;let i=index;">
+    <ion-accordion [value]="inputLabels[i]" *ngIf="inputData[i]>0">
+      <ion-item slot="header" color="light">
+        <ion-label color="secondary">{{inputLabels[i]}}</ion-label>
+        <ion-label color="tertiary">Total: {{inputData[i]}}</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-item color="primary" class="ion-no-padding" lines="full"
+          *ngFor="let expense of cat.expenses">
+          <ion-label
+            class="ion-no-padding ion-padding-start">{{getCardBankName(expense.cardTypeId)}}</ion-label>
+          <ion-label
+            class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
+        </ion-item>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</div>

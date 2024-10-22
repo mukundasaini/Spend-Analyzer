@@ -1,0 +1,65 @@
+.ICICI_card{
+  --background: #E56D1D;
+}
+
+.SBI_card{
+  --background: #1166DD;
+}
+
+.HDFC_card{
+  --background: #FF0000;
+}
+
+.RUPAY_type{
+  --background: var(--ion-color-warning-tint);
+}
+
+.AMAZON_type{
+  --background: var(--ion-color-dark-tint);
+}
+
+.FOOD_type{
+  --background: var(--ion-color-medium-tint);
+}
+
+.DEBIT_type{
+  --background: #001E79;
+}
+
+.CREDIT_type{
+  --background: var(--ion-color-danger-tint);
+}
+
+div#app-cards {
+  max-height: 15em;
+  overflow-y: scroll;
+  padding-left:1em;
+  padding-right:1em;
+}
+ion-button {
+  ion-chip#bankname {
+    --color: var(--ion-color-tint);
+    font-size: 12px;
+    margin-left: -15px;
+  }
+
+  ion-chip#cardnumber {
+    --background: var(--ion-color-secondary);
+    --color: var(--ion-color-tint);
+    font-size: 10px;
+    margin-left: -15px;
+  }
+
+  ion-chip#cardtype {
+    --color: var(--ion-color-tint);
+    font-size: 6px;
+  }
+
+  --background: var(--ion-color-medium);
+}
+
+ion-button#card-close {
+  --background: var(--ion-color-warning-shade);
+  --color: var(--ion-color-tint);
+}
+

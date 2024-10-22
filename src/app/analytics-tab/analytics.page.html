@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Analytics
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div>
+    <ion-item color="light" lines="full">
+      <ion-label color="secondary" class="ion-text-start"> Cards
+        Analytics</ion-label>
+    </ion-item>
+    <app-cards-analytics
+      *ngIf="hasCardsData && hasCatsData && hasExpenseData"
+      [cats]="inputCategories"
+      [cards]="inputCardDetails"
+      [expenses]="inputExpenses"></app-cards-analytics>
+  </div>
+
+  <div id="cats-section">
+    <ion-item color="light" lines="full">
+      <ion-label color="secondary" class="ion-text-start"> Categories
+        Analytics</ion-label>
+    </ion-item>
+    <app-categories-analytics
+      *ngIf="hasCardsData && hasCatsData && hasExpenseData"
+      [cats]="inputCategories"
+      [cards]="inputCardDetails"
+      [expenses]="inputExpenses"></app-categories-analytics>
+  </div>
+</ion-content>

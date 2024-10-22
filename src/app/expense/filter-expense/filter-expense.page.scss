@@ -1,0 +1,48 @@
+ion-modal {
+    ion-content {
+        ion-item {
+            ion-checkbox {
+                font-size: 12px;
+                --size: 12px;
+                --checkbox-background: var(--ion-color-light);
+                padding: 0;
+            }
+
+            ion-checkbox::part(container) {
+                border-radius: 2px;
+                border: 2px solid var(--ion-color-primary);
+            }
+        }
+
+        ion-item::part(native) {
+            padding: 0px;
+            min-height: 14px;
+            color: var(--ion-color-secondary);
+        }
+
+        div#cardTypes,
+        div#bankNames,
+        div#years {
+            max-height: 20dvh;
+            overflow-y: scroll;
+        }
+
+        div#categories {
+            max-height: 55dvh;
+            overflow-y: scroll;
+        }
+
+        ion-button {
+            --background: var(--ion-color-light);
+            color: var(--ion-color-primary);
+        }
+    }
+}
+
+ion-list {
+    background: var(--ion-color-light);
+}
+
+ion-segment-button.md::part(native) {
+    color: var(--ion-color-secondary);
+  }
