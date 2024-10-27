@@ -15,8 +15,9 @@ import { Expense } from "src/app/Models/expense-model";
   standalone: true,
   imports: [IonSegmentButton, IonSegment, IonNavLink, IonNav, IonLabel, IonToolbar, IonButtons, IonHeader, IonModal, CommonModule, IonItem, IonList, IonCheckbox, IonRow, IonContent, IonGrid, IonCol, IonButton, IonPopover,]
 })
-export class FilterExpensePage implements OnInit {
+export class FilterExpensePage implements OnInit, OnDestroy {
   expenses$: Observable<Expense[]>;
+  expenses: Expense[] = [];
 
   firestore: Firestore = inject(Firestore);
 
@@ -24,6 +25,7 @@ export class FilterExpensePage implements OnInit {
   cardTypes: CheckBox[] = [];
   categories: CheckBox[] = [];
   months: CheckBox[] = [];
+  includeExclude: CheckBox = <CheckBox>{ value: 'Is Inclde', checked: true };
 
   expenseCollection = AppConstants.collections.expense;
   categoryCollection = AppConstants.collections.category;
@@ -41,7 +43,11 @@ export class FilterExpensePage implements OnInit {
   slectedCategories: string[] = [];
   selectedMonths: string[] = [];
   selectedYears: string[] = [];
-  selectedTab: string = 'years';
+  selectedTab: string = 'cats';
+  slectedIsInclude!: boolean;
+
+
+  onDestroy$: Subject<void> = new Subject();
 
   logPrefix: string = 'FILTEREXPENSE_PAGE::: ';
 
@@ -49,11 +55,20 @@ export class FilterExpensePage implements OnInit {
   @Input() cats: Category[] = [];
   @Input() years: CheckBox[] = [];
 
-  @Output() onExpenseFilter = new EventEmitter<{ filterIndicator: string, filterdData$: Observable<Expense[]> }>();
+  @Output() onExpenseFilter = new EventEmitter<{ filterIndicator: string, filterdData: Expense[] }>();
 
   constructor() {
     console.log(this.logPrefix + "constructor");
     this.expenses$ = collectionData(collection(this.firestore, this.expenseCollection)) as Observable<Expense[]>;
+    this.expenses$.pipe(takeUntil(this.onDestroy$))
+      .subscribe(expenses => {
+        this.expenses = expenses;
+      });
+  }
+  ngOnDestroy(): void {
+    console.log(this.logPrefix + "ngOnDestroy");
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
   ngOnInit(): void {
@@ -62,7 +77,6 @@ export class FilterExpensePage implements OnInit {
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
     this.selectedYears.push(dateValues[0]);
     this.selectedMonths.push(dateValues[1]);
-
     this.cards.map(item => item.bankName)
       .filter((value, index, self) => self.indexOf(value) === index)
       .forEach(bankName => {
@@ -82,6 +96,10 @@ export class FilterExpensePage implements OnInit {
     this.constMonths.forEach(month => {
       this.months.push({ value: month.value, name: month.name, checked: dateValues[1] == month.value });
     });
+  }
+
+  onIncludeExcludeCheckBoxChange(event: any) {
+    this.slectedIsInclude = event.detail.checked
   }
 
   onBankCheckBoxChange(event: any) {
@@ -252,32 +270,35 @@ export class FilterExpensePage implements OnInit {
   onApplyFilters(modal: IonModal) {
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
+    this.slectedIsInclude = this.slectedIsInclude === undefined ? true : this.slectedIsInclude;
 
-    let filterdData$ = this.expenses$;
+    let filterdData = this.expenses;
+    filterdData = filterdData.filter(expense => expense.isInclude == this.slectedIsInclude);
+
     if (this.selectedYears.length > 0) {
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => this.selectedYears.includes(expense.year)
-      )));
+      );
     } else {
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => expense.year == dateValues[0]
-      )));
+      );
     }
 
     if (this.selectedMonths.length > 0) {
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => this.selectedMonths.includes(expense.month)
-      )));
+      );
     } else {
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => expense.year == dateValues[1]
-      )));
+      );
     }
 
     if (this.slectedCategories.length > 0) {
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => this.slectedCategories.includes(expense.categoryId)
-      )));
+      );
     }
 
     if (this.slectedBankNames.length > 0) {
@@ -288,9 +309,9 @@ export class FilterExpensePage implements OnInit {
         })
       });
 
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => cardTypeIds.includes(expense.cardTypeId)
-      )));
+      );
     }
 
 
@@ -302,12 +323,12 @@ export class FilterExpensePage implements OnInit {
         })
       });
 
-      filterdData$ = filterdData$.pipe(map(expenses => expenses.filter(
+      filterdData = filterdData.filter(
         expense => cardTypeIds.includes(expense.cardTypeId)
-      )));
+      );
     }
 
-    this.onExpenseFilter.emit({ filterIndicator: '.', filterdData$: filterdData$ });
+    this.onExpenseFilter.emit({ filterIndicator: '.', filterdData: filterdData });
     modal.dismiss();
   }
 
@@ -343,14 +364,17 @@ export class FilterExpensePage implements OnInit {
     this.selectedYears.push(dateValues[0]);
     this.selectedMonths.push(dateValues[1]);
 
-    let expenses$ = collectionData(
+    (collectionData(
       query(collection(this.firestore, this.expenseCollection),
         where('year', '==', dateValues[0]),
         where('month', '==', dateValues[1]),
         orderBy('fullDate', 'desc')
-      )) as Observable<Expense[]>;
+      )) as Observable<Expense[]>).pipe(takeUntil(this.onDestroy$))
+      .subscribe(expenses => {
+        this.expenses = expenses;
+        this.onExpenseFilter.emit({ filterIndicator: '', filterdData: expenses });
+      });;
 
-    this.onExpenseFilter.emit({ filterIndicator: '', filterdData$: expenses$ });
     modal.dismiss();
   }
 

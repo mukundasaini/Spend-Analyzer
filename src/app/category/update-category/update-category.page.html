@@ -2,17 +2,16 @@
   [trigger]="'open-category-dialog_' +inputSelectedItemId"
   [initialBreakpoint]="0.25"
   [breakpoints]="[0,0.25, 0.75,0.90]"
-  handleBehavior="cycle" (willPresent)="onGetCategoryDetails(inputSelectedItemId)" >
+  handleBehavior="cycle"
+  (willPresent)="onGetCategoryDetails(inputSelectedItemId)">
   <ng-template>
     <ion-content class="ion-padding" color="light">
       <form [formGroup]="updateCategoryFG">
         <ion-toolbar color="light">
-          <ion-title size="small" color="primary">Category
-            Details</ion-title>
+          <ion-button size="small"  fill="clear" shape="round"
+            color="primary"
+            (click)="onDelete(inputSelectedItemId);updateCategoryModal.dismiss()">Remove</ion-button>
           <ion-buttons slot="end">
-            <ion-button size="small" shape="round"
-              color="primary"
-              (click)="onDelete(inputSelectedItemId);updateCategoryModal.dismiss()">Remove</ion-button>
             <ion-button size="small" shape="round" color="primary"
               (click)="onUpdateSubmit(inputSelectedItemId);updateCategoryModal.dismiss()">Save</ion-button>
           </ion-buttons>

@@ -7,12 +7,10 @@
     <ion-content color="light" class="ion-padding">
       <form [formGroup]="updateCardFG">
         <ion-toolbar color="light">
-          <ion-title size="small" color="primary">Card
-            Details</ion-title>
+          <ion-button size="small" fill="clear" shape="round"
+            color="primary"
+            (click)="onDelete(inputSelectedItemId);updateCardModal.dismiss()">Remove</ion-button>
           <ion-buttons slot="end">
-            <ion-button size="small" shape="round"
-              color="primary"
-              (click)="onDelete(inputSelectedItemId);updateCardModal.dismiss()">Remove</ion-button>
             <ion-button size="small" shape="round"
               color="primary"
               (click)="onUpdateSubmit(inputSelectedItemId);updateCardModal.dismiss()">Save</ion-button>

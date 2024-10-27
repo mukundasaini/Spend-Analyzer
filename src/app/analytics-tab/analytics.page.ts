@@ -76,7 +76,8 @@ export class AnalyticsPage implements OnInit, OnDestroy {
       .subscribe(expenses => {
         this.inputExpenses = expenses;
         this.hasExpenseData = this.inputExpenses.length > 0;
-        this.loading.dismiss();
+        if (this.loading != undefined)
+          this.loading.dismiss();
       });
 
     this.cardDetails$.pipe(takeUntil(this.onDestroy$))
@@ -95,7 +96,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
       message: 'Fetcing data...',
-      // duration: 3000,
+      duration: Number.MAX_VALUE,
       cssClass: 'custom-loading'
     });
     this.loading.present();

@@ -67,7 +67,8 @@ export class SettingsPage implements OnInit, OnDestroy {
       .subscribe(cats => {
         this.inputCategories = cats;
         this.hasCatsData = cats.length > 0;
-        this.loading.dismiss();
+        if (this.loading != undefined)
+          this.loading.dismiss();
       });
 
     this.cards$
@@ -103,7 +104,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
       message: 'Fetcing data...',
-      // duration: 3000,
+      duration: Number.MAX_VALUE,
       cssClass: 'custom-loading'
     });
     this.loading.present();

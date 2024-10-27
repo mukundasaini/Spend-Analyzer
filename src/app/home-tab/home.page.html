@@ -22,6 +22,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-no-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <app-expense
     *ngIf="hasCardsData && hasCatsData && hasExpenseData"
     [categories]="inputCategories"

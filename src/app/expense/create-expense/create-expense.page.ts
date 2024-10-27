@@ -84,7 +84,6 @@ export class CreatEexpensePage {
       var date = new Date(oldDate.setMonth(oldDate.getMonth() + index));
       const fulldate = formatDate(date, 'yyyy-MM-dd hh:mm:ss.sss a Z', 'en-US');
       const dateValues = fulldate.split('-');
-      console.log(fulldate);
 
       let expense = <Expense>{
         id: UUID.UUID(),

@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFab, IonFabButton, IonBadge, IonItem, IonGrid, IonRow, IonCol, IonChip, IonSkeletonText, IonLabel } from "@ionic/angular/standalone";
+import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFab, IonFabButton, IonBadge, IonItem, IonGrid, IonRow, IonCol, IonChip, IonSkeletonText, IonLabel, IonRefresherContent, IonRefresher } from "@ionic/angular/standalone";
 import { FilterExpensePage } from "../expense/filter-expense/filter-expense.page";
 import { ExpensePage } from "../expense/expense.page";
 import { CreatEexpensePage } from "../expense/create-expense/create-expense.page";
@@ -11,7 +11,7 @@ import { AppConstants } from "../app.constants";
 import { CardDetails } from "../Models/card-details.model";
 import { Category } from "../Models/category.model";
 import { addIcons } from "ionicons";
-import { add, filter } from "ionicons/icons";
+import { add, filter, infinite } from "ionicons/icons";
 import { CheckBox } from "../Models/checkbox.model";
 import { LoadingController } from '@ionic/angular';
 
@@ -20,7 +20,7 @@ import { LoadingController } from '@ionic/angular';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonLabel, IonSkeletonText, IonChip, IonCol, IonRow, IonGrid, IonItem, CommonModule, IonBadge, IonFabButton, IonFab, IonContent, IonIcon, IonButton, IonButtons, IonToolbar, IonTitle, IonHeader, FilterExpensePage, ExpensePage, CreatEexpensePage],
+  imports: [IonRefresher, IonRefresherContent, IonLabel, IonSkeletonText, IonChip, IonCol, IonRow, IonGrid, IonItem, CommonModule, IonBadge, IonFabButton, IonFab, IonContent, IonIcon, IonButton, IonButtons, IonToolbar, IonTitle, IonHeader, FilterExpensePage, ExpensePage, CreatEexpensePage],
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -92,7 +92,8 @@ export class HomePage implements OnInit, OnDestroy {
             this.inputYears.push({ value: year, checked: dateValues[0] == year });
           });
         this.hasExpenseData = this.inputExpenses.length > 0;
-        if (this.hasExpenseData) this.loading.dismiss();
+        if (this.loading != undefined)
+          this.loading.dismiss();
       });
 
     this.cardDetails$.pipe(takeUntil(this.onDestroy$))
@@ -108,23 +109,23 @@ export class HomePage implements OnInit, OnDestroy {
       });
   }
 
-  onApplyExpenseFilters(data: { filterIndicator: string, filterdData$: Observable<Expense[]> }) {
-    this.expenses$ = data.filterdData$;
+  onApplyExpenseFilters(data: { filterIndicator: string, filterdData: Expense[] }) {
+    this.inputExpenses = data.filterdData;
     this.expenseFilterIndeicator = data.filterIndicator;
-    this.expenses$
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(expenses => {
-        this.inputExpenses = expenses;
-      });
   }
 
   async showLoading() {
     this.loading = await this.loadingCtrl.create({
       message: 'Fetcing data...',
-      // duration: 3000,
-      cssClass:'custom-loading'
+      duration: Number.MAX_VALUE,
+      cssClass: 'custom-loading'
     });
     this.loading.present();
+  }
+
+  handleRefresh(event: any) {
+    event.target.complete();
+    window.location.reload();
   }
 
 }

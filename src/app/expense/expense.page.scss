@@ -103,4 +103,12 @@ ion-item {
 
 ion-item::part(native) {
     padding-left: 2dvw;
+    padding-bottom: 20px;
+    color-scheme: dark;
 }
+
+ion-item-divider {
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+    min-height: 20px;
+  }
