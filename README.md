@@ -1,6 +1,28 @@
 # Spend-Analyzer
- Spend Analyzer Ionic App
+ Spend Analyzer Ionic App is for keep track on dialy expenses and know about your spend flow.  
  
+* Features
+* Home (Expense) Tab
+* Settings Tab
+* Analytics Tab
+
+** Settings Tab
+-*- Add or Update card
+-*- Add or Update category
+-*- Filter card or category
+
+** Home Tab
+-*- Displasys current month transactions
+-*- Add Or Update transaction
+-*- Filter transactions
+-*- Filters has include or exclude, year, month, cards and categories selection options
+-*- Transaction has EMI, note and include or exclude options
+
+** Analytics Tab
+-*- Card wise pie chart with percentage and amount
+-*- category wise bar chart 
+-*- Show tansactions card wise and category wise
+
  * Update Fire Store Credentials
  Open src\environments\environment.ts
  
