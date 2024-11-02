@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFab, IonFabButton, IonBadge, IonItem, IonGrid, IonRow, IonCol, IonChip, IonSkeletonText, IonLabel, IonRefresherContent, IonRefresher } from "@ionic/angular/standalone";
+import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFab, IonFabButton, IonBadge, IonItem, IonGrid, IonRow, IonCol, IonChip, IonSkeletonText, IonLabel, IonRefresherContent, IonRefresher, IonSearchbar } from "@ionic/angular/standalone";
 import { FilterExpensePage } from "../expense/filter-expense/filter-expense.page";
 import { ExpensePage } from "../expense/expense.page";
 import { CreatEexpensePage } from "../expense/create-expense/create-expense.page";
@@ -11,7 +11,7 @@ import { AppConstants } from "../app.constants";
 import { CardDetails } from "../Models/card-details.model";
 import { Category } from "../Models/category.model";
 import { addIcons } from "ionicons";
-import { add, filter, infinite } from "ionicons/icons";
+import { add, card, filter, infinite } from "ionicons/icons";
 import { CheckBox } from "../Models/checkbox.model";
 import { LoadingController } from '@ionic/angular';
 
@@ -20,7 +20,7 @@ import { LoadingController } from '@ionic/angular';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonRefresher, IonRefresherContent, IonLabel, IonSkeletonText, IonChip, IonCol, IonRow, IonGrid, IonItem, CommonModule, IonBadge, IonFabButton, IonFab, IonContent, IonIcon, IonButton, IonButtons, IonToolbar, IonTitle, IonHeader, FilterExpensePage, ExpensePage, CreatEexpensePage],
+  imports: [IonSearchbar, IonRefresher, IonRefresherContent, IonLabel, IonSkeletonText, IonChip, IonCol, IonRow, IonGrid, IonItem, CommonModule, IonBadge, IonFabButton, IonFab, IonContent, IonIcon, IonButton, IonButtons, IonToolbar, IonTitle, IonHeader, FilterExpensePage, ExpensePage, CreatEexpensePage],
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -29,6 +29,7 @@ export class HomePage implements OnInit, OnDestroy {
   inputCategories: Category[] = [];
   inputExpenses: Expense[] = [];
   inputYears: CheckBox[] = [];
+  inputFilterExpenses: Expense[] = [];
 
   expenseCollection = AppConstants.collections.expense;
   categoryCollection = AppConstants.collections.category;
@@ -37,15 +38,16 @@ export class HomePage implements OnInit, OnDestroy {
   expenseFilterIndeicator: string = '';
 
   hasExpenseData: boolean = false;
+  hasFilterExpenseData: boolean = false;
   hasCardsData: boolean = false;
   hasCatsData: boolean = false;
 
   expenses$: Observable<Expense[]>;
+  filterExpenses$: Observable<Expense[]>;
   cardDetails$: Observable<CardDetails[]>;
   categories$: Observable<Category[]>;
   logPrefix: string = 'HOME_PAGE::: ';
   onDestroy$: Subject<void> = new Subject();
-  loading!: HTMLIonLoadingElement;
 
   constructor(private loadingCtrl: LoadingController) {
     console.log(this.logPrefix + "constructor");
@@ -60,6 +62,10 @@ export class HomePage implements OnInit, OnDestroy {
         where('month', '==', dateValues[1]),
         orderBy('fullDate', 'desc')
       )) as Observable<Expense[]>;
+
+      this.filterExpenses$ = collectionData(
+        query(collection(this.firestore, this.expenseCollection),
+        )) as Observable<Expense[]>;
 
     this.cardDetails$ = (collectionData(
       query(collection(this.firestore, this.cardCollection),
@@ -79,22 +85,25 @@ export class HomePage implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    var date = new Date();
-    const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
 
     this.expenses$
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(expenses => {
         this.inputExpenses = expenses;
-        this.inputYears = [];
-        expenses.map(item => item.year)
-          .filter((value, index, self) => self.indexOf(value) === index).forEach(year => {
-            this.inputYears.push({ value: year, checked: dateValues[0] == year });
-          });
         this.hasExpenseData = this.inputExpenses.length > 0;
-        if (this.loading != undefined)
-          this.loading.dismiss();
       });
+
+      this.filterExpenses$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(expenses => {
+        this.inputFilterExpenses = expenses;
+        this.hasFilterExpenseData = this.inputFilterExpenses.length > 0;
+        this.inputYears = [];
+        this.inputFilterExpenses.map(item => item.year)
+          .filter((value, index, self) => self.indexOf(value) === index).forEach(year => {
+            this.inputYears.push({ value: year, checked: false });
+          });
+      }); 
 
     this.cardDetails$.pipe(takeUntil(this.onDestroy$))
       .subscribe(cardTypes => {
@@ -115,18 +124,17 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async showLoading() {
-    this.loading = await this.loadingCtrl.create({
+    const loading = await this.loadingCtrl.create({
       message: 'Fetcing data...',
-      duration: Number.MAX_VALUE,
+      duration: 3000,
       cssClass: 'custom-loading'
     });
-    this.loading.present();
+    loading.present();
   }
 
   handleRefresh(event: any) {
     event.target.complete();
     window.location.reload();
   }
-
 }
 

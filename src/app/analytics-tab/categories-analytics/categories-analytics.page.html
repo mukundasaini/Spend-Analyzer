@@ -2,23 +2,7 @@
   [labels]="inputLabels"
   [backgroundColor]="inputBackgroundColor"
   [data]="inputData"
-  width="300" height="300"></canvas>
-
-<ion-item color="light" id="card-select">
-  <ion-select
-    class="ion-no-padding"
-    id="cardId"
-    label="Select Card"
-    placeholder="ALL"
-    interface="popover"
-    (ionChange)="onCardTypeChange($event)">
-    <ion-select-option value="ALL">ALL</ion-select-option>
-    <ion-select-option *ngFor="let item of cards;"
-      [value]="item.id">
-      {{item.bankName+'-'+item.type}}
-    </ion-select-option>
-  </ion-select>
-</ion-item>
+  width="475" height="310"></canvas>
 
 <ion-item lines="full" color="light">
   <ion-button fill="clear" color="tertiary"

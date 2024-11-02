@@ -8,13 +8,13 @@
       <form [formGroup]="expenseFG"
         (ngSubmit)="createExpanseModal.dismiss();onSubmit();">
         <ion-toolbar color="light">
-          <ion-title size="small" color="primary">New Expense
+          <ion-title size="small" color="secondary">New Expense
           </ion-title>
           <ion-buttons slot="end">
-            <ion-button size="small" shape="round" color="primary"
+            <ion-button size="small" shape="round" color="secondary"
               (click)="onClear()"
-              color="primary">Clear</ion-button>
-            <ion-button size="small" shape="round" color="primary"
+              color="secondary">Clear</ion-button>
+            <ion-button size="small" shape="round" color="secondary"
               [disabled]="expenseFG.invalid"
               type="submit">Save</ion-button>
           </ion-buttons>

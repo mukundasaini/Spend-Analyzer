@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, Renderer2, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild } from "@angular/core";
 import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData, ChartDataset } from 'chart.js/auto';
@@ -20,7 +20,7 @@ import { CatBarChartPageDirective } from "../directives/cat-bar-chart.page.direc
   imports: [IonButton, IonSelect, IonSelectOption, IonLabel, IonItem, IonAccordion, IonAccordionGroup, CommonModule,
     IonContent, IonTitle, IonToolbar, IonHeader, CatPieChartPageDirective, CatBarChartPageDirective],
 })
-export class CategoriesAnalyticsPage implements OnInit {
+export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 
   chartData!: ChartData;
   chart!: Chart;
@@ -52,19 +52,35 @@ export class CategoriesAnalyticsPage implements OnInit {
   }
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    this.loadChartTransData(this.expenses);
+    this.loadChartTransData();
   }
 
-  loadChartTransData(expenses: Expense[]) {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.logPrefix + "ngOnChanges");
+    if (changes['expenses'].previousValue !== undefined) {
+      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
+      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
+      if (currentSelected.month != previousSelected.month
+        || currentSelected.year != previousSelected.year) {
+        this.loadChartTransData();
+        this.catBarChart.chart.data.labels = this.inputLabels;
+        this.catBarChart.chart.data.datasets[0].data = this.inputData;
+        this.catBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
+        this.catBarChart.chart.update();
+      }
+    }
+  }
+
+  loadChartTransData() {
     this.inputBackgroundColor = [];
     this.inputData = [];
     this.inputLabels = [];
     this.catsTotal = 0;
     this.categoriesExpenses = [];
-    
+
     this.cats.forEach(category => {
       let total: number = 0;
-      let filterData = expenses.filter(expense => expense.categoryId == category.id);
+      let filterData = this.expenses.filter(expense => expense.categoryId == category.id);
       let amounts = filterData.map(e => e.amount);
       amounts.forEach(amount => {
         amount = typeof (amount) == 'string' ? parseInt(amount) : amount;
@@ -116,14 +132,5 @@ export class CategoriesAnalyticsPage implements OnInit {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
-
-  onCardTypeChange(event: any) {
-    let catExpenses = event.target.value == 'ALL' ? this.expenses : this.expenses.filter(e => e.cardTypeId == event.target.value);    
-    this.loadChartTransData(catExpenses);
-    this.catBarChart.chart.data.labels = this.inputLabels;
-    this.catBarChart.chart.data.datasets[0].data = this.inputData;
-    this.catBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
-    this.catBarChart.chart.update();
   }
 }

@@ -12,7 +12,6 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
-  total: number = 0;
 
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
@@ -23,7 +22,6 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    this.total = this.data.reduce((sum, item) => sum + item, 0);
     this.config = <ChartConfiguration>{
       type: 'pie',
       data: {
@@ -38,7 +36,6 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
       },
       options: {
         responsive: true,
-        // aspectRatio: 2 / 1,
         layout: {
           autoPadding: false,
           padding: {
@@ -75,7 +72,8 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
           },
           datalabels: {
             formatter: (value, context) => {
-              let v = (value / this.total) * 100;
+              let total = (context.dataset.data as number[]).reduce((sum, item) => sum + item, 0);
+              let v = (value / total) * 100;
               return v.toFixed(2) + '%';
             },
             color: '#fff',

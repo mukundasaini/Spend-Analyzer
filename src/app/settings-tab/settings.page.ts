@@ -28,7 +28,6 @@ export class SettingsPage implements OnInit, OnDestroy {
   categories$: Observable<Category[]>;
   cards$: Observable<CardDetails[]>;
   onDestroy$: Subject<void> = new Subject();
-  loading!: HTMLIonLoadingElement;
 
   logPrefix: string = 'SETTINGS_PAGE::: ';
 
@@ -67,8 +66,6 @@ export class SettingsPage implements OnInit, OnDestroy {
       .subscribe(cats => {
         this.inputCategories = cats;
         this.hasCatsData = cats.length > 0;
-        if (this.loading != undefined)
-          this.loading.dismiss();
       });
 
     this.cards$
@@ -102,11 +99,11 @@ export class SettingsPage implements OnInit, OnDestroy {
   }
 
   async showLoading() {
-    this.loading = await this.loadingCtrl.create({
+    const loading = await this.loadingCtrl.create({
       message: 'Fetcing data...',
-      duration: Number.MAX_VALUE,
+      duration: 3000,
       cssClass: 'custom-loading'
     });
-    this.loading.present();
+    loading.present();
   }
 }

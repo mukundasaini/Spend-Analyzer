@@ -8,12 +8,12 @@
       <form [formGroup]="categoryFG"
         (ngSubmit)="onSubmit();createCategoryModal.dismiss()">
         <ion-toolbar color="light">
-          <ion-title size="small" color="primary">New Category
+          <ion-title size="small" color="secondary">New Category
           </ion-title>
           <ion-buttons slot="end">
             <ion-button size="small" shape="round" color="primary"
-              (click)="onClear()" color="primary">Clear</ion-button>
-            <ion-button size="small" shape="round" color="primary"
+              (click)="onClear()" color="secondary">Clear</ion-button>
+            <ion-button size="small" shape="round" color="secondary"
               type="submit"
               [disabled]="!categoryFG.valid">Save</ion-button>
           </ion-buttons>

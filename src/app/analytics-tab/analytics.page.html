@@ -15,23 +15,101 @@
     <ion-item color="light" lines="full">
       <ion-label color="secondary" class="ion-text-start"> Cards
         Analytics</ion-label>
-    </ion-item>
-    <app-cards-analytics
-      *ngIf="hasCardsData && hasCatsData && hasExpenseData"
-      [cats]="inputCategories"
-      [cards]="inputCardDetails"
-      [expenses]="inputExpenses"></app-cards-analytics>
-  </div>
+      <ion-select
+        class="ion-no-padding"
+        [placeholder]="presentMonth"
+        interface="popover"
+        (ionChange)="onCardMonthChange($event)">
+        <ion-select-option *ngFor="let item of months;"
+          [value]="item.value">
+          {{item.name}}
+        </ion-select-option>
+      </ion-select>
+      <ion-select
+        class="ion-no-padding"
+        [placeholder]="presentYear"
+        interface="popover"
+        (ionChange)="onCardYearChange($event)">
+        <ion-select-option *ngFor="let item of years;"
+          [value]="item">
+          {{item}}
+        </ion-select-option>
+      </ion-select>
 
+      <ion-toggle id="emi-toggle" class="ion-float-end"
+        (ionChange)="showOrHideCardsAnalytics($event)">{{'Hide'}}
+      </ion-toggle>
+    </ion-item>
+    <div *ngIf="!hideCardsAnalytics">
+      <app-cards-analytics
+        *ngIf="hasCardsData && hasCatsData && inputCardsYearMonthExpenses.length>0"
+        [cats]="inputCategories"
+        [cards]="inputCardDetails"
+        [expenses]="inputCardsYearMonthExpenses"></app-cards-analytics>
+    </div>
+  </div>
   <div id="cats-section">
     <ion-item color="light" lines="full">
       <ion-label color="secondary" class="ion-text-start"> Categories
         Analytics</ion-label>
+      <ion-select
+        class="ion-no-padding"
+        [placeholder]="presentMonth"
+        interface="popover"
+        (ionChange)="onCatMonthChange($event)">
+        <ion-select-option *ngFor="let item of months;"
+          [value]="item.value">
+          {{item.name}}
+        </ion-select-option>
+      </ion-select>
+      <ion-select
+        class="ion-no-padding"
+        [placeholder]="presentYear"
+        interface="popover"
+        (ionChange)="onCatYearChange($event)">
+        <ion-select-option *ngFor="let item of years;"
+          [value]="item">
+          {{item}}
+        </ion-select-option>
+      </ion-select>
+      <ion-toggle id="emi-toggle" class="ion-float-end"
+        (ionChange)="showOrHideCatsAnalytics($event)">{{'Hide'}}
+      </ion-toggle>
     </ion-item>
-    <app-categories-analytics
-      *ngIf="hasCardsData && hasCatsData && hasExpenseData"
-      [cats]="inputCategories"
-      [cards]="inputCardDetails"
-      [expenses]="inputExpenses"></app-categories-analytics>
+    <div *ngIf="!hideCatsAnalytics">
+      <app-categories-analytics
+        *ngIf="hasCardsData && hasCatsData && inputCatsYearMonthExpenses.length>0"
+        [cats]="inputCategories"
+        [cards]="inputCardDetails"
+        [expenses]="inputCatsYearMonthExpenses"></app-categories-analytics>
+    </div>
+  </div>
+
+  <div>
+    <ion-item color="light" lines="full">
+      <ion-label color="secondary" class="ion-text-start">
+        All Months Analytics</ion-label>
+      <ion-select
+        class="ion-no-padding"
+        [placeholder]="presentYear"
+        interface="popover"
+        (ionChange)="onAllMonthsYearChange($event)">
+        <ion-select-option *ngFor="let item of years;"
+          [value]="item">
+          {{item}}
+        </ion-select-option>
+      </ion-select>
+      <ion-toggle id="emi-toggle" class="ion-float-end"
+        (ionChange)="showOrHideAllMonthsAnalytics($event)">{{'Hide'}}
+      </ion-toggle>
+    </ion-item>
+    <div *ngIf="!hideAllMonthsAnalytics">
+      <app-cards-monthly-analytics
+        *ngIf="hasCardsData && hasCatsData && inputAllMonthsExpenses.length>0"
+        [cats]="inputCategories"
+        [cards]="inputCardDetails"
+        [expenses]="inputAllMonthsExpenses">
+      </app-cards-monthly-analytics>
+    </div>
   </div>
 </ion-content>

@@ -2,7 +2,7 @@
     trigger="expense-filter-trigger" triggerAction="click">
     <ng-template>
         <ion-header>
-            <ion-toolbar color="primary">
+            <ion-toolbar color="secondary">
                 <ion-button (click)="popover.dismiss();" size="small"
                     fill="clear"
                     color="light" class="ion-float-start">
@@ -11,6 +11,9 @@
                 <ion-button class="ion-float-end"
                     (click)="onClearFilter(popover)" size="small"
                     fill="clear"
+                    [disabled]="selectedMonths.length==0 && selectedYears.length==0 
+                    && slectedBankNames.length==0 &&slectedCardTypes.length==0&& slectedCategories.length==0 
+                    && slectedIsInclude===undefined"
                     color="light">
                     Clear
                 </ion-button>
@@ -19,7 +22,7 @@
         <ion-content color="light">
             <ion-grid class="ion-no-padding">
                 <ion-row>
-                    <ion-col size="4">
+                    <ion-col size="5">
                         <ion-segment [value]="selectedTab" class="ion-text-left"
                             color="primary">
                             <ion-list lines="full">
@@ -184,8 +187,12 @@
                 </ion-row>
             </ion-grid>
         </ion-content>
-        <ion-toolbar color="primary" class="ion-text-center">
-            <ion-button (click)="onApplyFilters(popover)" size="small"
+        <ion-toolbar color="secondary" class="ion-text-center">
+            <ion-button
+                [disabled]="selectedMonths.length==0 && selectedYears.length==0 
+            && slectedBankNames.length==0 &&slectedCardTypes.length==0&& slectedCategories.length==0 
+            && slectedIsInclude===undefined"
+                (click)="onApplyFilters(popover)" size="small"
                 fill="clear"
                 color="light">
                 Apply

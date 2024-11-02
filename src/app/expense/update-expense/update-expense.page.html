@@ -8,11 +8,11 @@
       <form [formGroup]="updateExpenseFG">
         <ion-toolbar color="light">
           <ion-button size="small" fill="clear" shape="round"
-            color="primary"
+            color="secondary"
             (click)="updateExpenseModal.dismiss();onDelete(inputSelectedItemId);">Remove</ion-button>
           <ion-buttons slot="end">
 
-            <ion-button size="small" shape="round" color="primary"
+            <ion-button size="small" shape="round" color="secondary"
               (click)="updateExpenseModal.dismiss();onUpdateSubmit(inputSelectedItemId);">Save</ion-button>
           </ion-buttons>
         </ion-toolbar>

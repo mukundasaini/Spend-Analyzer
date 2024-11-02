@@ -1,41 +1,35 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { Chart, ChartConfiguration, ChartData } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Directive({
-  selector: 'canvas[appCatBarChartPage]',
+  selector: 'canvas[appCardBarChartPage]',
   standalone: true
 })
-export class CatBarChartPageDirective implements AfterViewInit, OnInit {
-  logPrefix: string = 'CAT_BAR_PAGE::: ';
+export class CardBarChartPageDirective implements AfterViewInit, OnInit {
+  logPrefix: string = 'CARD_BAR_PAGE::: ';
 
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
-  total: number = 0;
 
   @Input() labels: string[] = [];
-  @Input() data: number[] = [];
-  @Input() backgroundColor: string[] = [];
+  @Input() datasets: ChartDataset[] = [];
   constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
     console.log(this.logPrefix + "constructor");
   }
 
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    this.total = this.data.reduce((sum, item) => sum + item, 0);
+
     this.config = <ChartConfiguration>{
       type: 'bar',
       data: {
         labels: this.labels,
-        datasets: [{
-          data: this.data,
-          backgroundColor: this.backgroundColor,
-          label: 'Rs',
-        }]
+        datasets: this.datasets
       },
       options: {
-        indexAxis: 'y',
+        indexAxis: 'x',
         scales: {
         },
         responsive: false,
@@ -45,7 +39,7 @@ export class CatBarChartPageDirective implements AfterViewInit, OnInit {
             left: 10,
             top: 10,
             bottom: 10,
-            right: 30
+            right: 20
           },
         },
         plugins: {
@@ -72,20 +66,7 @@ export class CatBarChartPageDirective implements AfterViewInit, OnInit {
             backgroundColor: '#2a9d8f'
           },
           datalabels: {
-            formatter: (value, context) => {
-              let total = (context.dataset.data as number[]).reduce((sum, item) => sum + item, 0);
-              let v = (value / total) * 100;
-              return v.toFixed(2) + '%';
-            },
-            color: '#298',
-            font: {
-              size: 12,
-            },
-            anchor: 'end',
-            display: 'auto',
-            align: 'end',
-            clamp: true,
-            offset: 3,
+            display: false
           },
         }
       },

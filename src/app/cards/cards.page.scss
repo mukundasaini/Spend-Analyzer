@@ -38,7 +38,7 @@ div#app-cards {
 }
 ion-button {
   ion-chip#bankname {
-    --color: var(--ion-color-tint);
+    --color: #f6f8fc;
     font-size: 12px;
     margin-left: -15px;
   }
@@ -51,7 +51,7 @@ ion-button {
   }
 
   ion-chip#cardtype {
-    --color: var(--ion-color-tint);
+    --color: #f6f8fc;
     font-size: 6px;
   }
 

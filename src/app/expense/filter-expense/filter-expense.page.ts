@@ -1,13 +1,14 @@
 import { CommonModule, formatDate } from "@angular/common";
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
+import { Firestore } from "@angular/fire/firestore";
 import { IonPopover, IonButton, IonCol, IonGrid, IonContent, IonRow, IonCheckbox, IonList, IonItem, IonModal, IonHeader, IonButtons, IonToolbar, IonLabel, IonNav, IonNavLink, IonSegment, IonSegmentButton } from "@ionic/angular/standalone";
-import { map, Observable, Subject, takeUntil, tap } from "rxjs";
+import { Subject } from "rxjs";
 import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { CheckBox } from "src/app/Models/checkbox.model";
 import { Expense } from "src/app/Models/expense-model";
+import { LoadingController } from '@ionic/angular';
 @Component({
   selector: 'app-filter-expense',
   templateUrl: 'filter-expense.page.html',
@@ -16,16 +17,12 @@ import { Expense } from "src/app/Models/expense-model";
   imports: [IonSegmentButton, IonSegment, IonNavLink, IonNav, IonLabel, IonToolbar, IonButtons, IonHeader, IonModal, CommonModule, IonItem, IonList, IonCheckbox, IonRow, IonContent, IonGrid, IonCol, IonButton, IonPopover,]
 })
 export class FilterExpensePage implements OnInit, OnDestroy {
-  expenses$: Observable<Expense[]>;
-  expenses: Expense[] = [];
-
   firestore: Firestore = inject(Firestore);
-
   cardBankNames: CheckBox[] = [];
   cardTypes: CheckBox[] = [];
   categories: CheckBox[] = [];
   months: CheckBox[] = [];
-  includeExclude: CheckBox = <CheckBox>{ value: 'Is Inclde', checked: true };
+  includeExclude: CheckBox = <CheckBox>{ value: 'Exclude', checked: false };
 
   expenseCollection = AppConstants.collections.expense;
   categoryCollection = AppConstants.collections.category;
@@ -44,8 +41,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   selectedMonths: string[] = [];
   selectedYears: string[] = [];
   selectedTab: string = 'cats';
-  slectedIsInclude!: boolean;
-
+  slectedIsInclude: boolean | undefined;
+  filterdData: Expense[] = [];
 
   onDestroy$: Subject<void> = new Subject();
 
@@ -54,16 +51,12 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() years: CheckBox[] = [];
+  @Input() expenses: Expense[] = [];
 
   @Output() onExpenseFilter = new EventEmitter<{ filterIndicator: string, filterdData: Expense[] }>();
 
-  constructor() {
+  constructor(private loadingCtrl: LoadingController) {
     console.log(this.logPrefix + "constructor");
-    this.expenses$ = collectionData(collection(this.firestore, this.expenseCollection)) as Observable<Expense[]>;
-    this.expenses$.pipe(takeUntil(this.onDestroy$))
-      .subscribe(expenses => {
-        this.expenses = expenses;
-      });
   }
   ngOnDestroy(): void {
     console.log(this.logPrefix + "ngOnDestroy");
@@ -73,10 +66,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    var date = new Date();
-    const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
-    this.selectedYears.push(dateValues[0]);
-    this.selectedMonths.push(dateValues[1]);
+
     this.cards.map(item => item.bankName)
       .filter((value, index, self) => self.indexOf(value) === index)
       .forEach(bankName => {
@@ -94,8 +84,9 @@ export class FilterExpensePage implements OnInit, OnDestroy {
     });
 
     this.constMonths.forEach(month => {
-      this.months.push({ value: month.value, name: month.name, checked: dateValues[1] == month.value });
+      this.months.push({ value: month.value, name: month.name, checked: false });
     });
+
   }
 
   onIncludeExcludeCheckBoxChange(event: any) {
@@ -180,7 +171,6 @@ export class FilterExpensePage implements OnInit, OnDestroy {
       if (selectdItem != undefined)
         selectdItem.checked = false;
     }
-
     this.isAllCategoriesChecked = this.categories.every(x => x.checked == true);
   }
 
@@ -208,12 +198,11 @@ export class FilterExpensePage implements OnInit, OnDestroy {
       if (selectdItem != undefined)
         selectdItem.checked = true;
     } else {
-      this.selectedMonths.splice(event.detail.value, 1);
+      this.selectedMonths = this.selectedMonths.filter(m => m !== event.detail.value);
       let selectdItem = this.months.find(x => x.value == event.detail.value);
       if (selectdItem != undefined)
         selectdItem.checked = false;
     }
-
     this.isAllMonthsChecked = this.months.every(x => x.checked == true);
   }
 
@@ -241,7 +230,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
       if (selectdItem != undefined)
         selectdItem.checked = true;
     } else {
-      this.selectedYears.splice(event.detail.value, 1);
+      this.selectedYears = this.selectedYears.filter(y => y !== event.detail.value);
       let selectdItem = this.years.find(x => x.value == event.detail.value);
       if (selectdItem != undefined)
         selectdItem.checked = false;
@@ -268,35 +257,39 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onApplyFilters(modal: IonModal) {
+    this.showLoading();
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
-    this.slectedIsInclude = this.slectedIsInclude === undefined ? true : this.slectedIsInclude;
-
-    let filterdData = this.expenses;
-    filterdData = filterdData.filter(expense => expense.isInclude == this.slectedIsInclude);
+    this.slectedIsInclude = this.slectedIsInclude === undefined ? false : this.slectedIsInclude;
+    this.filterdData = this.expenses;
+    this.filterdData = this.filterdData.filter(expense => expense.isInclude == !this.slectedIsInclude);
 
     if (this.selectedYears.length > 0) {
-      filterdData = filterdData.filter(
+      this.filterdData = this.filterdData.filter(
         expense => this.selectedYears.includes(expense.year)
       );
     } else {
-      filterdData = filterdData.filter(
-        expense => expense.year == dateValues[0]
-      );
+      if (this.selectedMonths.length == 0 && this.slectedBankNames.length == 0 && this.slectedCardTypes.length == 0 && this.slectedCategories.length == 0
+        && this.slectedIsInclude === undefined)
+        this.filterdData = this.filterdData.filter(
+          expense => expense.year == dateValues[0]
+        );
     }
 
     if (this.selectedMonths.length > 0) {
-      filterdData = filterdData.filter(
+      this.filterdData = this.filterdData.filter(
         expense => this.selectedMonths.includes(expense.month)
       );
     } else {
-      filterdData = filterdData.filter(
-        expense => expense.year == dateValues[1]
-      );
+      if (this.selectedYears.length == 0 && this.slectedBankNames.length == 0 && this.slectedCardTypes.length == 0 && this.slectedCategories.length == 0
+        && this.slectedIsInclude === undefined)
+        this.filterdData = this.filterdData.filter(
+          expense => expense.month == dateValues[1]
+        );
     }
 
     if (this.slectedCategories.length > 0) {
-      filterdData = filterdData.filter(
+      this.filterdData = this.filterdData.filter(
         expense => this.slectedCategories.includes(expense.categoryId)
       );
     }
@@ -309,11 +302,10 @@ export class FilterExpensePage implements OnInit, OnDestroy {
         })
       });
 
-      filterdData = filterdData.filter(
+      this.filterdData = this.filterdData.filter(
         expense => cardTypeIds.includes(expense.cardTypeId)
       );
     }
-
 
     if (this.slectedCardTypes.length > 0) {
       let cardTypeIds: string[] = [];
@@ -323,60 +315,31 @@ export class FilterExpensePage implements OnInit, OnDestroy {
         })
       });
 
-      filterdData = filterdData.filter(
+      this.filterdData = this.filterdData.filter(
         expense => cardTypeIds.includes(expense.cardTypeId)
       );
     }
 
-    this.onExpenseFilter.emit({ filterIndicator: '.', filterdData: filterdData });
+    this.filterdData.sort((a, b) => new Date(b.fullDate).getTime() - new Date(a.fullDate).getTime())
     modal.dismiss();
+    this.onExpenseFilter.emit({ filterIndicator: '.', filterdData: this.filterdData });
   }
 
   onClearFilter(modal: IonModal) {
-    var date = new Date();
-    const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
-
-    this.categories.forEach(element => {
-      element.checked = false;
-    });
-    this.cardBankNames.forEach(element => {
-      element.checked = false;
-    });
-    this.cardTypes.forEach(element => {
-      element.checked = false;
-    });
-    this.years.forEach(element => {
-      element.checked = dateValues[0] == element.value;
-    });
-    this.months.forEach(element => {
-      element.checked = dateValues[1] == element.value;
-    });
-    this.isAllCategoriesChecked = false;
-    this.isAllBankNamesChecked = false;
-    this.isAllCardsChecked = false;
-    this.isAllMonthsChecked = false;
-    this.isAllyearsChecked = false;
-    this.slectedCategories = [];
-    this.selectedMonths = [];
-    this.selectedYears = [];
-    this.slectedBankNames = [];
-    this.slectedCardTypes = [];
-    this.selectedYears.push(dateValues[0]);
-    this.selectedMonths.push(dateValues[1]);
-
-    (collectionData(
-      query(collection(this.firestore, this.expenseCollection),
-        where('year', '==', dateValues[0]),
-        where('month', '==', dateValues[1]),
-        orderBy('fullDate', 'desc')
-      )) as Observable<Expense[]>).pipe(takeUntil(this.onDestroy$))
-      .subscribe(expenses => {
-        this.expenses = expenses;
-        this.onExpenseFilter.emit({ filterIndicator: '', filterdData: expenses });
-      });;
-
     modal.dismiss();
+    if (this.filterdData.length > 0)
+      window.location.reload();
   }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Fetcing data...',
+      duration: 3000,
+      cssClass: 'custom-loading'
+    });
+    loading.present();
+  }
+
 
   onItemClick(selectedTab: string) {
     this.selectedTab = selectedTab;

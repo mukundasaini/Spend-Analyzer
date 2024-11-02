@@ -20,17 +20,9 @@ ion-modal {
             color: var(--ion-color-secondary);
         }
 
-        // div#cardTypes,
-        // div#bankNames,
-        // div#years {
-        //     max-height: 20dvh;
-        //     overflow-y: scroll;
-        // }
-
-        // div#categories {
-        //     max-height: 55dvh;
-        //     overflow-y: scroll;
-        // }
+        div#categories {
+            overflow-y: auto;
+        }
 
         ion-button {
             --background: var(--ion-color-light);
@@ -45,4 +37,4 @@ ion-list {
 
 ion-segment-button.md::part(native) {
     color: var(--ion-color-secondary);
-  }
+}

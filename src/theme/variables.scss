@@ -1,6 +1,9 @@
 @media (prefers-color-scheme: dark) {
-	:root {
-		// --ion-color-primary: #264653;
+	:root.md {
+		 --ion-color-primary: #020202;
+		 --ion-color-secondary: #f6f8fc;
+		 --ion-color-tertiary: #f6f8fc;
+
 		// --ion-color-primary-rgb: 38, 70, 83;
 		// --ion-color-primary-contrast: #ffffff;
 		// --ion-color-primary-contrast-rgb: 255, 255, 255;
@@ -165,5 +168,5 @@ ion-loading.custom-loading {
 	--background: var(--ion-color-light);
 	--spinner-color: var(--ion-color-secondary);
   
-	color: var(--ion-color-primary);
+	color: var(--ion-color-secondary);
   }

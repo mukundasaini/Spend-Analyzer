@@ -8,12 +8,12 @@
       <form [formGroup]="newCardsFG"
         (ngSubmit)="onSubmit();createCardModal.dismiss()">
         <ion-toolbar color="light">
-          <ion-title size="small" color="primary">New Card
+          <ion-title size="small" color="secondary">New Card
           </ion-title>
           <ion-buttons slot="end">
-            <ion-button slot="end" size="small" shape="round" color="primary"
+            <ion-button slot="end" size="small" shape="round" color="secondary"
               (click)="onClear()">Clear</ion-button>
-            <ion-button slot="end" size="small" shape="round" color="primary"
+            <ion-button slot="end" size="small" shape="round" color="secondary"
               type="submit"
               [disabled]="!newCardsFG.valid">Save</ion-button>
           </ion-buttons>

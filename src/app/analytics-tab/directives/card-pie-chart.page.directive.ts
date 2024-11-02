@@ -11,7 +11,6 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
-  total: number = 0;
   logPrefix: string = 'CARDPIE_PAGE::: ';
 
   @Input() labels: string[] = [];
@@ -23,7 +22,6 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-    this.total = this.data.reduce((sum, item) => sum + item, 0);
 
     this.config = <ChartConfiguration>{
       type: 'pie',
@@ -38,15 +36,14 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
         }]
       },
       options: {
-        responsive: true,
-        // aspectRatio: 2 / 1,
+        responsive: false,
         layout: {
-          autoPadding: false,
+          autoPadding: true,
           padding: {
             left: 10,
-            top: 10,
-            bottom: 0,
-            right: 40
+            top: 30,
+            bottom: 30,
+            right: 10
           },
         },
         plugins: {
@@ -63,7 +60,7 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
               color: '#2a9d8f',
               font: {
                 size: 12,
-                
+
               }
             }
           },
@@ -77,7 +74,8 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
           },
           datalabels: {
             formatter: (value, context) => {
-              let v = (value / this.total) * 100;
+              let total = (context.dataset.data as number[]).reduce((sum, item) => sum + item, 0);
+              let v = (value / total) * 100;
               return v.toFixed(2) + '%';
             },
             color: '#298',

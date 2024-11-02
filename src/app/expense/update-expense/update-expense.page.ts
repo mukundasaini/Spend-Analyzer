@@ -67,13 +67,8 @@ export class UpdateExpensePage {
       this.updateExpenseFG.controls.amount.setValue(expenseDetils.amount);
       var isInclude = document.getElementById("isInclude") as HTMLIonToggleElement;
       isInclude.checked = expenseDetils.isInclude;
-      this.updateExpenseFG.controls.isInclude.setValue(expenseDetils.isInclude === undefined ? true : expenseDetils.isInclude);
-      var date = parseInt(expenseDetils.date);
-      var month = parseInt(expenseDetils.month) - 1;
-      var year = parseInt(expenseDetils.year);
-      var fulldate = expenseDetils.fullDate === undefined ? formatDate(new Date(year, month, date), 'yyyy-MM-ddThh:mm:ss.sss', 'en-US')
-        : formatDate(expenseDetils.fullDate, 'yyyy-MM-ddThh:mm:ss.sss', 'en-US');
-      this.updateExpenseFG.controls.fulldate.setValue(new Date(fulldate + 'Z').toISOString());
+      this.updateExpenseFG.controls.isInclude.setValue(expenseDetils.isInclude);
+      this.updateExpenseFG.controls.fulldate.setValue(new Date(formatDate(expenseDetils.fullDate, 'yyyy-MM-ddThh:mm:ss.sss', 'en-US') + 'Z').toISOString());
       this.updateExpenseFG.controls.note.setValue(expenseDetils.note == undefined ? '' : expenseDetils.note);
 
     }).catch(x => {

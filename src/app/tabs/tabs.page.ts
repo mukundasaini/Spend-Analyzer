@@ -12,8 +12,10 @@ import { wallet, card, apps, analytics, settings } from 'ionicons/icons';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
+  logPrefix: string = 'TABS_PAGE::: ';
 
   constructor() {
+    console.log(this.logPrefix + "constructor");
     addIcons({ wallet, card, apps, analytics, settings });
   }
 }

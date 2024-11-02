@@ -2,23 +2,7 @@
   [labels]="inputLabels"
   [backgroundColor]="inputBackgroundColor"
   [data]="inputData"
-  width="300" height="300"></canvas>
-
-<ion-item color="light" id="category-select">
-  <ion-select
-  class="ion-no-padding"
-    id="categoryId"
-    label="Select Category"
-    placeholder="ALL"
-    interface="popover"
-    (ionChange)="onCategoryChange($event)">
-    <ion-select-option value="ALL">ALL</ion-select-option>
-    <ion-select-option *ngFor="let item of cats;"
-      [value]="item.id">
-      {{item.name}}
-    </ion-select-option>
-  </ion-select>
-</ion-item>
+  width="475" height="310"></canvas>
 
 <ion-item id="cards-trans" lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
@@ -36,13 +20,29 @@
         <ion-label color="tertiary">Total: {{inputData[i]}}</ion-label>
       </ion-item>
       <div slot="content">
-        <ion-item color="primary" class="ion-no-padding" lines="full"
-          *ngFor="let expense of card.expenses">
-          <ion-label
-            class="ion-no-padding ion-padding-start">{{getCategory(expense.categoryId)}}</ion-label>
-          <ion-label
-            class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
-        </ion-item>
+        <ion-accordion-group *ngFor="let expense of card.expenses">
+          <ion-accordion [value]="getCategory(expense.totalExpense.categoryId)">
+            <ion-item color="primary" slot="header" class="ion-no-padding"
+              lines="full">
+              <ion-label
+                class="ion-no-padding ion-padding-start">{{getCategory(expense.totalExpense.categoryId)}}</ion-label>
+              <ion-label
+                class="ion-no-padding ion-text-end">Rs.{{expense.totalExpense.amount}}</ion-label>
+            </ion-item>
+            <div slot="content">
+              <ion-item color="light" class="ion-padding-start" lines="full"
+                *ngFor="let transaction of expense.transactions">
+                <ion-label
+                  class="ion-no-padding ion-padding-start">{{getCategory(transaction.categoryId)}}</ion-label>
+                <ion-label
+                  class="ion-no-padding ion-text-end">{{transaction.fullDate
+                  | date:'medium'}}</ion-label>
+                <ion-label
+                  class="ion-no-padding ion-text-end">Rs.{{transaction.amount}}</ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
       </div>
     </ion-accordion>
   </ion-accordion-group>

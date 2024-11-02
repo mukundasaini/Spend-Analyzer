@@ -1,21 +1,19 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>
-      Expenses
-    </ion-title>
+    <ion-title class="ion-no-margin ion-padding-start">Expenses</ion-title>
     <ion-buttons slot="end" class="ion-margin-end">
-
       <ion-button fill="clear" id="expense-filter-trigger">
-        <ion-icon color="light" slot="icon-only" name="filter">
+        <ion-icon slot="icon-only" name="filter">
         </ion-icon>
       </ion-button>
       <ion-badge slot="start" class="ion-no-padding"
         color="success">{{expenseFilterIndeicator}}</ion-badge>
       <app-filter-expense
-        *ngIf="hasCardsData && hasCatsData && hasExpenseData"
+        *ngIf="hasCardsData && hasCatsData && hasFilterExpenseData"
         [cats]="inputCategories"
         [cards]="inputCardDetails"
         [years]="inputYears"
+        [expenses]="inputFilterExpenses"
         (onExpenseFilter)="onApplyExpenseFilters($event)"></app-filter-expense>
     </ion-buttons>
   </ion-toolbar>
