@@ -1,5 +1,12 @@
 # Spend-Analyzer
- Spend Analyzer Ionic App is for keep track on dialy expenses and know about your spend flow.  
+ Spend Analyzer Ionic App is for keep track on dialy expenses and know about your spend flow. 
+ Application is build with ionic angular, create android project with help of capcitor plugin
+,build android apk with help of Andoird Studio and used google firestore database api to perform Database transactions.
+
+* No need to worry about hosting your application and data will store in your own google managele account
+
+** Note: Not used any login machanism to access the data from your own google firebase.
+** You can implement any login method provided by google firebase. 
  
 * Features
 * Home (Expense) Tab
