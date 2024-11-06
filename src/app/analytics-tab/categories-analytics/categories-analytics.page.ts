@@ -79,13 +79,8 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
     this.categoriesExpenses = [];
 
     this.cats.forEach(category => {
-      let total: number = 0;
       let filterData = this.expenses.filter(expense => expense.categoryId == category.id);
-      let amounts = filterData.map(e => e.amount);
-      amounts.forEach(amount => {
-        amount = typeof (amount) == 'string' ? parseInt(amount) : amount;
-        total = total + amount;
-      })
+      let total = filterData.reduce((sum, e) => sum + e.amount, 0);
       if (total > 0) {
         this.inputData.push(total);
         this.inputLabels.push(category.name);
@@ -94,13 +89,8 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
       let catsFilterData: Expense[] = [];
       let cardIds = filterData.map(e => e.cardTypeId).filter((v, i, a) => a.indexOf(v) == i);
       cardIds.forEach(cardId => {
-        let total: number = 0;
         let cardExpenses = filterData.filter(e => e.cardTypeId == cardId);
-        let amounts = cardExpenses.map(e => e.amount);
-        amounts.forEach(amount => {
-          amount = typeof (amount) == 'string' ? parseInt(amount) : amount;
-          total = total + amount;
-        });
+        let total = cardExpenses.reduce((sum, e) => sum + e.amount, 0);
         if (total > 0)
           catsFilterData.push(<Expense>{ cardTypeId: cardId, categoryId: category.id, amount: total });
       });

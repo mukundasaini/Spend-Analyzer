@@ -2,6 +2,7 @@
   [labels]="inputLabels"
   [backgroundColor]="inputBackgroundColor"
   [data]="inputData"
+  (legendItemClick)="onLegendItemClick($event)"
   width="475" height="310"></canvas>
 
 <ion-item id="cards-trans" lines="full" color="light">

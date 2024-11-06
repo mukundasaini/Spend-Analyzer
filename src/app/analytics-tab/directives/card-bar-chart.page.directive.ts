@@ -14,7 +14,9 @@ export class CardBarChartPageDirective implements AfterViewInit, OnInit {
   config!: ChartConfiguration;
 
   @Input() labels: string[] = [];
-  @Input() datasets: ChartDataset[] = [];
+  @Input() data: number[] = [];
+  @Input() backgroundColor: string[] = [];
+
   constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
     console.log(this.logPrefix + "constructor");
   }
@@ -26,7 +28,11 @@ export class CardBarChartPageDirective implements AfterViewInit, OnInit {
       type: 'bar',
       data: {
         labels: this.labels,
-        datasets: this.datasets
+        datasets: [{
+          data: this.data,
+          backgroundColor: this.backgroundColor,
+          label: 'Rs',
+        }]
       },
       options: {
         indexAxis: 'x',

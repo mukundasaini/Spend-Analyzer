@@ -1,21 +1,18 @@
 <div id="expenses-content">
-  <div class="expenses-list" *ngFor="let item of expenses">
-    <ion-item-sliding>
-      <ion-item-options side="start">
-        <ion-item-option [id]="'open-expense-update-dialog_'+item.id" expandable
-          color="secondary">
-          <ion-icon color="light" slot="icon-only" name="create"></ion-icon>
-          Edit</ion-item-option>
-      </ion-item-options>
-      <ion-item lines="none"
-        color="light">
+  <div
+    *ngFor="let item of expenses;let i=index;">
+    <ion-card>
+      <ion-item class="ion-activatable"
+        lines="none">
+        <ion-ripple-effect></ion-ripple-effect>
         <ion-grid>
           <ion-row class="ion-justify-content-start">
             <ion-col size="1.5" class="ion-align-self-center">
-              <div [class]="getBackgroundBankName(item.cardTypeId)">
+              <div
+                [class]="'DEFAULT_BG '+ getBackgroundBankName(item.cardTypeId)">
                 {{getCardType(item.cardTypeId)}}</div>
             </ion-col>
-            <ion-col size="6">
+            <ion-col size="5">
               <ion-label class="cat_name"
                 color="secondary">{{getCategory(item.categoryId)}}</ion-label>
               <ion-label class="expense_dt"
@@ -27,21 +24,53 @@
             <ion-col class="ion-text-end">
               <ion-label class="expense_amount" color="secondary"> &#8377;
                 {{item.amount}}</ion-label>
-              <ion-label class="expense_is_include" color="tertiary">
-                {{item.isInclude?'':'Excluded'}}</ion-label>
+
+              <ion-button (click)="onClone(item.id)" size="small"
+                color="secondary" fill="clear">
+                <ion-icon name="copy" color="secondary"></ion-icon>
+              </ion-button>
+              <ion-button (click)="hideExpenseFullDetails[i]=!hideExpenseFullDetails[i]" size="small"
+                color="secondary" fill="clear">
+                <ion-icon [name]="!hideExpenseFullDetails[i]?'add':'remove'" color="secondary"></ion-icon>
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option (click)="onClone(item.id)" expandable color="tertiary">
-          <ion-icon color="light" slot="icon-only" name="copy"></ion-icon>
-          Clone</ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-    <app-update-expense
-      [categories]="categories"
-      [cardDetails]="cardDetails"
-      [inputSelectedItemId]="item.id"></app-update-expense>
+      <ion-item color="light" lines="none" *ngIf="hideExpenseFullDetails[i]">
+        <ion-button style="--background: var(--ion-color-light);" size="medium"  
+          [id]="'open-expense-update-dialog_'+item.id"
+           fill="icon-only">
+          <ion-icon name="create" color="secondary"></ion-icon>
+        </ion-button>
+        <app-update-expense
+          [categories]="categories"
+          [cardDetails]="cardDetails"
+          [inputSelectedItemId]="item.id"></app-update-expense>
+        <ion-grid>
+          <ion-row class="ion-justify-content-start">
+            <ion-col>
+              <ion-label>
+                <b>Card Type:</b>
+                {{getCardTypeFull(item.cardTypeId)}}</ion-label>
+            </ion-col>
+            <ion-col size="4">
+              <ion-label> <b>Excluded:</b>
+                {{item.isInclude?'NO':'YES'}}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-start">
+            <ion-col>
+              <ion-label><b> Note:</b> {{item.note}}</ion-label>
+            </ion-col>
+            <ion-col size="4">
+              <ion-label> <b>EMI:</b>
+                {{item.emiMonths==1?'NO':item.emiMonths}}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card>
   </div>
 </div>

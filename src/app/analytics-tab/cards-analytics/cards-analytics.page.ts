@@ -40,6 +40,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   inputData: number[] = [];
   inputBackgroundColor: string[] = [];
   cardsExpenses: { cardId: string, expenses: { transactions: Expense[], totalExpense: Expense }[] }[] = [];
+  cardsCopy: CardDetails[] = [];
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
@@ -55,7 +56,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     if (changes['expenses'].previousValue !== undefined) {
       let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      if (currentSelected.month != previousSelected.month 
+      if (currentSelected.month != previousSelected.month
         || currentSelected.year != previousSelected.year) {
         this.loadChartTransData();
         this.cardPieChart.chart.data.labels = this.inputLabels;
@@ -67,6 +68,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   }
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
+    this.cardsCopy = Array.from(this.cards);
     this.loadChartTransData();
   }
 
@@ -78,13 +80,8 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     this.cardsExpenses = [];
 
     this.cards.forEach(card => {
-      let total: number = 0;
       let filterData = this.expenses.filter(expense => expense.cardTypeId == card.id);
-      let amounts = filterData.map(e => e.amount);
-      amounts.forEach(amount => {
-        amount = typeof (amount) == 'string' ? parseInt(amount) : amount;
-        total = total + amount;
-      })
+      let total = filterData.reduce((sum, e) => sum + e.amount, 0);
       if (total > 0) {
         this.inputData.push(total);
         this.inputLabels.push(`${card.bankName}-${card.type}`);
@@ -93,13 +90,8 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
       let cardsFilterData: { transactions: Expense[], totalExpense: Expense }[] = [];
       let catIds = filterData.map(e => e.categoryId).filter((v, i, a) => a.indexOf(v) == i);
       catIds.forEach(catId => {
-        let total: number = 0;
         let catExpenses = filterData.filter(e => e.categoryId == catId);
-        let amounts = catExpenses.map(e => e.amount);
-        amounts.forEach(amount => {
-          amount = typeof (amount) == 'string' ? parseInt(amount) : amount;
-          total = total + amount;
-        });
+        let total = catExpenses.reduce((sum, e) => sum + e.amount, 0);
         if (total > 0)
           cardsFilterData.push({ transactions: catExpenses, totalExpense: <Expense>{ cardTypeId: card.id, categoryId: catId, amount: total } });
       });
@@ -130,5 +122,24 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   }
   setShowTransactions() {
     this.showTransactions = !this.showTransactions;
+  }
+
+  onLegendItemClick(legend: any) {
+    var labelData = legend.label.split('-');
+    var bankName = labelData[0].trim();
+    var type = labelData[1].trim();
+    var card = this.cards.find(c => c.bankName == bankName && c.type == type);
+
+    if (!legend.display) {
+      let index = card === undefined ? -1 : this.cards.indexOf(card);
+      this.cards.splice(index, 1);
+    } else {
+      if (card === undefined) {
+        var cardCopy = this.cardsCopy.find(c => c.bankName == bankName && c.type == type);
+        if (cardCopy != undefined)
+          this.cards.push(cardCopy);
+      }
+    }
+    this.loadChartTransData();
   }
 }

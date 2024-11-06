@@ -1,10 +1,10 @@
-import { Component, inject, Input } from "@angular/core";
-import { IonChip, IonLabel, IonAvatar, IonButton, IonItem, IonItemDivider, IonGrid, IonRow, IonCol, IonButtons, IonList, IonIcon, IonAccordion, IonAccordionGroup, IonListHeader, IonSkeletonText, IonContent, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
+import { Component, inject, Input, OnInit } from "@angular/core";
+import { IonChip, IonLabel, IonAvatar, IonButton, IonItem, IonItemDivider, IonGrid, IonRow, IonCol, IonButtons, IonList, IonIcon, IonAccordion, IonAccordionGroup, IonListHeader, IonSkeletonText, IonContent, IonItemSliding, IonItemOptions, IonItemOption, IonTitle, IonCard, IonRippleEffect } from '@ionic/angular/standalone';
 import { Expense } from "../Models/expense-model";
 import { Observable, tap } from "rxjs";
 import { CommonModule, formatDate } from '@angular/common';
 import { addIcons } from "ionicons";
-import { cash, copy, create } from "ionicons/icons";
+import { add, cash, copy, create, remove } from "ionicons/icons";
 import { CardDetails } from "../Models/card-details.model";
 import { Category } from "../Models/category.model";
 import { UpdateExpensePage } from "./update-expense/update-expense.page";
@@ -18,11 +18,11 @@ import { AlertController } from '@ionic/angular';
   templateUrl: 'expense.page.html',
   styleUrls: ['expense.page.scss'],
   standalone: true,
-  imports: [IonItemOption, IonItemOptions, IonItemSliding, IonContent, IonSkeletonText, IonListHeader, IonAccordionGroup, IonAccordion, CommonModule,
+  imports: [IonRippleEffect, IonCard, IonTitle, IonItemOption, IonItemOptions, IonItemSliding, IonContent, IonSkeletonText, IonListHeader, IonAccordionGroup, IonAccordion, CommonModule,
     IonGrid, IonRow, IonCol,
     IonChip, IonItemDivider, IonList, IonIcon, IonButtons, IonItem, IonLabel, IonButton, IonAvatar, UpdateExpensePage],
 })
-export class ExpensePage {
+export class ExpensePage implements OnInit {
 
   @Input() expenses: Expense[] = [];
   @Input() cardDetails: CardDetails[] = [];
@@ -30,11 +30,16 @@ export class ExpensePage {
 
   firestore: Firestore = inject(Firestore);
   expenseCollection = AppConstants.collections.expense;
-
+  hideExpenseFullDetails: boolean[] = [];
   logPrefix: string = 'EXPENSE_PAGE::: ';
+
   constructor(private alertController: AlertController) {
     console.log(this.logPrefix + "constructor");
-    addIcons({ cash, create, copy });
+    addIcons({ cash, create, copy, add, remove });
+  }
+  ngOnInit(): void {
+    console.log(this.logPrefix + "ngOnInit");
+    this.expenses.forEach(e => { this.hideExpenseFullDetails.push(false) });
   }
 
   getCardType(cardTypeId: string) {
@@ -42,11 +47,16 @@ export class ExpensePage {
     return cardType?.charAt(0);
   }
 
+  getCardTypeFull(cardTypeId: string) {
+    var card = this.cardDetails?.find(x => x.id == cardTypeId);
+    return `${card?.bankName} - ${card?.type}`;
+  }
+
   getCardBankName(cardTypeId: string) {
     return this.cardDetails?.find(x => x.id == cardTypeId)?.bankName;
   }
   getBackgroundBankName(cardTypeId: string) {
-    return this.cardDetails?.find(x => x.id == cardTypeId)?.bankName + '_BG';
+    return `${this.cardDetails?.find(x => x.id == cardTypeId)?.bankName}_BG`;
   }
 
 

@@ -11,6 +11,7 @@ import { CategoriesAnalyticsPage } from "./categories-analytics/categories-analy
 import { Category } from "../Models/category.model";
 import { LoadingController } from '@ionic/angular';
 import { CardsMonthlyAnalyticsPage } from "./cards-monthly-analytics/cards-monthly-analytics.page";
+import { CardsYearlyAnalyticsPage } from "./cards-yearly-analytics/cards-yearly-analytics.page";
 
 @Component({
   selector: 'app-analytics',
@@ -19,7 +20,7 @@ import { CardsMonthlyAnalyticsPage } from "./cards-monthly-analytics/cards-month
   standalone: true,
   imports: [IonToggle, IonCol, IonRow, IonGrid, IonAccordion, IonAccordionGroup, IonSelect, IonSelectOption, IonRefresherContent, IonRefresher, IonItem, IonLabel,
     CommonModule, IonContent, IonTitle, IonToolbar, IonHeader,
-    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage],
+    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage, CardsYearlyAnalyticsPage],
 })
 export class AnalyticsPage implements OnInit, OnDestroy {
   firestore: Firestore = inject(Firestore);
@@ -56,7 +57,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   constructor(private loadingCtrl: LoadingController) {
     console.log(this.logPrefix + "constructor");
-    this.showLoading();
+    // this.showLoading();
     this.expenses$ = collectionData(
       query(collection(this.firestore, this.expenseCollection),
         where('isInclude', '==', true),
@@ -94,7 +95,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
       .subscribe(expenses => {
         this.inputAllYearsExpenses = expenses;
         this.years = this.inputAllYearsExpenses.map(item => item.year)
-          .filter((value, index, self) => self.indexOf(value) === index);
+          .filter((value, index, self) => self.indexOf(value) === index).sort();
         this.inputAllMonthsExpenses = this.inputAllYearsExpenses.filter(exp => exp.year == dateValues[0]);
         this.inputCardsYearMonthExpenses = this.inputAllYearsExpenses.filter(exp => exp.year == dateValues[0] && exp.month == dateValues[1]);
         this.inputCatsYearMonthExpenses = this.inputCardsYearMonthExpenses;

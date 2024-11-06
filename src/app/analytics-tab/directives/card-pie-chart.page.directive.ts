@@ -1,5 +1,5 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { Chart, ChartConfiguration, ChartData } from 'chart.js';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Chart, ChartConfiguration, ChartData, ChartEvent, LegendElement, LegendItem } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Directive({
@@ -16,15 +16,17 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
+  @Output() legendItemClick = new EventEmitter<{ label: string, display: boolean }>();
+
   constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
     console.log(this.logPrefix + "constructor");
   }
 
   ngOnInit(): void {
     console.log(this.logPrefix + "ngOnInit");
-
+    const pieDoughnutLegendClickHandler = Chart.overrides.doughnut.plugins.legend.onClick;
     this.config = <ChartConfiguration>{
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: this.labels,
         datasets: [{
@@ -48,6 +50,10 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
         },
         plugins: {
           legend: {
+            onClick: (e, legendItem, legend) => {
+              pieDoughnutLegendClickHandler.call(legend, e, legendItem, legend);
+              this.legendItemClick.emit({ label: legendItem.text, display: legendItem.hidden ?? false });
+            },
             position: "left",
             align: 'start',
             fullSize: true,

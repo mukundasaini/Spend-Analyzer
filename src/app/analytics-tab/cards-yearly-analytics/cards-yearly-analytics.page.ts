@@ -13,20 +13,20 @@ import { CardDetails } from "src/app/Models/card-details.model";
 import { CardBarChartPageDirective } from "../directives/card-bar-chart.page.directive";
 
 @Component({
-  selector: 'app-cards-monthly-analytics',
-  templateUrl: 'cards-monthly-analytics.page.html',
-  styleUrls: ['cards-monthly-analytics.page.scss'],
+  selector: 'app-cards-yearly-analytics',
+  templateUrl: 'cards-yearly-analytics.page.html',
+  styleUrls: ['cards-yearly-analytics.page.scss'],
   standalone: true,
   imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
     CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardBarChartPageDirective],
 })
-export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
+export class CardsYearlyAnalyticsPage implements OnInit {
 
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
 
-  cardsTotal: number = 0;
+  total: number = 0;
   showTransactions: boolean = false;
 
   firestore: Firestore = inject(Firestore);
@@ -40,11 +40,13 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
   inputLabels: string[] = [];
   inputData: number[] = [];
   inputBackgroundColor: string[] = [];
-  cardsExpenses: { month: string, total: number, expenses: Expense[] }[] = [];
+  transactions: { year: string, total: number, monthsTotals: { month: string, total: number }[] }[] = [];
 
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
+  @Input() years: string[] = [];
+
   @ViewChild(CardBarChartPageDirective) cardBarChart!: CardBarChartPageDirective;
 
   constructor() {
@@ -56,53 +58,34 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
     this.loadChartTransData();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.logPrefix + "ngOnChanges");
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
-      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      if (currentSelected.year != previousSelected.year) {
-        this.loadChartTransData();
-        this.cardBarChart.chart.data.labels = this.inputLabels;
-        this.cardBarChart.chart.data.datasets[0].data = this.inputData;
-        this.cardBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
-        this.cardBarChart.chart.update();
-      }
-    }
-  }
-
   loadChartTransData() {
     this.inputLabels = [];
-    this.cardsTotal = 0;
-    this.cardsExpenses = [];
     this.inputData = [];
     this.inputBackgroundColor = [];
-    var monthlyTrans: { month: string, expense: Expense }[] = [];
-    this.cards.forEach(card => {
-      var cardTotals: number[] = [];
-      var cardBgColors: string[] = [];
-      AppConstants.Months.forEach(month => {
-        let filterData = this.expenses.filter(expense => expense.month == month.value && expense.cardTypeId == card.id);
-        let total = filterData.reduce((sum, e) => sum + e.amount, 0);
-        cardTotals.push(total);
-        cardBgColors.push(this.getRGB(this.getRandomColor()));
-        this.cardsTotal = this.cardsTotal + total;
-        if (total > 0)
-          monthlyTrans.push({ month: month.name, expense: <Expense>{ cardTypeId: card.id, amount: total } });
-      });
-    });
-    AppConstants.Months.forEach(month => {
-      let expenses = monthlyTrans.filter(mt => mt.month == month.name).map(mt => mt.expense);
+    this.transactions = [];
+    this.total = 0;
+
+    this.years.forEach(year => {
+      let expenses = this.expenses.filter(ex => ex.year == year);
       let total = expenses.reduce((sum, e) => sum + e.amount, 0);
-      let monthValue = AppConstants.Months.filter(m => m.value == month.value).map(m => m.name);
+
       if (total > 0) {
         this.inputData.push(total);
-        this.inputLabels.push(month.name);
+        this.inputLabels.push(year);
         this.inputBackgroundColor.push(this.getRGB(this.getRandomColor()));
-        this.cardsExpenses.push({ month: monthValue[0], total: total, expenses: expenses });
+        let monthsTotals: { month: string, total: number }[] = [];
+
+        AppConstants.Months.forEach(month => {
+          let expenses = this.expenses.filter(ex => ex.year == year && ex.month == month.value);
+          let total = expenses.reduce((sum, e) => sum + e.amount, 0);
+          if (total > 0) {
+            monthsTotals.push({ month: month.name, total: total });
+          }
+        });
+        this.total = this.total + total;
+        this.transactions.push({ year: year, total: total, monthsTotals: monthsTotals });
       }
     });
-
   }
 
   getRandomColor() {
