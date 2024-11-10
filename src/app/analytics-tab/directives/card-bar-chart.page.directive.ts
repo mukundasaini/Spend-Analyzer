@@ -1,14 +1,13 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Directive({
   selector: 'canvas[appCardBarChartPage]',
   standalone: true
 })
 export class CardBarChartPageDirective implements AfterViewInit, OnInit {
-  logPrefix: string = 'CARD_BAR_PAGE::: ';
-
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
@@ -17,12 +16,12 @@ export class CardBarChartPageDirective implements AfterViewInit, OnInit {
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
 
-  constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private elementRef: ElementRef<HTMLCanvasElement>) {
   }
 
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
+    this.logger.trackEventCalls(CardBarChartPageDirective.name, "ngOnInit");
 
     this.config = <ChartConfiguration>{
       type: 'bar',
@@ -82,7 +81,7 @@ export class CardBarChartPageDirective implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.logPrefix + "ngAfterViewInit");
+    this.logger.trackEventCalls(CardBarChartPageDirective.name, "ngAfterViewInit");
     this.chart = new Chart(this.elementRef.nativeElement, this.config);
   }
 

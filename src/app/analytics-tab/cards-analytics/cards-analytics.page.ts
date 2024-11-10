@@ -1,23 +1,26 @@
-import { CommonModule, formatDate } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
-import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import Chart, { ChartConfiguration, ChartData, ChartDataset } from 'chart.js/auto';
+import { CommonModule } from "@angular/common";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup,
+  IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonToggle, IonIcon } from '@ionic/angular/standalone';
+import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Observable, of, map } from 'rxjs';
-import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
 import { CardPieChartPageDirective } from "../directives/card-pie-chart.page.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
+import { LoggerService } from "src/app/services/logger.service";
+import { UtilityService } from "src/app/services/utility.service";
+import { AppConstants } from "src/app/app.constants";
+import { UpdateExpensePage } from "../../expense/update-expense/update-expense.page";
 
 @Component({
   selector: 'app-cards-analytics',
   templateUrl: 'cards-analytics.page.html',
   styleUrls: ['cards-analytics.page.scss'],
   standalone: true,
-  imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardPieChartPageDirective],
+  imports: [IonIcon, IonToggle, IonCol, IonRow, IonGrid, IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
+    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardPieChartPageDirective, UpdateExpensePage],
 })
 export class CardsAnalyticsPage implements OnInit, OnChanges {
 
@@ -28,118 +31,111 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   cardsTotal: number = 0;
   showTransactions: boolean = false;
 
-  firestore: Firestore = inject(Firestore);
-
-  categoryCollection = AppConstants.collections.category;
-  cardCollection = AppConstants.collections.cards;
-  expenseCollection = AppConstants.collections.expense;
-
-  logPrefix: string = 'CARDSANALYTICS_PAGE::: ';
-
   inputLabels: string[] = [];
   inputData: number[] = [];
   inputBackgroundColor: string[] = [];
-  cardsExpenses: { cardId: string, expenses: { transactions: Expense[], totalExpense: Expense }[] }[] = [];
-  cardsCopy: CardDetails[] = [];
+  cardsExpenses: {
+    cardTotal: number, cardId: string,
+    expenses: {
+      transactions: Expense[], cardTypeId: string,
+      categoryId: string, amount: number
+    }[]
+  }[] = [];
+  expensesTransactions: Expense[] = [];
+
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
   @ViewChild(CardPieChartPageDirective) cardPieChart!: CardPieChartPageDirective;
 
-  constructor() {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    public utility: UtilityService
+  ) {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.logPrefix + "ngOnChanges");
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnChanges");
     if (changes['expenses'].previousValue !== undefined) {
       let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
       if (currentSelected.month != previousSelected.month
         || currentSelected.year != previousSelected.year) {
-        this.loadChartTransData();
+        this.loadChartData();
         this.cardPieChart.chart.data.labels = this.inputLabels;
         this.cardPieChart.chart.data.datasets[0].data = this.inputData;
         this.cardPieChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
         this.cardPieChart.chart.update();
+        this.loadTransactions();
       }
     }
   }
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
-    this.cardsCopy = Array.from(this.cards);
-    this.loadChartTransData();
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnInit");
+    this.expensesTransactions = Array.from(this.expenses);
+    this.loadChartData();
+    this.loadTransactions();
   }
 
-  loadChartTransData() {
+  loadChartData() {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "loadChartData");
     this.inputBackgroundColor = [];
     this.inputData = [];
     this.inputLabels = [];
-    this.cardsTotal = 0;
-    this.cardsExpenses = [];
 
-    this.cards.forEach(card => {
-      let filterData = this.expenses.filter(expense => expense.cardTypeId == card.id);
-      let total = filterData.reduce((sum, e) => sum + e.amount, 0);
-      if (total > 0) {
-        this.inputData.push(total);
-        this.inputLabels.push(`${card.bankName}-${card.type}`);
-        this.inputBackgroundColor.push(this.getRGB(this.getRandomColor()));
-      }
-      let cardsFilterData: { transactions: Expense[], totalExpense: Expense }[] = [];
-      let catIds = filterData.map(e => e.categoryId).filter((v, i, a) => a.indexOf(v) == i);
-      catIds.forEach(catId => {
-        let catExpenses = filterData.filter(e => e.categoryId == catId);
-        let total = catExpenses.reduce((sum, e) => sum + e.amount, 0);
-        if (total > 0)
-          cardsFilterData.push({ transactions: catExpenses, totalExpense: <Expense>{ cardTypeId: card.id, categoryId: catId, amount: total } });
-      });
-      if (cardsFilterData.length > 0)
-        this.cardsExpenses.push({ cardId: card.id, expenses: cardsFilterData });
-      this.cardsTotal = this.cardsTotal + total;
-    });
-  }
-
-  getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+    var cardGroups = this.utility.expenseGroupBy(this.expenses, 'card');
+    for (const key in cardGroups) {
+      let total = this.utility.getTotal(cardGroups[key]);
+      let label = this.utility.getcard(this.cards, key);
+      this.inputData.push(total);
+      this.inputLabels.push(label);
+      this.inputBackgroundColor.push(this.utility.getRandomColor());
     }
-    return color;
   }
 
-  getRGB(colorHex: string) {
-    let r = parseInt(colorHex.slice(1, 3), 16);
-    let g = parseInt(colorHex.slice(3, 5), 16);
-    let b = parseInt(colorHex.slice(5, 7), 16);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
+  loadTransactions() {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "loadTransactions");
+    this.cardsExpenses = [];
+    this.cardsTotal = 0;
 
-  getCategory(categoryId: string) {
-    return this.cats?.find(x => x.id == categoryId)?.name;
-  }
-  setShowTransactions() {
-    this.showTransactions = !this.showTransactions;
+    var cardGroups = this.utility.expenseGroupBy(this.expensesTransactions, 'card');
+
+    for (const cardId in cardGroups) {
+      let total = this.utility.getTotal(cardGroups[cardId]);
+      let cardsFilterData: {
+        transactions: Expense[], cardTypeId: string,
+        categoryId: string, amount: number
+      }[] = [];
+      var catGroups = this.utility.expenseGroupBy(cardGroups[cardId], 'cat');
+      for (const catId in catGroups) {
+        let total = this.utility.getTotal(catGroups[catId]);
+        cardsFilterData.push({
+          transactions: catGroups[catId],
+          cardTypeId: cardId, categoryId: catId, amount: total
+        });
+      }
+      cardsFilterData = cardsFilterData.sort((a, b) => b.amount - a.amount);
+      this.cardsExpenses.push({ cardTotal: total, cardId: cardId, expenses: cardsFilterData });
+      this.cardsTotal = this.cardsTotal + total;
+    }
+
+    this.cardsExpenses = this.cardsExpenses.sort((a, b) => b.cardTotal - a.cardTotal);
   }
 
   onLegendItemClick(legend: any) {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "onLegendItemClick");
     var labelData = legend.label.split('-');
     var bankName = labelData[0].trim();
     var type = labelData[1].trim();
-    var card = this.cards.find(c => c.bankName == bankName && c.type == type);
+    var cardId = this.cards.find(c => c.bankName == bankName && c.type == type)?.id;
 
     if (!legend.display) {
-      let index = card === undefined ? -1 : this.cards.indexOf(card);
-      this.cards.splice(index, 1);
+      this.expensesTransactions = this.expensesTransactions.filter(ex => ex.cardTypeId != cardId);
     } else {
-      if (card === undefined) {
-        var cardCopy = this.cardsCopy.find(c => c.bankName == bankName && c.type == type);
-        if (cardCopy != undefined)
-          this.cards.push(cardCopy);
-      }
+      var cardExpenses = this.expenses.filter(ex => ex.cardTypeId == cardId);
+      this.expensesTransactions.push(...cardExpenses);
     }
-    this.loadChartTransData();
+    this.loadTransactions();
   }
 }

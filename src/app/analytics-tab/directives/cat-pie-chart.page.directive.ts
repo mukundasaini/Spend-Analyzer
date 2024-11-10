@@ -1,14 +1,13 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { LoggerService } from '../../services/logger.service';
 
 @Directive({
   selector: 'canvas[appCatPieChartPage]',
   standalone: true
 })
 export class CatPieChartPageDirective implements AfterViewInit, OnInit {
-  logPrefix: string = 'CATPIE_PAGE::: ';
-
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
@@ -16,12 +15,12 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
-  constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private elementRef: ElementRef<HTMLCanvasElement>) {
   }
 
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
+    this.logger.trackEventCalls(CatPieChartPageDirective.name, "ngOnInit");
     this.config = <ChartConfiguration>{
       type: 'pie',
       data: {
@@ -94,7 +93,7 @@ export class CatPieChartPageDirective implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.logPrefix + "ngAfterViewInit");
+    this.logger.trackEventCalls(CatPieChartPageDirective.name, "ngAfterViewInit");
     this.chart = new Chart(this.elementRef.nativeElement, this.config);
   }
 

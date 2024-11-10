@@ -1,16 +1,18 @@
-import { CommonModule, formatDate } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild } from "@angular/core";
-import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import Chart, { ChartConfiguration, ChartData, ChartDataset } from 'chart.js/auto';
+import { CommonModule } from "@angular/common";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion,
+  IonItem, IonLabel, IonButton, IonSelect, IonSelectOption
+} from '@ionic/angular/standalone';
+import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Observable, of } from "rxjs";
-import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
 import { CatPieChartPageDirective } from "../directives/cat-pie-chart.page.directive";
 import { CatBarChartPageDirective } from "../directives/cat-bar-chart.page.directive";
+import { LoggerService } from "src/app/services/logger.service";
+import { UtilityService } from "src/app/services/utility.service";
 
 @Component({
   selector: 'app-categories-analytics',
@@ -29,98 +31,78 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
   catsTotal: number = 0;
   showTransactions: boolean = false;
 
-  firestore: Firestore = inject(Firestore);
-  logPrefix: string = 'CATEGORIESANALYTICS_PAGE::: ';
-
-  cardCollection = AppConstants.collections.cards;
-  categoryCollection = AppConstants.collections.category;
-  expenseCollection = AppConstants.collections.expense;
-
   inputLabels: string[] = [];
   inputBackgroundColor: string[] = [];
   inputData: number[] = [];
 
-  categoriesExpenses: { catId: string, expenses: Expense[] }[] = [];
+  categoriesExpenses: { catId: string, total: number, expenses: Expense[] }[] = [];
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
   @ViewChild(CatBarChartPageDirective) catBarChart!: CatBarChartPageDirective;
 
-  constructor() {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    public utility: UtilityService
+  ) {
+    this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);
   }
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
-    this.loadChartTransData();
+    this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "ngOnInit");
+    this.loadChartData();
+    this.loadTransactions();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.logPrefix + "ngOnChanges");
+    this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "ngOnChanges");
     if (changes['expenses'].previousValue !== undefined) {
       let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
       if (currentSelected.month != previousSelected.month
         || currentSelected.year != previousSelected.year) {
-        this.loadChartTransData();
+        this.loadChartData();
         this.catBarChart.chart.data.labels = this.inputLabels;
         this.catBarChart.chart.data.datasets[0].data = this.inputData;
         this.catBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
         this.catBarChart.chart.update();
+        this.loadTransactions();
       }
     }
   }
 
-  loadChartTransData() {
+  loadChartData() {
+    this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "loadChartData");
     this.inputBackgroundColor = [];
     this.inputData = [];
     this.inputLabels = [];
+    let catGroups = this.utility.expenseGroupBy(this.expenses, 'cat');
+    for (var catkey in catGroups) {
+      let total = this.utility.getTotal(catGroups[catkey]);
+      let catName = this.utility.getCategory(this.cats, catkey);
+      this.inputData.push(total);
+      this.inputLabels.push(catName);
+      this.inputBackgroundColor.push(this.utility.getRandomColor());
+    }
+  }
+
+  loadTransactions() {
+    this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "loadTransactions");
     this.catsTotal = 0;
     this.categoriesExpenses = [];
 
-    this.cats.forEach(category => {
-      let filterData = this.expenses.filter(expense => expense.categoryId == category.id);
-      let total = filterData.reduce((sum, e) => sum + e.amount, 0);
-      if (total > 0) {
-        this.inputData.push(total);
-        this.inputLabels.push(category.name);
-        this.inputBackgroundColor.push(this.getRGB(this.getRandomColor()));
+    let catGroups = this.utility.expenseGroupBy(this.expenses, 'cat');
+    for (var catkey in catGroups) {
+      let total = this.utility.getTotal(catGroups[catkey]);
+      let cardExpenses: Expense[] = [];
+      let cardGroups = this.utility.expenseGroupBy(catGroups[catkey], 'card');
+      for (var cardkey in cardGroups) {
+        let total = this.utility.getTotal(cardGroups[cardkey]);
+        cardExpenses.push(<Expense>{ cardTypeId: cardkey, categoryId: catkey, amount: total });
       }
-      let catsFilterData: Expense[] = [];
-      let cardIds = filterData.map(e => e.cardTypeId).filter((v, i, a) => a.indexOf(v) == i);
-      cardIds.forEach(cardId => {
-        let cardExpenses = filterData.filter(e => e.cardTypeId == cardId);
-        let total = cardExpenses.reduce((sum, e) => sum + e.amount, 0);
-        if (total > 0)
-          catsFilterData.push(<Expense>{ cardTypeId: cardId, categoryId: category.id, amount: total });
-      });
-      if (catsFilterData.length > 0)
-        this.categoriesExpenses.push({ catId: category.id, expenses: catsFilterData });
       this.catsTotal = this.catsTotal + total;
-    });
-  }
-
-  getCardBankName(cardTypeId: string) {
-    let card = this.cards.find(x => x.id == cardTypeId);
-    return `${card?.bankName}-${card?.type}`;
-  }
-  setShowTransactions() {
-    this.showTransactions = !this.showTransactions;
-  }
-
-  getRGB(colorHex: string) {
-    let r = parseInt(colorHex.slice(1, 3), 16);
-    let g = parseInt(colorHex.slice(3, 5), 16);
-    let b = parseInt(colorHex.slice(5, 7), 16);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-
-  getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+      this.categoriesExpenses.push({ catId: catkey, expenses: cardExpenses, total: total });
     }
-    return color;
+
+    this.categoriesExpenses = this.categoriesExpenses.sort((a, b) => b.total - a.total);
   }
 }

@@ -6,7 +6,7 @@
 
 <ion-item lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
-    (click)="setShowTransactions()">
+    (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
   <ion-label class="ion-text-end" color="secondary">Total:
     Rs.{{catsTotal}}</ion-label>
@@ -14,16 +14,19 @@
 
 <div *ngIf="showTransactions">
   <ion-accordion-group *ngFor="let cat of categoriesExpenses;let i=index;">
-    <ion-accordion [value]="inputLabels[i]" *ngIf="inputData[i]>0">
+    <ion-accordion [value]="utility.getCategory(cats, cat.catId)"
+      *ngIf="cat.total>0">
       <ion-item slot="header" color="light">
-        <ion-label color="secondary">{{inputLabels[i]}}</ion-label>
-        <ion-label color="tertiary">Total: {{inputData[i]}}</ion-label>
+        <ion-label color="secondary">{{utility.getCategory(cats,
+          cat.catId)}}</ion-label>
+        <ion-label color="tertiary">Total: {{cat.total}}</ion-label>
       </ion-item>
       <div slot="content">
         <ion-item color="primary" class="ion-no-padding" lines="full"
           *ngFor="let expense of cat.expenses">
           <ion-label
-            class="ion-no-padding ion-padding-start">{{getCardBankName(expense.cardTypeId)}}</ion-label>
+            class="ion-no-padding ion-padding-start">{{utility.getcard(cards,
+            expense.cardTypeId)}}</ion-label>
           <ion-label
             class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
         </ion-item>

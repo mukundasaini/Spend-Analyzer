@@ -27,9 +27,5 @@ ion-toggle::part(track) {
 }
 
 ion-popover::part(list) {
-  // ion-select-popover ::part(list){
-    // ion-list {
-      background-color: var(--ion-color-danger);
-    // }
-  // }
+  background-color: var(--ion-color-danger);
 }

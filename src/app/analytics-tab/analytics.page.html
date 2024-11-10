@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" color="light">
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="utility.handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
@@ -45,7 +45,7 @@
           </ion-col>
           <ion-col size="3">
             <ion-toggle id="emi-toggle" class="ion-float-end"
-              (ionChange)="showOrHideCardsAnalytics($event)">{{'Hide'}}
+              (ionChange)="hideCardsAnalytics = $event.target.checked">{{'Hide'}}
             </ion-toggle>
           </ion-col>
         </ion-row>
@@ -93,7 +93,7 @@
           </ion-col>
           <ion-col size="3">
             <ion-toggle id="emi-toggle" class="ion-float-end"
-              (ionChange)="showOrHideCatsAnalytics($event)">{{'Hide'}}
+              (ionChange)="hideCatsAnalytics = $event.target.checked">{{'Hide'}}
             </ion-toggle>
           </ion-col>
         </ion-row>
@@ -130,7 +130,7 @@
           </ion-col>
           <ion-col size="3">
             <ion-toggle id="emi-toggle" class="ion-float-end"
-              (ionChange)="showOrHideAllMonthsAnalytics($event)">{{'Hide'}}
+              (ionChange)="hideAllMonthsAnalytics = $event.target.checked">{{'Hide'}}
             </ion-toggle>
           </ion-col>
         </ion-row>

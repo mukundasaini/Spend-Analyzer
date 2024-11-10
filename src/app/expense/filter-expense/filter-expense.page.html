@@ -2,10 +2,10 @@
     trigger="expense-filter-trigger" triggerAction="click">
     <ng-template>
         <ion-header>
-            <ion-toolbar color="secondary">
+            <ion-toolbar color="primary">
                 <ion-button (click)="popover.dismiss();" size="small"
                     fill="clear"
-                    color="light" class="ion-float-start">
+                    color="secondary" class="ion-float-start">
                     Close
                 </ion-button>
                 <ion-button class="ion-float-end"
@@ -14,7 +14,7 @@
                     [disabled]="selectedMonths.length==0 && selectedYears.length==0 
                     && slectedBankNames.length==0 &&slectedCardTypes.length==0&& slectedCategories.length==0 
                     && slectedIsInclude===undefined"
-                    color="light">
+                    color="secondary">
                     Clear
                 </ion-button>
             </ion-toolbar>
@@ -28,29 +28,29 @@
                             <ion-list lines="full">
                                 <ion-segment-button
                                     value="includeExcludeSwitch"
-                                    (click)="onItemClick('includeExcludeSwitch')">
+                                    (click)="selectedTab = 'includeExcludeSwitch'">
                                     Exclude Or Include
                                 </ion-segment-button>
                                 <ion-segment-button
                                     value="years"
-                                    (click)="onItemClick('years')">
+                                    (click)="selectedTab ='years'">
                                     Years
                                 </ion-segment-button>
                                 <ion-segment-button
                                     value="months"
-                                    (click)="onItemClick('months')">
+                                    (click)="selectedTab = 'months'">
                                     Months
                                 </ion-segment-button>
                                 <ion-segment-button value="banks"
-                                    (click)="onItemClick('banks')">
+                                    (click)="selectedTab ='banks'">
                                     Banks
                                 </ion-segment-button>
                                 <ion-segment-button value="ct"
-                                    (click)="onItemClick('ct')">
+                                    (click)="selectedTab ='ct'">
                                     Card Types
                                 </ion-segment-button>
                                 <ion-segment-button value="cats"
-                                    (click)="onItemClick('cats')">
+                                    (click)="selectedTab ='cats'">
                                     Categories
                                 </ion-segment-button>
                             </ion-list>
@@ -64,7 +64,7 @@
                                     <ion-checkbox
                                         [value]="includeExclude.value"
                                         [checked]="includeExclude.checked"
-                                        (ionChange)="onIncludeExcludeCheckBoxChange($event)"
+                                        (ionChange)="slectedIsInclude = $event.detail.checked"
                                         justify="start" labelPlacement="end">
                                         {{includeExclude.value}}
                                     </ion-checkbox>
@@ -187,14 +187,15 @@
                 </ion-row>
             </ion-grid>
         </ion-content>
-        <ion-toolbar color="secondary" class="ion-text-center">
+        <ion-toolbar color="primary" class="ion-text-center">
             <ion-button
                 [disabled]="selectedMonths.length==0 && selectedYears.length==0 
             && slectedBankNames.length==0 &&slectedCardTypes.length==0&& slectedCategories.length==0 
             && slectedIsInclude===undefined"
                 (click)="onApplyFilters(popover)" size="small"
                 fill="clear"
-                color="light">
+                color="secondary"
+                >
                 Apply
             </ion-button>
         </ion-toolbar>

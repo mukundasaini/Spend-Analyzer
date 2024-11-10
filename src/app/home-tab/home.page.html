@@ -9,7 +9,7 @@
       <ion-badge slot="start" class="ion-no-padding"
         color="success">{{expenseFilterIndeicator}}</ion-badge>
       <app-filter-expense
-        *ngIf="hasCardsData && hasCatsData && hasFilterExpenseData"
+        *ngIf="hasCardsData && hasCatsData && hasExpensesData"
         [cats]="inputCategories"
         [cards]="inputCardDetails"
         [years]="inputYears"
@@ -24,10 +24,10 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <app-expense
-    *ngIf="hasCardsData && hasCatsData && hasExpenseData"
+    *ngIf="hasCardsData && hasCatsData && hasPresetMonthExpenseData"
     [categories]="inputCategories"
     [cardDetails]="inputCardDetails"
-    [expenses]="inputExpenses"></app-expense>
+    [expenses]="inputPresetMonthExpenses"></app-expense>
   <ion-fab horizontal="end" class="ion-margin-bottom" vertical="bottom"
     slot="fixed">
     <ion-fab-button id="open-create-dialog-expense">

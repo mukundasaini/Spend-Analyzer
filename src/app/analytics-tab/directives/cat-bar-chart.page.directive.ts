@@ -1,14 +1,13 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Directive({
   selector: 'canvas[appCatBarChartPage]',
   standalone: true
 })
 export class CatBarChartPageDirective implements AfterViewInit, OnInit {
-  logPrefix: string = 'CAT_BAR_PAGE::: ';
-
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
@@ -17,12 +16,13 @@ export class CatBarChartPageDirective implements AfterViewInit, OnInit {
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
-  constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private elementRef: ElementRef<HTMLCanvasElement>) {
   }
 
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
+    this.logger.trackEventCalls(CatBarChartPageDirective.name, "ngOnInit");
+   
     this.total = this.data.reduce((sum, item) => sum + item, 0);
     this.config = <ChartConfiguration>{
       type: 'bar',
@@ -95,7 +95,7 @@ export class CatBarChartPageDirective implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.logPrefix + "ngAfterViewInit");
+    this.logger.trackEventCalls(CatBarChartPageDirective.name, "ngOnngAfterViewInitInit");
     this.chart = new Chart(this.elementRef.nativeElement, this.config);
   }
 

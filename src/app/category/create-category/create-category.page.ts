@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   IonHeader, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
@@ -18,15 +18,12 @@ import {
   IonItemOption, IonChip,
   IonPopover,
   IonCheckbox,
-  AlertController
 } from '@ionic/angular/standalone';
-import { CardDetails } from '../../Models/card-details.model';
 import { UUID } from 'angular2-uuid';
 import { AppConstants } from '../../app.constants';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
-import { addIcons } from 'ionicons';
-import { business } from 'ionicons/icons';
 import { Category } from 'src/app/Models/category.model';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Component({
   selector: 'app-create-category',
@@ -39,46 +36,28 @@ import { Category } from 'src/app/Models/category.model';
     IonCardTitle, IonItemSliding, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonInput, IonLabel, ReactiveFormsModule]
 })
 export class CreateCategoryPage {
-  firestore: Firestore = inject(Firestore);
-  categoryCollection = AppConstants.collections.category;
-  logPrefix: string = 'CREATECATEGORY_PAGE::: ';
-
-  constructor(private alertController: AlertController) {
-    console.log(this.logPrefix + "constructor");
-    addIcons({ business });
-  }
 
   categoryFG = new FormGroup({
     name: new FormControl(''),
   });
- 
+
+  constructor(private logger: LoggerService,
+    private firebase: FirebaseService) {
+  }
+
   onSubmit() {
-    var name = this.categoryFG.controls.name.value?.toString()?.trim()?.toUpperCase();
-    let category = <Category>{ id: UUID.UUID(), name: name };
+    this.logger.trackEventCalls(CreateCategoryPage.name, "onSubmit");
+    let category = <Category>{
+      id: UUID.UUID(),
+      name: this.categoryFG.controls.name.value?.toString()?.trim()?.toUpperCase()
+    };
 
-    setDoc(doc(this.firestore, this.categoryCollection, category.id), category).then(x => {
-      console.log("Category saved successfully");
-      this.presentAlert('Success', "category saved successfully");
-
-    }).catch(x => {
-      console.log("Category saving failed");
-      this.presentAlert('Warning', "Category updating failed");
-    });
+    this.firebase.saveRecordDetails(AppConstants.collections.category, category);
     this.onClear();
   }
 
   onClear() {
+    this.logger.trackEventCalls(CreateCategoryPage.name, "onClear");
     this.categoryFG.controls.name.setValue('');
-  }
-
-  async presentAlert(alertHeader: string, alertMessage: string,) {
-    const alert = await this.alertController.create({
-      header: alertHeader,
-      message: alertMessage,
-      buttons: ['Close'],
-      cssClass: 'alert-custom',
-    });
-
-    await alert.present();
   }
 }

@@ -8,12 +8,10 @@
       <form [formGroup]="newCardsFG"
         (ngSubmit)="onSubmit();createCardModal.dismiss()">
         <ion-toolbar color="light">
-          <ion-title size="small" color="secondary">New Card
-          </ion-title>
+          <ion-button size="small" shape="round" fill="clear" color="secondary"
+            (click)="onClear()">Clear</ion-button>
           <ion-buttons slot="end">
-            <ion-button slot="end" size="small" shape="round" color="secondary"
-              (click)="onClear()">Clear</ion-button>
-            <ion-button slot="end" size="small" shape="round" color="secondary"
+            <ion-button size="small" shape="round" color="secondary"
               type="submit"
               [disabled]="!newCardsFG.valid">Save</ion-button>
           </ion-buttons>
@@ -22,7 +20,7 @@
           <ion-input
             labelPlacement="stacked"
             formControlName="bankName" type="text"
-            class="ion-text-uppercase" 
+            class="ion-text-uppercase"
             [counter]="true"
             placeholder="ICICI"
             label="Bank Short Name *"
@@ -34,16 +32,17 @@
           <ion-input type="number"
             label="Card Last Four Digits *"
             placeholder="xxxx-xxxx-1234"
-            formControlName="cardNumber" pattern="\d{4}" required
+            formControlName="cardNumber"
             labelPlacement="stacked"
             [counter]="true"
             maxlength="4"
             minlength="4"
-            (keypress)="onKeyPress()"></ion-input>
+            (keypress)="utility.onKeyPress(newCardsFG.controls.cardNumber.value+'',3)"
+            required></ion-input>
         </ion-item>
         <ion-item color="light">
           <ion-input
-            label="Type*" 
+            label="Type*"
             formControlName="type" type="text"
             class="ion-text-uppercase"
             labelPlacement="stacked"

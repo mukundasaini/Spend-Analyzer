@@ -6,7 +6,7 @@
 
 <ion-item lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
-    (click)="setShowTransactions()">
+    (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
   <ion-label color="secondary" class="ion-text-end">Total:
     Rs.{{total}}</ion-label>

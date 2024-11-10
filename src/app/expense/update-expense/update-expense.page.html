@@ -21,7 +21,7 @@
             label="Card Type *"
             ngDefaultControl
             formControlName="cardTypeId"
-            (ionChange)="onCardTypeChange($event)"
+            (ionChange)="updateExpenseFG.controls.cardTypeId.setValue($event.target.value)"
             labelPlacement="stacked"
             interface="popover" required>
             <ion-select-option
@@ -36,7 +36,7 @@
             label="Category *"
             ngDefaultControl
             formControlName="categoryId"
-            (ionChange)="onCategoryChange($event)"
+            (ionChange)="updateExpenseFG.controls.categoryId.setValue($event.target.value)"
             labelPlacement="stacked" interface="popover"
             required>
             <ion-select-option
@@ -49,12 +49,13 @@
         <ion-item color="light">
           <ion-input type="number"
             label="Amount *"
-            formControlName="amount" (keypress)="onKeyPress()"
+            formControlName="amount"
+            (keypress)="utility.onKeyPress(updateExpenseFG.controls.amount.value+'',10)"
             required
             labelPlacement="stacked"></ion-input>
           <ion-toggle id="isInclude" ngDefaultControl
             formControlName="isInclude"
-            (ionChange)="onIsIncludedChange($event)">Include</ion-toggle>
+            (ionChange)="updateExpenseFG.controls.isInclude.setValue($event.target.checked)">Include</ion-toggle>
         </ion-item>
         <ion-item color="light">
           <ion-datetime-button

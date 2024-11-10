@@ -1,16 +1,18 @@
-import { CommonModule, formatDate } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
-import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import Chart, { ChartConfiguration, ChartData, ChartDataset } from 'chart.js/auto';
+import { CommonModule } from "@angular/common";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup,
+  IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption
+} from '@ionic/angular/standalone';
+import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Observable, of } from "rxjs";
 import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { CardPieChartPageDirective } from "../directives/card-pie-chart.page.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { CardBarChartPageDirective } from "../directives/card-bar-chart.page.directive";
+import { LoggerService } from "src/app/services/logger.service";
+import { UtilityService } from "src/app/services/utility.service";
 
 @Component({
   selector: 'app-cards-yearly-analytics',
@@ -29,14 +31,6 @@ export class CardsYearlyAnalyticsPage implements OnInit {
   total: number = 0;
   showTransactions: boolean = false;
 
-  firestore: Firestore = inject(Firestore);
-
-  categoryCollection = AppConstants.collections.category;
-  cardCollection = AppConstants.collections.cards;
-  expenseCollection = AppConstants.collections.expense;
-
-  logPrefix: string = 'CARDS_MONTHLY_ANALYTICS_PAGE::: ';
-
   inputLabels: string[] = [];
   inputData: number[] = [];
   inputBackgroundColor: string[] = [];
@@ -49,67 +43,50 @@ export class CardsYearlyAnalyticsPage implements OnInit {
 
   @ViewChild(CardBarChartPageDirective) cardBarChart!: CardBarChartPageDirective;
 
-  constructor() {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private utility: UtilityService
+  ) {
+    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);
   }
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
-    this.loadChartTransData();
+    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "ngOnInit");
+    this.loadChartData();
+    this.loadTransactions();
   }
 
-  loadChartTransData() {
+  loadChartData() {
+    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "loadChartData");
     this.inputLabels = [];
     this.inputData = [];
     this.inputBackgroundColor = [];
+    var yearGroups = this.utility.expenseGroupBy(this.expenses, 'year');
+    for (var yearKey in yearGroups) {
+      let total = this.utility.getTotal(yearGroups[yearKey]);
+      this.inputData.push(total);
+      this.inputLabels.push(yearKey);
+      this.inputBackgroundColor.push(this.utility.getRandomColor());
+    }
+  }
+
+  loadTransactions() {
+    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "loadTransactions");
     this.transactions = [];
     this.total = 0;
 
-    this.years.forEach(year => {
-      let expenses = this.expenses.filter(ex => ex.year == year);
-      let total = expenses.reduce((sum, e) => sum + e.amount, 0);
-
-      if (total > 0) {
-        this.inputData.push(total);
-        this.inputLabels.push(year);
-        this.inputBackgroundColor.push(this.getRGB(this.getRandomColor()));
-        let monthsTotals: { month: string, total: number }[] = [];
-
-        AppConstants.Months.forEach(month => {
-          let expenses = this.expenses.filter(ex => ex.year == year && ex.month == month.value);
-          let total = expenses.reduce((sum, e) => sum + e.amount, 0);
-          if (total > 0) {
-            monthsTotals.push({ month: month.name, total: total });
-          }
-        });
-        this.total = this.total + total;
-        this.transactions.push({ year: year, total: total, monthsTotals: monthsTotals });
+    let yearGroups = this.utility.expenseGroupBy(this.expenses, 'year');
+    for (var yearKey in yearGroups) {
+      let yearTotal = this.utility.getTotal(yearGroups[yearKey]);
+      let monthsTotals: { month: string, total: number }[] = [];
+      let monthGroups = this.utility.expenseGroupBy(yearGroups[yearKey], 'month');
+      for (var monthKey in monthGroups) {
+        let total = this.utility.getTotal(monthGroups[monthKey]);
+        let monthName = this.utility.getMonthName(monthKey);
+        monthsTotals.push({ month: monthName, total: total });
       }
-    });
-  }
-
-  getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+      monthsTotals = monthsTotals.sort((a, b) => b.total - a.total);
+      this.total = this.total + yearTotal;
+      this.transactions.push({ year: yearKey, total: yearTotal, monthsTotals: monthsTotals });
     }
-    return color;
-  }
-
-  getRGB(colorHex: string) {
-    let r = parseInt(colorHex.slice(1, 3), 16);
-    let g = parseInt(colorHex.slice(3, 5), 16);
-    let b = parseInt(colorHex.slice(5, 7), 16);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-
-  getcard(cardTypeId: string) {
-    let card = this.cards?.find(x => x.id == cardTypeId);
-    return `${card?.bankName} - ${card?.type}`;
-  }
-
-  setShowTransactions() {
-    this.showTransactions = !this.showTransactions;
   }
 }

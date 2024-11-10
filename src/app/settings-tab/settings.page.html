@@ -13,15 +13,6 @@
         <ion-toolbar color="light" class="ion-no-padding">
           <ion-title color="secondary" size="small">Cards</ion-title>
           <ion-buttons slot="end" class="ion-margin-end">
-            <ion-button fill="clear" id="cards-filter-trigger">
-              <ion-icon color="secondary" slot="icon-only" name="filter">
-              </ion-icon>
-            </ion-button>
-            <ion-badge slot="start" class="ion-no-padding"
-              color="success">{{cardsFilterIndeicator}}</ion-badge>
-            <app-filter-card *ngIf="hasCardsData"
-            [cards]="inputCards"
-              (onCardFilter)="onApplyCardFilters($event)"></app-filter-card>
             <ion-button size="small"
               id="open-create-dialog-card"
               shape="round"
@@ -40,15 +31,6 @@
         <ion-toolbar color="light" class="ion-no-padding">
           <ion-title size="small" color="secondary">Categories</ion-title>
           <ion-buttons slot="end" class="ion-margin-end">
-            <ion-button fill="clear" id="category-filter-trigger">
-              <ion-icon color="secondary" slot="icon-only" name="filter">
-              </ion-icon>
-            </ion-button>
-            <ion-badge slot="start" class="ion-no-padding"
-              color="success">{{categoriesFilterIndeicator}}</ion-badge>
-            <app-filter-category *ngIf="hasCatsData"
-            [categories]="inputCategories"
-              (onCategoryFilter)="onApplyCategoryFilters($event)"></app-filter-category>
             <ion-button
               id="open-create-dialog-category"
               shape="round"

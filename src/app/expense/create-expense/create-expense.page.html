@@ -8,12 +8,10 @@
       <form [formGroup]="expenseFG"
         (ngSubmit)="createExpanseModal.dismiss();onSubmit();">
         <ion-toolbar color="light">
-          <ion-title size="small" color="secondary">New Expense
-          </ion-title>
+          <ion-button size="small" fill="clear" shape="round" color="secondary"
+            (click)="onClear()"
+            color="secondary">Clear</ion-button>
           <ion-buttons slot="end">
-            <ion-button size="small" shape="round" color="secondary"
-              (click)="onClear()"
-              color="secondary">Clear</ion-button>
             <ion-button size="small" shape="round" color="secondary"
               [disabled]="expenseFG.invalid"
               type="submit">Save</ion-button>
@@ -24,7 +22,7 @@
             label="Card Type *"
             formControlName="cardTypeId"
             labelPlacement="stacked"
-            (ionChange)="onCardTypeChange($event)"
+            (ionChange)="expenseFG.controls.cardTypeId.setValue($event.target.value)"
             required interface="popover">
             <ion-select-option *ngFor="let item of cardDetails"
               [value]="item.id">
@@ -33,11 +31,11 @@
           </ion-select>
         </ion-item>
         <ion-item color="light">
-          <ion-select 
+          <ion-select
             label="Category *"
             formControlName="categoryId"
             labelPlacement="stacked" interface="popover"
-            (ionChange)="onCategoryChange($event)"
+            (ionChange)="expenseFG.controls.categoryId.setValue($event.target.value)"
             required>
             <ion-select-option *ngFor="let item of categories;"
               [value]="item.id">
@@ -53,7 +51,7 @@
             labelPlacement="stacked"></ion-input>
           <ion-toggle ngDefaultControl
             formControlName="isInclude" checked="true"
-            (ionChange)="onIsIncludedChange($event)">Include</ion-toggle>
+            (ionChange)="expenseFG.controls.isInclude.setValue($event.target.checked)">Include</ion-toggle>
         </ion-item>
         <ion-item color="light">
           <ion-input type="number"
@@ -62,8 +60,8 @@
             labelPlacement="stacked" *ngIf="hasEMI"></ion-input>
           <ion-toggle id="emi-toggle" class="ion-float-end"
             checked="false"
-            (ionChange)="onHasEMIChange($event)">{{hasEMI?'Hide EMI':'Show EMI'}}
-            </ion-toggle>
+            (ionChange)="hasEMI = $event.target.checked">{{hasEMI?'Hide EMI':'Show EMI'}}
+          </ion-toggle>
         </ion-item>
         <ion-item color="light">
           <ion-input

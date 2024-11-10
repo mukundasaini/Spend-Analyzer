@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { CardDetails } from "../Models/card-details.model";
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
@@ -17,12 +16,9 @@ import { IonButton, IonChip, IonSkeletonText } from "@ionic/angular/standalone";
 })
 export class CardsPage {
  
-  logPrefix: string = 'Cards_PAGE::: ';
- 
   @Input() cards: CardDetails[] = [];
 
   constructor() {
-    console.log(this.logPrefix + "constructor");
   }
 
 }

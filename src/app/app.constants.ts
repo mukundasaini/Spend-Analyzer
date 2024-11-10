@@ -1,5 +1,26 @@
 
 export const AppConstants = {
+    alertHeader: {
+        SUCCESS: 'Success',
+        FAILED: 'Warning',
+    },
+    alertMessage: {
+        save: {
+            success: 'saved successfully',
+            failed: 'saving failed'
+        },
+        update: {
+            success: 'updaed successfully',
+            failed: 'updating failed'
+        },
+        delete: {
+            success: 'deleted successfully',
+            failed: 'deleting failed'
+        },
+        get: {
+            failed: 'fetching failed'
+        }
+    },
     collections: {
         cards: 'cardTypes',
         expense: 'expense',

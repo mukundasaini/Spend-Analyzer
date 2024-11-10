@@ -6,14 +6,14 @@
 
 <ion-item lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
-    (click)="setShowTransactions()">
+    (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
   <ion-label color="secondary" class="ion-text-end">Total:
     Rs.{{cardsTotal}}</ion-label>
 </ion-item>
 
 <div *ngIf="showTransactions">
-  <ion-accordion-group *ngFor="let card of cardsExpenses;let i=index;">
+  <ion-accordion-group *ngFor="let card of monthlyExpenses;let i=index;">
     <ion-accordion [value]="card.month">
       <ion-item slot="header" color="light">
         <ion-label color="secondary">{{card.month}}</ion-label>
@@ -24,7 +24,8 @@
           class="ion-no-padding"
           lines="full">
           <ion-label
-            class="ion-no-padding ion-padding-start">{{getcard(expense.cardTypeId)}}</ion-label>
+            class="ion-no-padding ion-padding-start">{{
+            utility.getcard(cards,expense.cardTypeId)}}</ion-label>
           <ion-label
             class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
         </ion-item>

@@ -5,10 +5,6 @@
     overflow-y: scroll;
 }
 
-// .expenses-list {
-//     background: var(--ion-color-light);
-// }
-
 .DEFAULT_BG {
     background: linear-gradient(135deg, rgba(237, 26, 34, 1) 15%, rgba(0, 75, 140, 1) 100%);
     color: #f6f8fc;
@@ -18,39 +14,19 @@
     width: 42px;
     text-align: center;
     align-content: center;
+    margin-left: 10px;
 }
 
 .ICICI_BG {
     background: linear-gradient(135deg, rgba(176, 42, 48, 1) 15%, rgba(245, 130, 32, 1) 100%);
-    color: #f6f8fc;
-    font-size: 20px;
-    border-radius: 50%;
-    height: 42px;
-    width: 42px;
-    text-align: center;
-    align-content: center;
 }
 
 .SBI_BG {
     background: linear-gradient(135deg, rgba(17, 102, 221, 1) 15%, rgba(86, 18, 234, 1) 100%);
-    color: #f6f8fc;
-    font-size: 20px;
-    border-radius: 50%;
-    height: 42px;
-    width: 42px;
-    text-align: center;
-    align-content: center;
 }
 
 .HDFC_BG {
     background: linear-gradient(135deg, rgba(237, 26, 34, 1) 15%, rgba(0, 75, 140, 1) 100%);
-    color: #f6f8fc;
-    font-size: 20px;
-    border-radius: 50%;
-    height: 42px;
-    width: 42px;
-    text-align: center;
-    align-content: center;
 }
 
 ion-item {
@@ -68,13 +44,12 @@ ion-item {
 
                 ion-label {
                     &.cat_name {
-                        font-size: 16px;
-                        padding-bottom: 8px;
+                        font-size: 18px;
+                        font-weight: bold;
                     }
 
                     &.expense_dt {
-                        font-size: 14px;
-                        color: var(--ion-color-tertiary);
+                        font-size: 16px;
                     }
 
                     &.expense_note {
@@ -84,7 +59,6 @@ ion-item {
 
                     &.expense_amount {
                         font-size: 16px;
-                        padding-bottom: 8px;
                     }
 
                     &.expense_emi {
@@ -99,11 +73,6 @@ ion-item {
             }
         }
     }
-}
-
-ion-item::part(native) {
-    padding-left: 2dvw;
-    padding-bottom: 10px;
 }
 
 ion-item-divider {

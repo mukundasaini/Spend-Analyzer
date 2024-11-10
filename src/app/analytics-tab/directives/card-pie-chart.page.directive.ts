@@ -1,6 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, ChartEvent, LegendElement, LegendItem } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { LoggerService } from 'src/app/services/logger.service';
 
 @Directive({
   selector: 'canvas[appCardPieChartPage]',
@@ -11,19 +12,18 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
   chartData!: ChartData;
   chart!: Chart;
   config!: ChartConfiguration;
-  logPrefix: string = 'CARDPIE_PAGE::: ';
 
   @Input() labels: string[] = [];
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
   @Output() legendItemClick = new EventEmitter<{ label: string, display: boolean }>();
 
-  constructor(private elementRef: ElementRef<HTMLCanvasElement>) {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private elementRef: ElementRef<HTMLCanvasElement>) {
   }
-
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
+    this.logger.trackEventCalls(CardPieChartPageDirective.name, "ngOnInit");
+
     const pieDoughnutLegendClickHandler = Chart.overrides.doughnut.plugins.legend.onClick;
     this.config = <ChartConfiguration>{
       type: 'doughnut',
@@ -102,7 +102,7 @@ export class CardPieChartPageDirective implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.logPrefix + "ngAfterViewInit");
+    this.logger.trackEventCalls(CardPieChartPageDirective.name, "ngAfterViewInit");
     this.chart = new Chart(this.elementRef.nativeElement, this.config);
   }
 

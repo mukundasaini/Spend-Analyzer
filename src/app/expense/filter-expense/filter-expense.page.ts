@@ -1,33 +1,34 @@
 import { CommonModule, formatDate } from "@angular/common";
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { Firestore } from "@angular/fire/firestore";
-import { IonPopover, IonButton, IonCol, IonGrid, IonContent, IonRow, IonCheckbox, IonList, IonItem, IonModal, IonHeader, IonButtons, IonToolbar, IonLabel, IonNav, IonNavLink, IonSegment, IonSegmentButton } from "@ionic/angular/standalone";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import {
+  IonPopover, IonButton, IonCol, IonGrid, IonContent, IonRow,
+  IonCheckbox, IonList, IonItem, IonModal, IonHeader, IonButtons,
+  IonToolbar, IonLabel, IonNav, IonNavLink, IonSegment, IonSegmentButton
+} from "@ionic/angular/standalone";
 import { Subject } from "rxjs";
 import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { CheckBox } from "src/app/Models/checkbox.model";
 import { Expense } from "src/app/Models/expense-model";
-import { LoadingController } from '@ionic/angular';
+import { LoggerService } from "src/app/services/logger.service";
+import { UtilityService } from "src/app/services/utility.service";
 @Component({
   selector: 'app-filter-expense',
   templateUrl: 'filter-expense.page.html',
   styleUrls: ['filter-expense.page.scss'],
   standalone: true,
-  imports: [IonSegmentButton, IonSegment, IonNavLink, IonNav, IonLabel, IonToolbar, IonButtons, IonHeader, IonModal, CommonModule, IonItem, IonList, IonCheckbox, IonRow, IonContent, IonGrid, IonCol, IonButton, IonPopover,]
+  imports: [IonSegmentButton, IonSegment, IonNavLink, IonNav,
+    IonLabel, IonToolbar, IonButtons, IonHeader, IonModal,
+    CommonModule, IonItem, IonList, IonCheckbox, IonRow,
+    IonContent, IonGrid, IonCol, IonButton, IonPopover,]
 })
 export class FilterExpensePage implements OnInit, OnDestroy {
-  firestore: Firestore = inject(Firestore);
   cardBankNames: CheckBox[] = [];
   cardTypes: CheckBox[] = [];
   categories: CheckBox[] = [];
   months: CheckBox[] = [];
   includeExclude: CheckBox = <CheckBox>{ value: 'Exclude', checked: false };
-
-  expenseCollection = AppConstants.collections.expense;
-  categoryCollection = AppConstants.collections.category;
-  cardCollection = AppConstants.collections.cards;
-  constMonths = AppConstants.Months;
 
   isAllBankNamesChecked: boolean = false;
   isAllCardsChecked: boolean = false;
@@ -46,8 +47,6 @@ export class FilterExpensePage implements OnInit, OnDestroy {
 
   onDestroy$: Subject<void> = new Subject();
 
-  logPrefix: string = 'FILTEREXPENSE_PAGE::: ';
-
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() years: CheckBox[] = [];
@@ -55,45 +54,26 @@ export class FilterExpensePage implements OnInit, OnDestroy {
 
   @Output() onExpenseFilter = new EventEmitter<{ filterIndicator: string, filterdData: Expense[] }>();
 
-  constructor(private loadingCtrl: LoadingController) {
-    console.log(this.logPrefix + "constructor");
+  constructor(private logger: LoggerService,
+    private utility: UtilityService) {
   }
   ngOnDestroy(): void {
-    console.log(this.logPrefix + "ngOnDestroy");
+    this.logger.trackEventCalls(FilterExpensePage.name, "ngOnDestroy");
     this.onDestroy$.next();
     this.onDestroy$.complete();
   }
 
   ngOnInit(): void {
-    console.log(this.logPrefix + "ngOnInit");
+    this.logger.trackEventCalls(FilterExpensePage.name, "ngOnInit");
 
-    this.cards.map(item => item.bankName)
-      .filter((value, index, self) => self.indexOf(value) === index)
-      .forEach(bankName => {
-        this.cardBankNames.push({ value: bankName, checked: false });
-      });
-
-    this.cards.map(item => item.type)
-      .filter((value, index, self) => self.indexOf(value) === index)
-      .forEach(name => {
-        this.cardTypes.push({ value: name, checked: false });
-      });
-
-    this.cats.forEach(category => {
-      this.categories.push({ value: category.id, name: category.name, checked: false });
-    });
-
-    this.constMonths.forEach(month => {
-      this.months.push({ value: month.value, name: month.name, checked: false });
-    });
-
-  }
-
-  onIncludeExcludeCheckBoxChange(event: any) {
-    this.slectedIsInclude = event.detail.checked
+    this.cardBankNames = this.utility.getBankNamesCheckBox(this.cards);
+    this.cardTypes = this.utility.getCardTypesCheckBox(this.cards);
+    this.categories = this.utility.getCategoriesCheckBox(this.cats);
+    this.months = this.utility.getMonthsCheckBox();
   }
 
   onBankCheckBoxChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onBankCheckBoxChange");
     if (event.detail.checked) {
       this.slectedBankNames.push(event.detail.value);
       let selectdItem = this.cardBankNames.find(x => x.value == event.detail.value);
@@ -110,6 +90,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onAllBankNamesChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onAllBankNamesChange");
     if (event.detail.checked) {
       this.slectedBankNames = [];
       this.cardBankNames.forEach(element => {
@@ -127,6 +108,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onCardTypeCheckBoxChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onCardTypeCheckBoxChange");
     if (event.detail.checked) {
       this.slectedCardTypes.push(event.detail.value);
       let selectdItem = this.cardTypes.find(x => x.value == event.detail.value);
@@ -143,6 +125,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onAllCardsChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onAllCardsChange");
     if (event.detail.checked) {
       this.slectedCardTypes = [];
       this.cardTypes.forEach(element => {
@@ -160,6 +143,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onCategoryCheckBoxChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onCategoryCheckBoxChange");
+
     if (event.detail.checked) {
       this.slectedCategories.push(event.detail.value);
       let selectdItem = this.categories.find(x => x.value == event.detail.value);
@@ -175,6 +160,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onAllCategoriesChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onAllCategoriesChange");
+
     if (event.detail.checked) {
       this.slectedCategories = [];
       this.categories.forEach(element => {
@@ -192,6 +179,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onMonthCheckBoxChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onMonthCheckBoxChange");
+
     if (event.detail.checked) {
       this.selectedMonths.push(event.detail.value);
       let selectdItem = this.months.find(x => x.value == event.detail.value);
@@ -207,6 +196,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onAllMonthsChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onAllMonthsChange");
+
     if (event.detail.checked) {
       this.selectedMonths = [];
       this.months.forEach(element => {
@@ -224,6 +215,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onYearCheckBoxChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onYearCheckBoxChange");
+
     if (event.detail.checked) {
       this.selectedYears.push(event.detail.value);
       let selectdItem = this.years.find(x => x.value == event.detail.value);
@@ -240,6 +233,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onAllYearsChange(event: any) {
+    this.logger.trackEventCalls(FilterExpensePage.name, "onAllYearsChange");
+
     if (event.detail.checked) {
       this.selectedYears = [];
       this.years.forEach(element => {
@@ -257,7 +252,9 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   }
 
   onApplyFilters(modal: IonModal) {
-    this.showLoading();
+    this.logger.trackEventCalls(FilterExpensePage.name, "onApplyFilters");
+
+    this.utility.showLoading();
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
     this.slectedIsInclude = this.slectedIsInclude === undefined ? false : this.slectedIsInclude;
@@ -329,19 +326,5 @@ export class FilterExpensePage implements OnInit, OnDestroy {
     modal.dismiss();
     if (this.filterdData.length > 0)
       window.location.reload();
-  }
-
-  async showLoading() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Fetcing data...',
-      duration: 3000,
-      cssClass: 'custom-loading'
-    });
-    loading.present();
-  }
-
-
-  onItemClick(selectedTab: string) {
-    this.selectedTab = selectedTab;
   }
 }

@@ -32,8 +32,8 @@
             maxlength="4" minlength="4"
             labelPlacement="stacked"
             [counter]="true"
-            class="ion-text-uppercase"
-            (keypress)="onKeyPress()" required></ion-input>
+            (keypress)=" utility.onKeyPress(updateCardFG.controls.cardNumber+'', 3)"
+            required></ion-input>
         </ion-item>
         <ion-item color="light">
           <ion-input

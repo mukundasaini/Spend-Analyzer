@@ -1,14 +1,18 @@
 import { CommonModule, formatDate } from "@angular/common";
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
-import { collection, collectionData, doc, Firestore, orderBy, query, setDoc } from "@angular/fire/firestore";
+import { Component, Input, } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { AlertController, IonSelect, IonToggle, IonButton, IonButtons, IonContent, IonItem, IonModal, IonSelectOption, IonTitle, IonToolbar, IonInput } from '@ionic/angular/standalone';
+import {
+  IonSelect, IonToggle, IonButton, IonButtons, IonContent,
+  IonItem, IonModal, IonSelectOption, IonTitle, IonToolbar, IonInput
+} from '@ionic/angular/standalone';
 import { UUID } from "angular2-uuid";
-import { Observable, Subject } from "rxjs";
 import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
+import { FirebaseService } from "src/app/services/firebase.service";
+import { LoggerService } from "src/app/services/logger.service";
+import { UtilityService } from "src/app/services/utility.service";
 
 @Component({
   selector: 'app-create-expense',
@@ -21,14 +25,6 @@ import { Expense } from "src/app/Models/expense-model";
   ]
 })
 export class CreatEexpensePage {
-
-  firestore: Firestore = inject(Firestore);
-
-  expenseCollection = AppConstants.collections.expense;
-  categoryCollection = AppConstants.collections.category;
-  cardCollection = AppConstants.collections.cards;
-
-  logPrefix: string = 'CREATE_EXPENSE_PAGE::: ';
 
   hasEMI: boolean = false;
 
@@ -44,9 +40,10 @@ export class CreatEexpensePage {
   @Input() cardDetails: CardDetails[] = [];
   @Input() categories: Category[] = [];
 
-  constructor(private alertController: AlertController) {
-    console.log(this.logPrefix + "constructor");
-
+  constructor(private logger: LoggerService,
+    private utility: UtilityService,
+    private firebase: FirebaseService) {
+    this.logger.trackEventCalls(CreatEexpensePage.name, "constructor");
     this.expenseFG.controls.cardTypeId.setValue('');
     this.expenseFG.controls.categoryId.setValue('');
     this.expenseFG.controls.amount.setValue('');
@@ -54,24 +51,8 @@ export class CreatEexpensePage {
     this.expenseFG.controls.months.setValue(1);
   }
 
-  onIsIncludedChange(event: any) {
-    this.expenseFG.controls.isInclude.setValue(event.target.checked);
-  }
-
-  onHasEMIChange(event: any) {
-    this.hasEMI = event.target.checked;
-  }
-
-  onCardTypeChange(event: any) {
-    this.expenseFG.controls.cardTypeId.setValue(event.target.value);
-  }
-
-  onCategoryChange(event: any) {
-    this.expenseFG.controls.categoryId.setValue(event.target.value);
-  }
-
-
   onSubmit() {
+    this.logger.trackEventCalls(CreatEexpensePage.name, "onSubmit");
     var cardTypeId = this.expenseFG.controls.cardTypeId.value?.toString();
     var categoryId = this.expenseFG.controls.categoryId.value?.toString();
     var amount: number = parseInt(this.expenseFG.controls.amount.value == null ? '1'
@@ -99,20 +80,13 @@ export class CreatEexpensePage {
         emiMonths: months
       };
 
-      setDoc(doc(this.firestore, this.expenseCollection, expense.id), expense).then(x => {
-        console.log("expense saved successfully");
-        if (index == months - 1)
-          this.presentAlert('Success', "expense saved successfully");
-      }).catch(x => {
-        if (index == months - 1)
-          this.presentAlert('Warning', "expense saving failed");
-        console.log("expense saving failed");
-      });
+      this.firebase.saveRecordDetails(AppConstants.collections.expense, expense);
     }
     this.onClear();
   }
 
   onClear() {
+    this.logger.trackEventCalls(CreatEexpensePage.name, "onClear");
     this.expenseFG.controls.amount.setValue('');
     this.expenseFG.controls.cardTypeId.setValue('');
     this.expenseFG.controls.categoryId.setValue('');
@@ -122,23 +96,8 @@ export class CreatEexpensePage {
   }
 
   onKeyPress() {
-    let cardNum = this.expenseFG.controls.amount?.value?.toString() ?? '0';
-    if (cardNum.length > 14)
-      return false;
-    if (parseInt(cardNum) <= 0)
-      return false;
-    return true;
-  }
-
-
-  async presentAlert(alertHeader: string, alertMessage: string,) {
-    const alert = await this.alertController.create({
-      header: alertHeader,
-      message: alertMessage,
-      buttons: ['Close'],
-      cssClass: 'alert-custom',
-    });
-
-    await alert.present();
+    this.logger.trackEventCalls(CreatEexpensePage.name, "onKeyPress");
+    let amount = this.expenseFG.controls.amount?.value?.toString() ?? '0';
+    return this.utility.onKeyPress(amount, 10);
   }
 }
