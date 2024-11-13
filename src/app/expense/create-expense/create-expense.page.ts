@@ -71,7 +71,7 @@ export class CreatEexpensePage {
         cardTypeId: cardTypeId,
         categoryId: categoryId,
         amount: amount / months,
-        date: dateValues[2],
+        date: dateValues[2].substring(0,2),
         month: dateValues[1],
         year: dateValues[0],
         fullDate: fulldate,

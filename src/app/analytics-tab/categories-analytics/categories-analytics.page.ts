@@ -9,8 +9,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { CatPieChartPageDirective } from "../directives/cat-pie-chart.page.directive";
-import { CatBarChartPageDirective } from "../directives/cat-bar-chart.page.directive";
+import { HorizentalBarChartDirective } from "../directives/horizental-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
 
@@ -20,7 +19,7 @@ import { UtilityService } from "src/app/services/utility.service";
   styleUrls: ['categories-analytics.page.scss'],
   standalone: true,
   imports: [IonButton, IonSelect, IonSelectOption, IonLabel, IonItem, IonAccordion, IonAccordionGroup, CommonModule,
-    IonContent, IonTitle, IonToolbar, IonHeader, CatPieChartPageDirective, CatBarChartPageDirective],
+    IonContent, IonTitle, IonToolbar, IonHeader, HorizentalBarChartDirective],
 })
 export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 
@@ -39,7 +38,7 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
-  @ViewChild(CatBarChartPageDirective) catBarChart!: CatBarChartPageDirective;
+  @ViewChild(HorizentalBarChartDirective) catBarChart!: HorizentalBarChartDirective;
 
   constructor(private logger: LoggerService,
     public utility: UtilityService

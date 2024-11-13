@@ -1,4 +1,4 @@
-<canvas appCatBarChartPage
+<canvas appHorizentalBarChart
   [labels]="inputLabels"
   [backgroundColor]="inputBackgroundColor"
   [data]="inputData"
@@ -8,7 +8,7 @@
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
-  <ion-label class="ion-text-end" color="secondary">Total:
+  <ion-label class="ion-text-end" color="secondary">Rs.
     Rs.{{catsTotal}}</ion-label>
 </ion-item>
 
@@ -19,7 +19,9 @@
       <ion-item slot="header" color="light">
         <ion-label color="secondary">{{utility.getCategory(cats,
           cat.catId)}}</ion-label>
-        <ion-label color="tertiary">Total: {{cat.total}}</ion-label>
+        <ion-label color="tertiary">Rs. {{cat.total}}</ion-label>
+        <ion-label color="tertiary">
+          {{utility.getPercentage(cat.total,catsTotal)}}</ion-label>
       </ion-item>
       <div slot="content">
         <ion-item color="primary" class="ion-no-padding" lines="full"

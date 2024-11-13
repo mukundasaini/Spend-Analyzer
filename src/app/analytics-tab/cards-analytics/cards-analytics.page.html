@@ -1,4 +1,4 @@
-<canvas appCardPieChartPage
+<canvas appPieChart
   [labels]="inputLabels"
   [backgroundColor]="inputBackgroundColor"
   [data]="inputData"
@@ -8,8 +8,8 @@
 <ion-item id="cards-trans" lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
-    <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
-  <ion-label color="secondary" class="ion-text-end">Total:
+    <u>{{showTransactions?'Hide':'Show'}} Transactions</u></ion-button>
+  <ion-label color="secondary" class="ion-text-end">Rs.
     Rs.{{cardsTotal}}</ion-label>
 </ion-item>
 
@@ -17,9 +17,13 @@
   <ion-accordion-group *ngFor="let card of cardsExpenses;let i=index;">
     <ion-accordion [value]="utility.getcard(cards,card.cardId)">
       <ion-item slot="header" color="light">
-        <ion-label color="secondary">{{ utility.getcard(cards,card.cardId)
+        <ion-label color="secondary">{{ utility.getcard(cards,card.cardId)+'(' +
+          card.expenses.length
+          +')'
           }}</ion-label>
-        <ion-label color="tertiary">Total: {{card.cardTotal}}</ion-label>
+        <ion-label color="tertiary">Rs. {{card.cardTotal}}</ion-label>
+        <ion-label color="tertiary">
+          {{utility.getPercentage(card.cardTotal,cardsTotal)}}</ion-label>
       </ion-item>
       <div slot="content">
         <ion-accordion-group *ngFor="let expense of card.expenses">
@@ -29,9 +33,13 @@
               lines="full">
               <ion-label
                 class="ion-no-padding ion-padding-start">{{utility.getCategory(cats,
-                expense.categoryId)}}</ion-label>
+                expense.categoryId)+'(' +
+                expense.transactions.length
+                +')'}}</ion-label>
               <ion-label
                 class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
+              <ion-label class="ion-no-padding ion-text-end">
+                {{utility.getPercentage(expense.amount,card.cardTotal)}}</ion-label>
             </ion-item>
             <div slot="content">
               <ion-item color="light" lines="full"

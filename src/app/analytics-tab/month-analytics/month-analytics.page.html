@@ -1,0 +1,57 @@
+<canvas appLineChart
+  [labels]="inputLabels"
+  [data]="inputData"
+  (legendItemClick)="onLegendItemClick($event)"
+  width="475" height="310"></canvas>
+
+<ion-item id="cards-trans" lines="full" color="light">
+  <ion-button fill="clear" color="tertiary"
+    (click)="showTransactions = !showTransactions">
+    <u>{{showTransactions?'Hide':'Show'}} Transactions</u></ion-button>
+  <ion-label color="secondary" class="ion-text-end">Rs.
+    Rs.{{cardsTotal}}</ion-label>
+</ion-item>
+
+<div *ngIf="showTransactions">
+  <ion-accordion-group *ngFor="let card of cardsExpenses;let i=index;">
+    <ion-accordion [value]="card.day">
+      <ion-item slot="header" color="light">
+        <ion-label color="secondary">{{ card.day+'(' +
+          card.expenses.length
+          +')'
+          }}</ion-label>
+        <ion-label color="tertiary">Rs. {{card.total}}</ion-label>
+        <ion-label color="tertiary">
+          {{utility.getPercentage(card.total,cardsTotal)}}</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-item color="light" lines="full"
+          *ngFor="let transaction of card.expenses">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-label
+                  color="secondary">{{utility.getCategory(cats,transaction.categoryId)}}</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-label color="secondary">{{transaction.fullDate
+                  | date:'short'}}</ion-label>
+              </ion-col>
+              <ion-col size="2.5">
+                <ion-label
+                  color="secondary">Rs.{{transaction.amount}}</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-label
+                  color="secondary">
+                  <i> {{transaction.note}} </i></ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</div>

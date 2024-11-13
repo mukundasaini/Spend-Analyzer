@@ -7,7 +7,7 @@ import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { CardPieChartPageDirective } from "../directives/card-pie-chart.page.directive";
+import { PieChartDirective } from "../directives/pie-chart.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
@@ -20,7 +20,7 @@ import { UpdateExpensePage } from "../../expense/update-expense/update-expense.p
   styleUrls: ['cards-analytics.page.scss'],
   standalone: true,
   imports: [IonIcon, IonToggle, IonCol, IonRow, IonGrid, IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardPieChartPageDirective, UpdateExpensePage],
+    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, PieChartDirective, UpdateExpensePage],
 })
 export class CardsAnalyticsPage implements OnInit, OnChanges {
 
@@ -46,7 +46,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
-  @ViewChild(CardPieChartPageDirective) cardPieChart!: CardPieChartPageDirective;
+  @ViewChild(PieChartDirective) cardPieChart!: PieChartDirective;
 
   constructor(private logger: LoggerService,
     public utility: UtilityService

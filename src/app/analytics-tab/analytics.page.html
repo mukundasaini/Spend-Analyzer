@@ -11,13 +11,62 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div>
-    <ion-item lines="full">
-      <ion-grid>
-        <ion-row>
+  <div id="month-analystics">
+    <ion-item lines="full" class="ion-no-padding">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
           <ion-col class="ion-align-self-center">
-            <ion-label color="secondary" class="ion-text-start"> Cards
-              Analytics</ion-label>
+            <ion-label color="secondary"
+              class="ion-padding-start ion-text-start">Month</ion-label>
+          </ion-col>
+          <ion-col size="2">
+            <ion-select
+              class="ion-no-padding"
+              [placeholder]="presentMonth"
+              interface="popover"
+              (ionChange)="onMonthChange($event)">
+              <ion-select-option *ngFor="let item of months;"
+                [value]="item.value">
+                {{item.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col size="2">
+            <ion-select
+              class="ion-no-padding"
+              [placeholder]="presentYear"
+              interface="popover"
+              (ionChange)="onYearChange($event)">
+              <ion-select-option *ngFor="let item of years;"
+                [value]="item">
+                {{item}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col size="3">
+            <ion-toggle id="emi-toggle" class="ion-float-end"
+              (ionChange)="hideMonthAnalytics = $event.target.checked">{{'Hide'}}
+            </ion-toggle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <div *ngIf="!hideMonthAnalytics">
+      <app-month-analytics
+        *ngIf="hasCardsData && hasCatsData && inputMonthExpenses.length>0"
+        [cats]="inputCategories"
+        [cards]="inputCardDetails"
+        [expenses]="inputMonthExpenses"></app-month-analytics>
+    </div>
+  </div>
+
+  <div>
+    <ion-item lines="full" class="ion-no-padding">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
+          <ion-col class="ion-align-self-center">
+            <ion-label color="secondary"
+              class="ion-padding-start ion-text-start">Cards</ion-label>
           </ion-col>
           <ion-col size="2">
             <ion-select
@@ -60,12 +109,12 @@
     </div>
   </div>
   <div id="cats-section">
-    <ion-item lines="full">
-      <ion-grid>
-        <ion-row>
+    <ion-item lines="full" class="ion-no-padding">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
           <ion-col class="ion-align-self-center">
-            <ion-label color="secondary" class="ion-text-start"> Categories
-              Analytics</ion-label>
+            <ion-label color="secondary"
+              class="ion-padding-start ion-text-start">Categories</ion-label>
           </ion-col>
           <ion-col size="2">
             <ion-select
@@ -109,12 +158,12 @@
   </div>
 
   <div>
-    <ion-item lines="full">
-      <ion-grid>
-        <ion-row>
+    <ion-item lines="full" class="ion-no-padding">
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
           <ion-col class="ion-align-self-center">
-            <ion-label color="secondary" class="ion-text-start">
-              Monthly Analytics</ion-label>
+            <ion-label color="secondary"
+              class="ion-padding-start ion-text-start">Year</ion-label>
           </ion-col>
           <ion-col size="2">
             <ion-select
@@ -147,9 +196,9 @@
   </div>
 
   <div>
-    <ion-item lines="full">
-      <ion-label color="secondary" class="ion-text-start">
-        Yearly Analytics</ion-label>
+    <ion-item lines="full" class="ion-no-padding">
+      <ion-label color="secondary" class="ion-padding-start ion-text-start">Last
+        10 Years</ion-label>
     </ion-item>
     <div>
       <app-cards-yearly-analytics

@@ -8,9 +8,9 @@ import { Observable, of } from "rxjs";
 import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { CardPieChartPageDirective } from "../directives/card-pie-chart.page.directive";
+import { PieChartDirective } from "../directives/pie-chart.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
-import { CardBarChartPageDirective } from "../directives/card-bar-chart.page.directive";
+import { VerticalBarChartDirective } from "../directives/vertical-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
 
@@ -20,7 +20,7 @@ import { UtilityService } from "src/app/services/utility.service";
   styleUrls: ['cards-monthly-analytics.page.scss'],
   standalone: true,
   imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardBarChartPageDirective],
+    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, VerticalBarChartDirective],
 })
 export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
 
@@ -39,7 +39,7 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
-  @ViewChild(CardBarChartPageDirective) cardBarChart!: CardBarChartPageDirective;
+  @ViewChild(VerticalBarChartDirective) cardBarChart!: VerticalBarChartDirective;
 
   constructor(private logger: LoggerService,
     public utility: UtilityService

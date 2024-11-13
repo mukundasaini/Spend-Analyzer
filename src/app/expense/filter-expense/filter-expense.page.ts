@@ -6,7 +6,6 @@ import {
   IonToolbar, IonLabel, IonNav, IonNavLink, IonSegment, IonSegmentButton
 } from "@ionic/angular/standalone";
 import { Subject } from "rxjs";
-import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
 import { CheckBox } from "src/app/Models/checkbox.model";
@@ -65,7 +64,6 @@ export class FilterExpensePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.trackEventCalls(FilterExpensePage.name, "ngOnInit");
-
     this.cardBankNames = this.utility.getBankNamesCheckBox(this.cards);
     this.cardTypes = this.utility.getCardTypesCheckBox(this.cards);
     this.categories = this.utility.getCategoriesCheckBox(this.cats);

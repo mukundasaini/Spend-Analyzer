@@ -43,7 +43,7 @@ export class FirebaseService {
     this.logger.trackEventCalls(FirebaseService.name, 'getIncludeExpenses')
     return collectionData(
       query(collection(this.firestore, AppConstants.collections.expense),
-      where('isInclude', '==', true)
+        where('isInclude', '==', true)
       )) as Observable<Expense[]>
   }
 

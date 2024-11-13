@@ -1,4 +1,4 @@
-<canvas appCardBarChartPage
+<canvas appVerticalBarChart
   [labels]="inputLabels"
   [data]="inputData"
   [backgroundColor]="inputBackgroundColor"
@@ -8,7 +8,7 @@
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
-  <ion-label color="secondary" class="ion-text-end">Total:
+  <ion-label color="secondary" class="ion-text-end">Rs.
     Rs.{{total}}</ion-label>
 </ion-item>
 
@@ -17,7 +17,9 @@
     <ion-accordion [value]="trans.year">
       <ion-item slot="header" color="light">
         <ion-label color="secondary">{{trans.year}}</ion-label>
-        <ion-label color="tertiary">Total: {{trans.total}}</ion-label>
+        <ion-label color="tertiary">Rs. {{trans.total}}</ion-label>
+        <ion-label color="tertiary">
+          {{utility.getPercentage(trans.total,total)}}</ion-label>
       </ion-item>
       <div slot="content">
         <ion-item color="primary" *ngFor="let monthTotal of trans.monthsTotals"
@@ -27,6 +29,8 @@
             class="ion-no-padding ion-padding-start">{{monthTotal.month}}</ion-label>
           <ion-label
             class="ion-no-padding ion-text-end">Rs.{{monthTotal.total}}</ion-label>
+          <ion-label class="ion-no-padding ion-text-end">
+            {{utility.getPercentage(monthTotal.total,trans.total)}}</ion-label>
         </ion-item>
       </div>
     </ion-accordion>

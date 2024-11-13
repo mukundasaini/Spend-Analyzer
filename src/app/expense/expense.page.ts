@@ -47,7 +47,9 @@ export class ExpensePage implements OnInit {
   }
   ngOnInit(): void {
     this.logger.trackEventCalls(ExpensePage.name, "ngOnInit");
-    this.expenses.forEach(e => { this.hideExpenseFullDetails.push(false) });
+    this.expenses.forEach(e => {
+      this.hideExpenseFullDetails.push(false);
+    });
   }
 
   onClone(id: string) {

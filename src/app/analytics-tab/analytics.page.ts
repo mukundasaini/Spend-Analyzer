@@ -17,6 +17,7 @@ import { CardsYearlyAnalyticsPage } from "./cards-yearly-analytics/cards-yearly-
 import { FirebaseService } from "../services/firebase.service";
 import { LoggerService } from "../services/logger.service";
 import { UtilityService } from "../services/utility.service";
+import { MonthAnalyticsPage } from "./month-analytics/month-analytics.page";
 
 @Component({
   selector: 'app-analytics',
@@ -26,11 +27,12 @@ import { UtilityService } from "../services/utility.service";
   imports: [IonToggle, IonCol, IonRow, IonGrid, IonAccordion, IonAccordionGroup,
     IonSelect, IonSelectOption, IonRefresherContent, IonRefresher, IonItem, IonLabel,
     CommonModule, IonContent, IonTitle, IonToolbar, IonHeader,
-    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage, CardsYearlyAnalyticsPage],
+    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage, MonthAnalyticsPage, CardsYearlyAnalyticsPage],
 })
 export class AnalyticsPage implements OnInit, OnDestroy {
   inputCardDetails: CardDetails[] = [];
   inputCategories: Category[] = [];
+  inputMonthExpenses: Expense[] = [];
   inputCardsYearMonthExpenses: Expense[] = [];
   inputCatsYearMonthExpenses: Expense[] = [];
   inputAllMonthsExpenses: Expense[] = [];
@@ -45,6 +47,8 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   hasCatsData: boolean = false;
   presentMonth!: string;
   presentYear!: string;
+  selectedMonth!: string;
+  selectedYear!: string;
   selectedCardMonth!: string;
   selectedCardYear!: string;
   selectedCatMonth!: string;
@@ -52,6 +56,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   selectedAllMonthsYear!: string;
   years: string[] = [];
   months = AppConstants.Months;
+  hideMonthAnalytics: boolean = false;
   hideCardsAnalytics: boolean = false;
   hideCatsAnalytics: boolean = false;
   hideAllMonthsAnalytics: boolean = false;
@@ -76,9 +81,9 @@ export class AnalyticsPage implements OnInit, OnDestroy {
     this.utility.showLoading();
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
-    this.selectedAllMonthsYear = this.selectedCatYear = this.selectedCardYear = this.presentYear = dateValues[0];
+    this.selectedAllMonthsYear = this.selectedCatYear = this.selectedCardYear = this.presentYear = this.selectedYear = dateValues[0];
     this.presentMonth = this.utility.getMonthName(dateValues[1]);
-    this.selectedCatMonth = this.selectedCardMonth = dateValues[1];
+    this.selectedCatMonth = this.selectedCardMonth = this.selectedMonth = dateValues[1];
 
     this.expenses$
       .pipe(takeUntil(this.onDestroy$))
@@ -86,8 +91,9 @@ export class AnalyticsPage implements OnInit, OnDestroy {
         this.inputAllYearsExpenses = expenses;
         this.years = this.utility.getYearsCheckBox(this.inputAllYearsExpenses).map(item => item.value);
         this.inputAllMonthsExpenses = this.utility.getCurrentMonthExpenses(this.inputAllYearsExpenses, true);
-        this.inputCardsYearMonthExpenses = this.utility.getCurrentMonthExpenses(this.inputAllYearsExpenses);
-        this.inputCatsYearMonthExpenses = this.inputCardsYearMonthExpenses;
+        this.inputMonthExpenses = this.utility.getCurrentMonthExpenses(this.inputAllYearsExpenses);
+        this.inputCardsYearMonthExpenses = Array.from(this.inputMonthExpenses);
+        this.inputCatsYearMonthExpenses = Array.from(this.inputMonthExpenses);
       });
 
     this.cardDetails$.pipe(takeUntil(this.onDestroy$))
@@ -125,6 +131,18 @@ export class AnalyticsPage implements OnInit, OnDestroy {
     this.logger.trackEventCalls(AnalyticsPage.name, "onCatMonthChange");
     this.selectedCatMonth = event.target.value;
     this.inputCatsYearMonthExpenses = this.getExpensesByMonthYear(this.selectedCatMonth, this.selectedCatYear);
+  }
+
+  onYearChange(event: any) {
+    this.logger.trackEventCalls(AnalyticsPage.name, "onMonthYearChange");
+    this.selectedYear = event.target.value;
+    this.inputMonthExpenses = this.getExpensesByMonthYear(this.selectedMonth, this.selectedYear);
+  }
+
+  onMonthChange(event: any) {
+    this.logger.trackEventCalls(AnalyticsPage.name, "onMonthMonthChange");
+    this.selectedMonth = event.target.value;
+    this.inputMonthExpenses = this.getExpensesByMonthYear(this.selectedMonth, this.selectedYear);
   }
 
   onAllMonthsYearChange(event: any) {

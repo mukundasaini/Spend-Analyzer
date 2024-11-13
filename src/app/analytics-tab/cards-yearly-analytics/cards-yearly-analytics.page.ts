@@ -10,7 +10,7 @@ import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
 import { CardDetails } from "src/app/Models/card-details.model";
-import { CardBarChartPageDirective } from "../directives/card-bar-chart.page.directive";
+import { VerticalBarChartDirective } from "../directives/vertical-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
 
@@ -20,7 +20,7 @@ import { UtilityService } from "src/app/services/utility.service";
   styleUrls: ['cards-yearly-analytics.page.scss'],
   standalone: true,
   imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, CardBarChartPageDirective],
+    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, VerticalBarChartDirective],
 })
 export class CardsYearlyAnalyticsPage implements OnInit {
 
@@ -41,10 +41,10 @@ export class CardsYearlyAnalyticsPage implements OnInit {
   @Input() expenses: Expense[] = [];
   @Input() years: string[] = [];
 
-  @ViewChild(CardBarChartPageDirective) cardBarChart!: CardBarChartPageDirective;
+  @ViewChild(VerticalBarChartDirective) cardBarChart!: VerticalBarChartDirective;
 
   constructor(private logger: LoggerService,
-    private utility: UtilityService
+    public utility: UtilityService
   ) {
     this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);

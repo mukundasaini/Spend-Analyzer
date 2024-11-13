@@ -28,6 +28,10 @@ export class UtilityService {
 
 
   /** Business logic */
+  getPercentage(value: number, total: number) {
+    return ((value / total) * 100).toFixed(2) + '%';
+  }
+
   onKeyPress(value: string, minLength: number) {
     if (value.length > minLength)
       return false;
@@ -138,6 +142,9 @@ export class UtilityService {
         break;
       case 'year':
         groups = this.groupBy(expenses, e => e.year);
+        break;
+      case 'day':
+        groups = this.groupBy(expenses, e => e.date);
         break;
     }
     return groups;
