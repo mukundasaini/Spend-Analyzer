@@ -17,11 +17,11 @@ export class UtilityService {
   cardCollection = AppConstants.collections.cards;
   loading: Promise<HTMLIonLoadingElement>;
 
-  constructor(private logger: LoggerService, private loadingCtrl: LoadingController,
+  constructor(private logger: LoggerService, loadingCtrl: LoadingController,
     private alertController: AlertController) {
     this.loading = loadingCtrl.create({
       message: 'Fetcing data...',
-      duration: 1000,
+      duration: 2000,
       cssClass: 'custom-loading'
     });
   }
@@ -156,7 +156,7 @@ export class UtilityService {
   /** Ionic */
   async showLoading() {
     this.logger.trackEventCalls(UtilityService.name, 'showLoading');
-    (await this.loading).present();
+   // (await this.loading).present();
   }
 
   async presentAlert(alertHeader: string, alertMessage: string, exption?: any) {

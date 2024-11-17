@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonContent, IonFab, IonFabButton, IonBadge, IonItem, IonGrid, IonRow, IonCol, IonChip, IonSkeletonText, IonLabel, IonRefresherContent, IonRefresher, IonSearchbar } from "@ionic/angular/standalone";
+import {
+  IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon,
+  IonContent, IonFab, IonFabButton, IonBadge, IonRefresherContent, IonRefresher
+} from "@ionic/angular/standalone";
 import { FilterExpensePage } from "../expense/filter-expense/filter-expense.page";
 import { ExpensePage } from "../expense/expense.page";
 import { CreatEexpensePage } from "../expense/create-expense/create-expense.page";
@@ -20,10 +23,10 @@ import { UtilityService } from "../services/utility.service";
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonSearchbar, IonRefresher, IonRefresherContent, IonLabel,
-    IonSkeletonText, IonChip, IonCol, IonRow, IonGrid, IonItem, CommonModule,
-    IonBadge, IonFabButton, IonFab, IonContent, IonIcon, IonButton, IonButtons,
-    IonToolbar, IonTitle, IonHeader, FilterExpensePage, ExpensePage, CreatEexpensePage],
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon,
+    IonBadge, FilterExpensePage, IonContent, IonRefresher, IonRefresherContent, ExpensePage,
+    IonFab, IonFabButton, CreatEexpensePage
+  ],
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -70,8 +73,8 @@ export class HomePage implements OnInit, OnDestroy {
       .subscribe(expenses => {
         this.inputFilterExpenses = expenses;
         this.hasExpensesData = this.inputFilterExpenses.length > 0;
-        this.inputPresetMonthExpenses =this.utility.getCurrentMonthExpenses(expenses);
-         this.hasPresetMonthExpenseData = this.inputPresetMonthExpenses.length > 0;
+        this.inputPresetMonthExpenses = this.utility.getCurrentMonthExpenses(expenses);
+        this.hasPresetMonthExpenseData = this.inputPresetMonthExpenses.length > 0;
         this.inputYears = this.utility.getYearsCheckBox(expenses);
       });
 

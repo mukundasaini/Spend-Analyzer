@@ -1,7 +1,9 @@
 import { Component, Input } from "@angular/core";
 import { DocumentSnapshot } from "@angular/fire/firestore";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { IonButton, IonButtons, IonContent, IonInput, IonItem, IonModal, IonTitle, IonToolbar } from "@ionic/angular/standalone";
+import {
+  IonButton, IonButtons, IonContent, IonInput, IonItem, IonModal, IonToolbar
+} from "@ionic/angular/standalone";
 import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { FirebaseService } from "src/app/services/firebase.service";
@@ -14,7 +16,7 @@ import { UtilityService } from "src/app/services/utility.service";
   styleUrls: ['update-card.page.scss'],
   standalone: true,
   imports: [ReactiveFormsModule,
-    IonModal, IonContent, IonToolbar, IonTitle, IonButtons,
+    IonModal, IonContent, IonToolbar, IonButtons,
     IonButton, IonItem, IonInput]
 })
 export class UpdateCardPage {

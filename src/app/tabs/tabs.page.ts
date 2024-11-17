@@ -2,6 +2,7 @@ import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { wallet, card, apps, analytics, settings } from 'ionicons/icons';
+import { LoggerService } from '../services/logger.service';
 
 @Component({
   selector: 'app-tabs',
@@ -12,10 +13,9 @@ import { wallet, card, apps, analytics, settings } from 'ionicons/icons';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
-  logPrefix: string = 'TABS_PAGE::: ';
 
-  constructor() {
-    console.log(this.logPrefix + "constructor");
+  constructor(private log: LoggerService) {
+    log.trackEventCalls(TabsPage.name, "constructor");
     addIcons({ wallet, card, apps, analytics, settings });
   }
 }

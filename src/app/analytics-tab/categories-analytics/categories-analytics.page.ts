@@ -1,9 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion,
-  IonItem, IonLabel, IonButton, IonSelect, IonSelectOption
-} from '@ionic/angular/standalone';
+  IonAccordionGroup, IonAccordion,
+  IonItem, IonLabel, IonButton} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CardDetails } from "src/app/Models/card-details.model";
@@ -18,8 +17,9 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'categories-analytics.page.html',
   styleUrls: ['categories-analytics.page.scss'],
   standalone: true,
-  imports: [IonButton, IonSelect, IonSelectOption, IonLabel, IonItem, IonAccordion, IonAccordionGroup, CommonModule,
-    IonContent, IonTitle, IonToolbar, IonHeader, HorizentalBarChartDirective],
+  imports: [CommonModule, HorizentalBarChartDirective, IonItem, IonButton, IonLabel, IonAccordionGroup,
+    IonAccordion
+  ],
 })
 export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 

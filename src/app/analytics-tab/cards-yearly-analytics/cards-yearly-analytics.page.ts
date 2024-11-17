@@ -1,12 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup,
-  IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption
-} from '@ionic/angular/standalone';
+  IonAccordionGroup,
+  IonAccordion, IonItem, IonLabel, IonButton} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
 import { CardDetails } from "src/app/Models/card-details.model";
@@ -19,8 +17,9 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'cards-yearly-analytics.page.html',
   styleUrls: ['cards-yearly-analytics.page.scss'],
   standalone: true,
-  imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, VerticalBarChartDirective],
+  imports: [CommonModule, VerticalBarChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
+    IonAccordionGroup
+  ],
 })
 export class CardsYearlyAnalyticsPage implements OnInit {
 

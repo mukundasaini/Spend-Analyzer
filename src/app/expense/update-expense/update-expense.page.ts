@@ -2,7 +2,11 @@ import { CommonModule, formatDate } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { DocumentSnapshot } from "@angular/fire/firestore";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { IonButton, IonDatetimeButton, IonDatetime, IonSelect, IonToggle, IonButtons, IonContent, IonInput, IonItem, IonModal, IonTitle, IonToolbar, IonSelectOption } from '@ionic/angular/standalone';
+import {
+  IonButton, IonDatetimeButton, IonDatetime, 
+  IonButtons, IonContent, IonInput, IonItem, IonModal, IonToolbar, IonSelectOption
+} from '@ionic/angular/standalone';
+import { UUID } from "angular2-uuid";
 import { AppConstants } from "src/app/app.constants";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { Category } from "src/app/Models/category.model";
@@ -16,9 +20,9 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'update-expense.page.html',
   styleUrls: ['update-expense.page.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,
-    IonModal, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonSelect,
-    IonButton, IonDatetime, IonDatetimeButton, IonItem, IonInput, IonSelectOption]
+  imports: [CommonModule, ReactiveFormsModule, IonModal, IonContent, IonButton,
+    IonToolbar, IonButtons, IonItem, IonSelectOption, IonDatetimeButton, IonDatetime,
+    IonInput]
 })
 export class UpdateExpensePage {
 
@@ -73,6 +77,39 @@ export class UpdateExpensePage {
     }
 
     this.firebase.updateRecordDetails(AppConstants.collections.expense, expense);
+  }
+
+  onClone(id: string) {
+    this.logger.trackEventCalls(UpdateExpensePage.name, "onClone");
+    this.firebase.getRecordDetails(AppConstants.collections.expense, id).then((document: DocumentSnapshot) => {
+      let expenseDetils = document.data() as Expense;
+      var months = expenseDetils.emiMonths ?? 1;
+      for (let index = 0; index < months; index++) {
+        var oldDate = new Date();
+        var date = new Date(oldDate.setMonth(oldDate.getMonth() + index));
+        const fulldate = formatDate(date, 'yyyy-MM-dd hh:mm:ss.sss a Z', 'en-US');
+        const dateValues = fulldate.split('-');
+
+        let expense = <Expense>{
+          id: UUID.UUID(),
+          cardTypeId: expenseDetils.cardTypeId,
+          categoryId: expenseDetils.categoryId,
+          amount: expenseDetils.amount / months,
+          date: dateValues[2].substring(0, 2),
+          month: dateValues[1],
+          year: dateValues[0],
+          fullDate: fulldate,
+          isInclude: expenseDetils.isInclude,
+          note: expenseDetils.note,
+          emiMonths: months
+        };
+
+        this.firebase.saveRecordDetails(AppConstants.collections.expense, expense, index)
+      }
+
+    }).catch(ex => {
+      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed, ex);
+    });
   }
 
   onDelete(id: string) {

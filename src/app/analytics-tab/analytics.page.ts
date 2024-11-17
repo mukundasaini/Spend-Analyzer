@@ -2,8 +2,8 @@ import { CommonModule, formatDate } from "@angular/common";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
-  IonLabel, IonItem, IonRefresher, IonRefresherContent, IonAccordionGroup,
-  IonAccordion, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonToggle
+  IonLabel, IonItem, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption,
+  IonGrid, IonRow, IonCol, IonToggle
 } from '@ionic/angular/standalone';
 import { CardsAnalyticsPage } from "./cards-analytics/cards-analytics.page";
 import { Observable, Subject, takeUntil } from "rxjs";
@@ -17,17 +17,16 @@ import { CardsYearlyAnalyticsPage } from "./cards-yearly-analytics/cards-yearly-
 import { FirebaseService } from "../services/firebase.service";
 import { LoggerService } from "../services/logger.service";
 import { UtilityService } from "../services/utility.service";
-import { MonthAnalyticsPage } from "./month-analytics/month-analytics.page";
+import { DailyAnalyticsPage } from "./daily-analytics/daily-analytics.page";
 
 @Component({
   selector: 'app-analytics',
   templateUrl: 'analytics.page.html',
   styleUrls: ['analytics.page.scss'],
   standalone: true,
-  imports: [IonToggle, IonCol, IonRow, IonGrid, IonAccordion, IonAccordionGroup,
-    IonSelect, IonSelectOption, IonRefresherContent, IonRefresher, IonItem, IonLabel,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader,
-    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage, MonthAnalyticsPage, CardsYearlyAnalyticsPage],
+  imports: [CommonModule, IonHeader, IonToolbar, IonContent, IonTitle, IonRefresher, IonRefresherContent, IonItem, IonGrid,
+    IonRow, IonCol, IonLabel, IonSelect, IonSelectOption, IonToggle,
+    CardsAnalyticsPage, CategoriesAnalyticsPage, CardsMonthlyAnalyticsPage, DailyAnalyticsPage, CardsYearlyAnalyticsPage],
 })
 export class AnalyticsPage implements OnInit, OnDestroy {
   inputCardDetails: CardDetails[] = [];

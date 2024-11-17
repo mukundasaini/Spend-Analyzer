@@ -24,6 +24,12 @@
         <ion-label color="tertiary">Rs. {{card.cardTotal}}</ion-label>
         <ion-label color="tertiary">
           {{utility.getPercentage(card.cardTotal,cardsTotal)}}</ion-label>
+        <ion-button color="tertiary"
+          (click)="onCardExcludeClick(i,card.cardId)"
+          fill="clear">
+          <ion-icon slot="icon-only" name="remove">
+          </ion-icon>
+        </ion-button>
       </ion-item>
       <div slot="content">
         <ion-accordion-group *ngFor="let expense of card.expenses">
@@ -40,6 +46,12 @@
                 class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
               <ion-label class="ion-no-padding ion-text-end">
                 {{utility.getPercentage(expense.amount,card.cardTotal)}}</ion-label>
+              <ion-button color="tertiary"
+                (click)="onCatExcludeClick(i,expense.categoryId)"
+                fill="clear">
+                <ion-icon slot="icon-only" name="remove">
+                </ion-icon>
+              </ion-button>
             </ion-item>
             <div slot="content">
               <ion-item color="light" lines="full"
@@ -60,6 +72,14 @@
                       <ion-label
                         color="secondary">
                         <i> {{transaction.note}} </i></ion-label>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-button color="tertiary"
+                        (click)="onItemExcludeClick(transaction.id)"
+                        fill="clear">
+                        <ion-icon slot="icon-only" name="remove">
+                        </ion-icon>
+                      </ion-button>
                     </ion-col>
                   </ion-row>
                 </ion-grid>

@@ -1,4 +1,4 @@
-<ion-modal #updateExpenseModal
+<ion-modal aria-hidden="true" #updateExpenseModal
   [trigger]="'open-expense-update-dialog_' +inputSelectedItemId"
   [initialBreakpoint]="0.65"
   [breakpoints]="[0,0.65, 0.75,0.90]"
@@ -10,6 +10,10 @@
           <ion-button size="small" fill="clear" shape="round"
             color="secondary"
             (click)="updateExpenseModal.dismiss();onDelete(inputSelectedItemId);">Remove</ion-button>
+          <ion-button class="ion-padding-start" size="small" fill="clear"
+            shape="round"
+            color="secondary"
+            (click)="updateExpenseModal.dismiss();onClone(inputSelectedItemId)">Clone</ion-button>
           <ion-buttons slot="end">
 
             <ion-button size="small" shape="round" color="secondary"

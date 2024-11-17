@@ -1,9 +1,9 @@
 import { CommonModule, formatDate } from "@angular/common";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import {
-  IonPopover, IonButton, IonCol, IonGrid, IonContent, IonRow,
-  IonCheckbox, IonList, IonItem, IonModal, IonHeader, IonButtons,
-  IonToolbar, IonLabel, IonNav, IonNavLink, IonSegment, IonSegmentButton
+  IonButton, IonCol, IonGrid, IonContent, IonRow,
+  IonCheckbox, IonList, IonItem, IonModal, IonHeader, 
+  IonToolbar, IonSegment, IonSegmentButton
 } from "@ionic/angular/standalone";
 import { Subject } from "rxjs";
 import { CardDetails } from "src/app/Models/card-details.model";
@@ -17,10 +17,9 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'filter-expense.page.html',
   styleUrls: ['filter-expense.page.scss'],
   standalone: true,
-  imports: [IonSegmentButton, IonSegment, IonNavLink, IonNav,
-    IonLabel, IonToolbar, IonButtons, IonHeader, IonModal,
-    CommonModule, IonItem, IonList, IonCheckbox, IonRow,
-    IonContent, IonGrid, IonCol, IonButton, IonPopover,]
+  imports: [CommonModule, IonModal, IonHeader, IonToolbar, IonButton, IonContent,
+    IonGrid, IonCol, IonRow, IonSegment, IonList, IonSegmentButton, IonItem, IonCheckbox,
+  ]
 })
 export class FilterExpensePage implements OnInit, OnDestroy {
   cardBankNames: CheckBox[] = [];

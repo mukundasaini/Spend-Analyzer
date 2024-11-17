@@ -1,14 +1,10 @@
-import { CommonModule, formatDate } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
-import { collection, collectionData, Firestore, orderBy, query, where } from "@angular/fire/firestore";
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import Chart, { ChartConfiguration, ChartData, ChartDataset } from 'chart.js/auto';
+import { CommonModule } from "@angular/common";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton } from '@ionic/angular/standalone';
+import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Observable, of } from "rxjs";
-import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { PieChartDirective } from "../directives/pie-chart.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { VerticalBarChartDirective } from "../directives/vertical-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
@@ -19,8 +15,9 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'cards-monthly-analytics.page.html',
   styleUrls: ['cards-monthly-analytics.page.scss'],
   standalone: true,
-  imports: [IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, VerticalBarChartDirective],
+  imports: [CommonModule, VerticalBarChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
+    IonAccordionGroup
+  ],
 })
 export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
 

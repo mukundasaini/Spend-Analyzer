@@ -2,9 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CardsPage } from "../cards/cards.page";
 import { CategoryPage } from "../category/category.page";
 import {
-  IonBadge, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid,
-  IonHeader, IonIcon, IonInput, IonItem, IonList, IonModal, IonPopover, IonRow, IonTitle,
-  IonToolbar, IonChip, IonSkeletonText
+  IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonRow, IonTitle,
+  IonToolbar
 } from '@ionic/angular/standalone';
 import { CreateCardPage } from '../cards/create-card/create-card.page';
 import { CreateCategoryPage } from "../category/create-category/create-category.page";
@@ -21,10 +20,9 @@ import { LoggerService } from '../services/logger.service';
   templateUrl: 'settings.page.html',
   styleUrls: ['settings.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonSkeletonText, IonChip, CardsPage, IonBadge, IonInput, IonModal, IonButtons, IonButton,
-    IonIcon, IonPopover, IonCheckbox,
-    IonList, IonItem, CreateCardPage, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CategoryPage
-    , CreateCategoryPage]
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol,
+    IonButtons, IonButton, CreateCardPage, CardsPage, CreateCategoryPage, CategoryPage
+  ]
 })
 export class SettingsPage implements OnInit, OnDestroy {
   categories$: Observable<Category[]>;

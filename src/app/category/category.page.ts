@@ -9,11 +9,11 @@ import { CommonModule } from "@angular/common";
   templateUrl: 'category.page.html',
   styleUrls: ['category.page.scss'],
   standalone: true,
-  imports: [IonSkeletonText, CommonModule, IonButton, IonChip, UpdateCategoryPage],
+  imports: [CommonModule, IonButton, IonChip, UpdateCategoryPage],
 })
 export class CategoryPage {
   @Input() categories: Category[] = [];
 
-  constructor() { 
+  constructor() {
   }
 }

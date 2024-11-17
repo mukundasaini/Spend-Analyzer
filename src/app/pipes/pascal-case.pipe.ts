@@ -13,15 +13,15 @@ export class PascalCasePipe implements PipeTransform {
 
         if (value.indexOf(' ') > -1) {
             let words = value.split(' ');
-
-            value = this.toPascalCase(words[0]) + ' ' + this.toPascalCase(words[1])
+            value = words.reduce((p, c) => p + this.toPascalCase(c) + ' ', '');
+            value = value.substring(0, value.length - 1);
             return value;
         }
 
         if (value.indexOf('/') > -1) {
             let words = value.split('/');
-
-            value = this.toPascalCase(words[0]) + '/' + this.toPascalCase(words[1])
+            value = words.reduce((p, c) => p + this.toPascalCase(c) + '/', '');
+            value = value.substring(0, value.length - 1);
             return value;
         }
 

@@ -2,8 +2,8 @@ import { CommonModule, formatDate } from "@angular/common";
 import { Component, Input, } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import {
-  IonSelect, IonToggle, IonButton, IonButtons, IonContent,
-  IonItem, IonModal, IonSelectOption, IonTitle, IonToolbar, IonInput
+  IonToggle, IonButton, IonButtons, IonContent,
+  IonItem, IonModal, IonSelectOption, IonToolbar, IonInput
 } from '@ionic/angular/standalone';
 import { UUID } from "angular2-uuid";
 import { AppConstants } from "src/app/app.constants";
@@ -20,8 +20,8 @@ import { UtilityService } from "src/app/services/utility.service";
   styleUrls: ['create-expense.page.scss'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,
-    IonModal, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonButton,
-    IonItem, IonSelectOption, IonInput, IonSelect
+    IonModal, IonContent, IonToolbar, IonButton, IonButtons, IonItem, IonSelectOption,
+    IonToggle, IonInput
   ]
 })
 export class CreatEexpensePage {
@@ -71,7 +71,7 @@ export class CreatEexpensePage {
         cardTypeId: cardTypeId,
         categoryId: categoryId,
         amount: amount / months,
-        date: dateValues[2].substring(0,2),
+        date: dateValues[2].substring(0, 2),
         month: dateValues[1],
         year: dateValues[0],
         fullDate: fulldate,

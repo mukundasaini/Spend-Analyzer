@@ -1,23 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  IonHeader, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonToolbar, IonIcon, IonTitle, IonContent, IonButton, IonInput, IonItem, IonLabel,
+  IonToolbar, IonContent, IonButton, IonInput, IonItem, 
   IonModal,
-  IonAlert,
-  IonButtons,
-  IonText,
-  IonFabButton,
-  IonFab,
-  IonItemSliding,
-  IonItemOptions,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonItemOption, IonChip,
-  IonPopover,
-  IonCheckbox,
+  IonButtons
+  ,
 } from '@ionic/angular/standalone';
 import { UUID } from 'angular2-uuid';
 import { AppConstants } from '../../app.constants';
@@ -30,10 +17,9 @@ import { LoggerService } from 'src/app/services/logger.service';
   templateUrl: 'create-category.page.html',
   styleUrls: ['create-category.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonGrid, IonPopover, IonCol, IonRow, IonChip,
-    IonText, IonItemOptions, IonItemOption, IonCheckbox,
-    IonFabButton, IonFab, IonButtons, IonAlert, IonModal, IonIcon, IonList, CommonModule, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader,
-    IonCardTitle, IonItemSliding, IonCardSubtitle, IonCardContent, IonButton, IonItem, IonInput, IonLabel, ReactiveFormsModule]
+  imports: [ReactiveFormsModule, IonModal, IonContent, IonToolbar, IonButton, IonButtons, IonInput,
+    IonItem
+  ]
 })
 export class CreateCategoryPage {
 

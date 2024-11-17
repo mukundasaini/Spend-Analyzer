@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import {
-  IonHeader, IonToolbar, IonTitle, IonContent, IonAccordionGroup,
-  IonAccordion, IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonGrid, IonRow, IonCol, IonToggle, IonIcon } from '@ionic/angular/standalone';
+  IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonButton, IonGrid,
+  IonRow, IonCol, IonIcon
+} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Category } from "src/app/Models/category.model";
@@ -11,16 +12,17 @@ import { PieChartDirective } from "../directives/pie-chart.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
-import { AppConstants } from "src/app/app.constants";
-import { UpdateExpensePage } from "../../expense/update-expense/update-expense.page";
+import { addIcons } from "ionicons";
+import { remove } from "ionicons/icons";
 
 @Component({
   selector: 'app-cards-analytics',
   templateUrl: 'cards-analytics.page.html',
   styleUrls: ['cards-analytics.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonToggle, IonCol, IonRow, IonGrid, IonSelect, IonSelectOption, IonButton, IonLabel, IonItem, IonAccordion, IonAccordionGroup,
-    CommonModule, IonContent, IonTitle, IonToolbar, IonHeader, PieChartDirective, UpdateExpensePage],
+  imports: [IonIcon, CommonModule, PieChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
+    IonAccordionGroup, IonGrid, IonRow, IonCol,
+  ],
 })
 export class CardsAnalyticsPage implements OnInit, OnChanges {
 
@@ -53,6 +55,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   ) {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);
+    addIcons({ remove });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,11 +65,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
       if (currentSelected.month != previousSelected.month
         || currentSelected.year != previousSelected.year) {
-        this.loadChartData();
-        this.cardPieChart.chart.data.labels = this.inputLabels;
-        this.cardPieChart.chart.data.datasets[0].data = this.inputData;
-        this.cardPieChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
-        this.cardPieChart.chart.update();
+        this.updateChartData();
         this.loadTransactions();
       }
     }
@@ -76,6 +75,14 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     this.expensesTransactions = Array.from(this.expenses);
     this.loadChartData();
     this.loadTransactions();
+  }
+
+  updateChartData() {
+    this.loadChartData();
+    this.cardPieChart.chart.data.labels = this.inputLabels;
+    this.cardPieChart.chart.data.datasets[0].data = this.inputData;
+    this.cardPieChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
+    this.cardPieChart.chart.update();
   }
 
   loadChartData() {
@@ -121,6 +128,37 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     }
 
     this.cardsExpenses = this.cardsExpenses.sort((a, b) => b.cardTotal - a.cardTotal);
+  }
+
+  onCardExcludeClick(index: number, cardId: string) {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "onGroupExcludeClick");
+    let excludeExpensesIds = this.cardsExpenses[index].expenses
+      .filter(e => e.cardTypeId == cardId)
+      .map(e => e.transactions).reduce((p, c) => p.concat(c), []).map(e => e.id);
+    this.expensesTransactions = this.expensesTransactions.filter(e => !excludeExpensesIds.includes(e.id));
+    this.expenses = this.expenses.filter(e => !excludeExpensesIds.includes(e.id));
+
+    this.updateChartData();
+    this.loadTransactions();
+  }
+
+  onCatExcludeClick(index: number, catId: string) {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "onCatExcludeClick");
+    let excludeExpensesIds = this.cardsExpenses[index].expenses
+      .filter(e => e.categoryId == catId)
+      .map(e => e.transactions).reduce((p, c) => p.concat(c), []).map(e => e.id);
+    this.expensesTransactions = this.expensesTransactions.filter(e => !excludeExpensesIds.includes(e.id));
+    this.expenses = this.expenses.filter(e => !excludeExpensesIds.includes(e.id));
+    this.updateChartData();
+    this.loadTransactions();
+  }
+
+  onItemExcludeClick(id: string) {
+    this.logger.trackEventCalls(CardsAnalyticsPage.name, "onItemExcludeClick");
+    this.expensesTransactions = this.expensesTransactions.filter(e => e.id != id);
+    this.expenses = this.expenses.filter(e => e.id != id);
+    this.updateChartData();
+    this.loadTransactions();
   }
 
   onLegendItemClick(legend: any) {

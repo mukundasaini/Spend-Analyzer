@@ -10,14 +10,13 @@
   <ion-refresher slot="fixed" (ionRefresh)="utility.handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
   <div id="month-analystics">
     <ion-item lines="full" class="ion-no-padding">
       <ion-grid class="ion-no-padding">
         <ion-row class="ion-no-padding">
           <ion-col class="ion-align-self-center">
             <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Month</ion-label>
+              class="ion-padding-start ion-text-start">Daily</ion-label>
           </ion-col>
           <ion-col size="2">
             <ion-select
@@ -52,11 +51,11 @@
       </ion-grid>
     </ion-item>
     <div *ngIf="!hideMonthAnalytics">
-      <app-month-analytics
+      <app-daily-analytics
         *ngIf="hasCardsData && hasCatsData && inputMonthExpenses.length>0"
         [cats]="inputCategories"
         [cards]="inputCardDetails"
-        [expenses]="inputMonthExpenses"></app-month-analytics>
+        [expenses]="inputMonthExpenses"></app-daily-analytics>
     </div>
   </div>
 

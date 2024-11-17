@@ -2,7 +2,8 @@
   <div
     *ngFor="let item of expenses;let i=index;">
     <ion-card>
-      <ion-item class="ion-no-padding ion-activatable"
+      <ion-item [id]="'open-expense-update-dialog_'+item.id"
+        class="ion-no-padding ion-activatable"
         lines="none">
         <ion-ripple-effect></ion-ripple-effect>
         <div
@@ -29,75 +30,13 @@
                 {{item.fullDate |date:'medium'}}
               </ion-label>
             </ion-col>
-            <ion-col class="ion-text-end">
-              <ion-button (click)="onClone(item.id)"
-                size="small"
-                color="secondary" fill="clear">
-                <ion-icon name="copy" color="secondary"></ion-icon>
-              </ion-button>
-            </ion-col>
-            <ion-col>
-              <ion-button
-                (click)="hideExpenseFullDetails[i]=!hideExpenseFullDetails[i]"
-                size="small"
-                color="secondary" fill="clear">
-                <ion-icon [name]="!hideExpenseFullDetails[i]?'add':'remove'"
-                  color="secondary"></ion-icon>
-              </ion-button>
-            </ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
-      <ion-item-divider *ngIf="hideExpenseFullDetails[i]"></ion-item-divider>
-      <ion-item lines="none" *ngIf="hideExpenseFullDetails[i]">
-        <ion-button size="medium"
-          [id]="'open-expense-update-dialog_'+item.id"
-          fill="clear">
-          <ion-icon name="create" slot="icon-only" color="secondary"></ion-icon>
-        </ion-button>
-        <app-update-expense
-          [categories]="categories"
-          [cardDetails]="cardDetails"
-          [inputSelectedItemId]="item.id"></app-update-expense>
-        <ion-grid>
-          <ion-row class="ion-justify-content-start">
-            <ion-col size="3">
-              <ion-label color="secondary">
-                <b>Card Type:</b>
-              </ion-label>
-            </ion-col>
-            <ion-col>
-              <ion-label color="secondary">
-                {{utility.getcard(cardDetails,item.cardTypeId)}}</ion-label>
-            </ion-col>
-            <ion-col size="2.5">
-              <ion-label color="secondary"> <b>Excluded:</b>
-              </ion-label>
-            </ion-col>
-            <ion-col size="1">
-              <ion-label color="secondary">
-                {{item.isInclude?'NO':'YES'}}</ion-label>
-            </ion-col>
-          </ion-row>
-          <ion-row class="ion-justify-content-start">
-            <ion-col size="1.5">
-              <ion-label color="secondary"><b> Note:</b></ion-label>
-            </ion-col>
-            <ion-col>
-              <ion-label color="secondary">{{item.note}}</ion-label>
-            </ion-col>
-            <ion-col size="1.5">
-              <ion-label color="secondary"> <b>EMI:</b>
-              </ion-label>
-            </ion-col>
-            <ion-col size="1">
-              <ion-label color="secondary">
-                {{item.emiMonths==1?'NO':item.emiMonths}}
-              </ion-label>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
+      <app-update-expense
+        [categories]="categories"
+        [cardDetails]="cardDetails"
+        [inputSelectedItemId]="item.id"></app-update-expense>
     </ion-card>
   </div>
 </div>

@@ -1,7 +1,9 @@
 import { Component, Input } from "@angular/core";
 import { DocumentSnapshot, } from "@angular/fire/firestore";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { IonButton, IonButtons, IonContent, IonInput, IonItem, IonModal, IonTitle, IonToolbar } from "@ionic/angular/standalone";
+import {
+  IonButton, IonButtons, IonContent, IonInput, IonItem, IonModal, IonTitle, IonToolbar
+} from "@ionic/angular/standalone";
 import { AppConstants } from "src/app/app.constants";
 import { Category } from "src/app/Models/category.model";
 import { FirebaseService } from "src/app/services/firebase.service";
@@ -13,8 +15,7 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'update-category.page.html',
   styleUrls: ['update-category.page.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule,
-    IonModal, IonContent, IonToolbar, IonTitle, IonButtons, IonButton,
+  imports: [ReactiveFormsModule, IonModal, IonContent, IonToolbar, IonButton, IonButtons,
     IonItem, IonInput
   ]
 })
