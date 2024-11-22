@@ -1,10 +1,14 @@
 <div id="app-category">
-  <ion-button *ngFor="let item of categories" class="ion-no-padding"
+  <ion-reorder-group  [disabled]="false"
+    (ionItemReorder)="handleReorder($any($event))">
+  <ion-item *ngFor="let item of categories" class="ion-no-padding cat_item"
     shape="round"
     [id]="'open-category-dialog_'+item.id">
-    <ion-chip id="categoryname">
+    <ion-chip class="cat">
       {{item.name}}
     </ion-chip>
+    <ion-reorder slot="end"></ion-reorder>
     <app-update-category [inputSelectedItemId]="item.id"></app-update-category>
-  </ion-button>
+  </ion-item>
+  </ion-reorder-group>
 </div>

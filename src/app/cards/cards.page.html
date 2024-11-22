@@ -1,16 +1,21 @@
 <div id="app-cards">
-  <ion-button *ngFor="let item of cards" class="ion-no-padding"
-    shape="round"
-    [id]="'open-cards-dialog_'+item.id">
-    <ion-chip id="cardtype" [class]="item.type+'_type'">
-      {{item.type}}
-    </ion-chip>
-    <ion-chip id="cardnumber">
-      {{item.cardNumber}}
-    </ion-chip>
-    <ion-chip id="bankname" [class]="item.bankName+'_card'">
-      {{item.bankName}}
-    </ion-chip>
-    <app-update-card [inputSelectedItemId]="item.id"></app-update-card>
-  </ion-button>
+  <ion-reorder-group  [disabled]="false"
+    (ionItemReorder)="handleReorder($any($event))">
+    <ion-item  *ngFor="let item of cards"
+      class="ion-no-padding ion-nowrap card_item"
+      shape="round"
+      [id]="'open-cards-dialog_'+item.id">
+      <ion-chip [class]="'DEFAULT_CARD '+ item.type+'_type'">
+        {{item.type}}
+      </ion-chip>
+      <ion-chip class="DEFAULT_CARD" >
+        {{item.cardNumber}}
+      </ion-chip>
+      <ion-chip [class]="'DEFAULT_CARD '+item.bankName+'_card'">
+        {{item.bankName}}
+      </ion-chip>
+      <ion-reorder slot="end"></ion-reorder>
+      <app-update-card [inputSelectedItemId]="item.id"></app-update-card>
+    </ion-item>
+  </ion-reorder-group>
 </div>

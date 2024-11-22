@@ -21,14 +21,14 @@ export class FirebaseService {
     this.logger.trackEventCalls(FirebaseService.name, 'getCategoriesOrderByID')
     return collectionData(
       query(collection(this.firestore, AppConstants.collections.category),
-        orderBy('id', 'desc'))) as Observable<Category[]>;
+      orderBy('order', 'asc'))) as Observable<Category[]>;
   }
 
   getCardsOrderByID(): Observable<CardDetails[]> {
     this.logger.trackEventCalls(FirebaseService.name, 'getCardsOrderByID')
     return collectionData(
       query(collection(this.firestore, AppConstants.collections.cards),
-        orderBy('id', 'desc'))) as Observable<CardDetails[]>
+        orderBy('order', 'asc'))) as Observable<CardDetails[]>
   }
 
   getExpensesOrderByID(): Observable<Expense[]> {
@@ -58,10 +58,12 @@ export class FirebaseService {
     });
   }
 
-  updateRecordDetails(collection: string, record: any) {
+  updateRecordDetails(collection: string, record: any, displayAlert?: boolean) {
+    displayAlert = displayAlert === undefined;
     this.logger.trackEventCalls(FirebaseService.name, 'updateRecordDetails')
     updateDoc(doc(this.firestore, collection, record.id), record).then(() => {
-      this.utility.presentAlert(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.update.success);
+      if (displayAlert)
+        this.utility.presentAlert(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.update.success);
     }).catch(ex => {
       this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.update.failed, ex);
     });

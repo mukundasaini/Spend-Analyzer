@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  IonToolbar, IonContent, IonButton, IonInput, IonItem, 
+  IonToolbar, IonContent, IonButton, IonInput, IonItem,
   IonModal,
   IonButtons
-  } from '@ionic/angular/standalone';
+} from '@ionic/angular/standalone';
 import { CardDetails } from '../../Models/card-details.model';
 import { UUID } from 'angular2-uuid';
 import { AppConstants } from '../../app.constants';
@@ -29,23 +29,27 @@ export class CreateCardPage {
     type: new FormControl('')
   });
 
+  @Input() cardsLength!: number;
+
   constructor(private logger: LoggerService,
     public utility: UtilityService,
     private firebase: FirebaseService) {
   }
 
-  onSubmit() {
+  onCreate() {
     this.logger.trackEventCalls(CreateCardPage.name, "onSubmit");
     var bankName = this.newCardsFG.controls.bankName.value?.toString()?.toUpperCase();
     var cardNumber = this.newCardsFG.controls.cardNumber.value ?? 0;
     var type = this.newCardsFG.controls.type.value?.toString()?.toUpperCase();
+    var order = this.cardsLength + 1;
 
     let cardDetails = <CardDetails>{
       id: UUID.UUID(),
       bankName: bankName,
       cardNumber: cardNumber,
       type: type,
-      cardType: `${bankName}-${cardNumber}-${type}`
+      cardType: `${bankName}-${cardNumber}-${type}`,
+      order: order
     };
 
     this.firebase.saveRecordDetails(AppConstants.collections.cards, cardDetails);

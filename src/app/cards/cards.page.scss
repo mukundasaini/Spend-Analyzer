@@ -1,65 +1,47 @@
-.ICICI_card{
+.DEFAULT_CARD {
+  --background: var(--ion-color-medium);
+  --color: var(--ion-color-secondary);
+}
+
+.DEFAULT_CARD.ICICI_card {
   --background: #E56D1D;
 }
 
-.SBI_card{
+.DEFAULT_CARD.SBI_card {
   --background: #1166DD;
 }
 
-.HDFC_card{
+.DEFAULT_CARD.HDFC_card {
   --background: #FF0000;
 }
 
-.RUPAY_type{
+.DEFAULT_CARD.RUPAY_type {
   --background: var(--ion-color-warning-tint);
 }
 
-.AMAZON_type{
+.DEFAULT_CARD.AMAZON_type {
   --background: var(--ion-color-dark-tint);
 }
 
-.FOOD_type{
+.DEFAULT_CARD.FOOD_type {
   --background: var(--ion-color-medium-tint);
 }
 
-.DEBIT_type{
+.DEFAULT_CARD.DEBIT_type {
   --background: #001E79;
 }
 
-.CREDIT_type{
+.DEFAULT_CARD.CREDIT_type {
   --background: var(--ion-color-danger-tint);
+}
+
+ion-item.card_item {
+  --background: linear-gradient(135deg, var(--ion-color-tertiary) 0%, var(--ion-color-primary) 100%);
 }
 
 div#app-cards {
   max-height: 15em;
   overflow-y: scroll;
-  padding-left:1em;
-  padding-right:1em;
+  padding-left: 1em;
+  padding-right: 1em;
 }
-ion-button {
-  ion-chip#bankname {
-    --color: #f6f8fc;
-    font-size: 12px;
-    margin-left: -15px;
-  }
-
-  ion-chip#cardnumber {
-    --background: var(--ion-color-secondary);
-    --color: var(--ion-color-tint);
-    font-size: 10px;
-    margin-left: -15px;
-  }
-
-  ion-chip#cardtype {
-    --color: #f6f8fc;
-    font-size: 6px;
-  }
-
-  --background: var(--ion-color-medium);
-}
-
-ion-button#card-close {
-  --background: var(--ion-color-warning-shade);
-  --color: var(--ion-color-tint);
-}
-

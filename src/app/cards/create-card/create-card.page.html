@@ -6,7 +6,7 @@
   <ng-template>
     <ion-content color="light" class="ion-padding">
       <form [formGroup]="newCardsFG"
-        (ngSubmit)="onSubmit();createCardModal.dismiss()">
+        (ngSubmit)="onCreate();createCardModal.dismiss()">
         <ion-toolbar color="light">
           <ion-button size="small" shape="round" fill="clear" color="secondary"
             (click)="onClear()">Clear</ion-button>

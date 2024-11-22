@@ -4,4 +4,5 @@ export interface CardDetails {
   cardNumber: number;
   type: string;
   cardType: string;
+  order: number;
 }

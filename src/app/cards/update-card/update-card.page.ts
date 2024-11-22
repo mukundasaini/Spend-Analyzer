@@ -44,7 +44,7 @@ export class UpdateCardPage {
       bankName: bankName,
       cardNumber: cardNumber,
       type: type,
-      cardType: `${bankName}-${cardNumber}-${type}`
+      cardType: `${bankName}-${cardNumber}-${type}`,
     };
 
     this.firebase.updateRecordDetails(AppConstants.collections.cards, cardDetails);

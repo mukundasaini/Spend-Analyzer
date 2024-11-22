@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  IonToolbar, IonContent, IonButton, IonInput, IonItem, 
+  IonToolbar, IonContent, IonButton, IonInput, IonItem,
   IonModal,
   IonButtons
   ,
@@ -27,15 +27,19 @@ export class CreateCategoryPage {
     name: new FormControl(''),
   });
 
+  @Input() catsLength!: number;
+
   constructor(private logger: LoggerService,
     private firebase: FirebaseService) {
   }
 
   onSubmit() {
     this.logger.trackEventCalls(CreateCategoryPage.name, "onSubmit");
+    var order = this.catsLength + 1;
     let category = <Category>{
       id: UUID.UUID(),
-      name: this.categoryFG.controls.name.value?.toString()?.trim()?.toUpperCase()
+      name: this.categoryFG.controls.name.value?.toString()?.trim()?.toUpperCase(),
+      order: order
     };
 
     this.firebase.saveRecordDetails(AppConstants.collections.category, category);

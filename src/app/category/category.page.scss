@@ -1,58 +1,15 @@
-// lsit content start
 div#app-category {
   max-height: 28em;
-  padding-left:1em;
-  padding-right:1em;
+  padding-left: 1em;
+  padding-right: 1em;
   overflow-y: scroll;
 }
 
-ion-item-sliding {
-  padding-bottom: 0.7dvh;
-  padding-top: 0;
+ion-item.cat_item {
+  --background: linear-gradient(135deg, var(--ion-color-tertiary) 0%, var(--ion-color-primary) 100%);
 }
 
-ion-card ion-card-content {
-  padding: 0.7dvh;
-}
-
-// lsit content end
-
-// Filter Pop Over content Start
-ion-popover::part(content) {
-  min-width: 300px;
-  padding: 5px;
-  background-color: var(--color);
-}
-
-ion-popover ion-content ion-list {
-  max-height: 220px;
-  overflow-y: scroll;
-  background: none;
-}
-
-ion-popover ion-content ion-list ion-item {
-  padding: 0px;
-}
-
-ion-popover ion-content ion-list ion-item::part(native) {
-  padding: 0px;
-  min-height: 16px;
-}
-
-ion-popover ion-content ion-checkbox {
-  --size: 14px;
-  font-size: 14px;
-  padding: 0px;
-  color: #606c38;
-}
-
-// Filter Pop Over content end
-
-ion-button {
-  ion-chip#categoryname {
-    --background: var(--ion-color-secondary);
-    --color: var(--ion-color-tint);
-    font-size: 12px;
-  }
-  --background: var(--ion-color-medium);
+.cat {
+  --background: linear-gradient(135deg, var(--ion-color-warning) 0%, var(--ion-color-danger) 100%);
+  --color: var(--ion-color-light);
 }

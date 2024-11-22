@@ -19,7 +19,7 @@
               color="secondary">
               Add
             </ion-button>
-            <app-create-card></app-create-card>
+            <app-create-card [cardsLength]="inputCards.length"></app-create-card>
           </ion-buttons>
         </ion-toolbar>
         <app-cards *ngIf="hasCardsData"
@@ -37,7 +37,7 @@
               color="secondary" size="small">
               Add
             </ion-button>
-            <app-create-category></app-create-category>
+            <app-create-category [catsLength]="inputCategories.length"></app-create-category>
           </ion-buttons>
         </ion-toolbar>
         <app-category *ngIf="hasCatsData"
