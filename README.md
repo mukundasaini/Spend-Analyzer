@@ -57,9 +57,9 @@ https://support.google.com/appsheet/answer/10104995?hl=en follow this link for c
 
 ** Android 
 
-1. npx cap add android
+1. npx cap add android (skip this step if capacitor is already installed)
 
-2. npx cap sync android
+2. npx cap sync android (this step needs to use run for updated apk)
 
 Note: Andoird folder will create in roo folder
 
