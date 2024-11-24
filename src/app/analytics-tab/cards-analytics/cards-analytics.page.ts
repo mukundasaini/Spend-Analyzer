@@ -63,8 +63,12 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     if (changes['expenses'].previousValue !== undefined) {
       let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
+      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
+      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
+
       if (currentSelected.month != previousSelected.month
-        || currentSelected.year != previousSelected.year) {
+        || currentSelected.year != previousSelected.year
+        || currentSelectedCards.length != previousSelectedCards.length) {
         this.updateChartData();
         this.loadTransactions();
       }

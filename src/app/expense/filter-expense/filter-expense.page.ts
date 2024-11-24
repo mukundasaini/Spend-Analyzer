@@ -2,7 +2,7 @@ import { CommonModule, formatDate } from "@angular/common";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import {
   IonButton, IonCol, IonGrid, IonContent, IonRow,
-  IonCheckbox, IonList, IonItem, IonModal, IonHeader, 
+  IonCheckbox, IonList, IonItem, IonModal, IonHeader,
   IonToolbar, IonSegment, IonSegmentButton
 } from "@ionic/angular/standalone";
 import { Subject } from "rxjs";
@@ -26,7 +26,7 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   cardTypes: CheckBox[] = [];
   categories: CheckBox[] = [];
   months: CheckBox[] = [];
-  includeExclude: CheckBox = <CheckBox>{ value: 'Exclude', checked: false };
+  includeExclude!: CheckBox;
 
   isAllBankNamesChecked: boolean = false;
   isAllCardsChecked: boolean = false;
@@ -67,6 +67,12 @@ export class FilterExpensePage implements OnInit, OnDestroy {
     this.cardTypes = this.utility.getCardTypesCheckBox(this.cards);
     this.categories = this.utility.getCategoriesCheckBox(this.cats);
     this.months = this.utility.getMonthsCheckBox();
+    this.includeExclude = <CheckBox>{ value: 'Exclude', checked: false };
+  }
+
+  onIncludeExcludeCheckboxChange(e: any) {
+    this.slectedIsInclude = e.detail.checked;
+    this.includeExclude.checked = e.detail.checked;
   }
 
   onBankCheckBoxChange(event: any) {

@@ -1,3 +1,10 @@
 ion-popover::part(content) {
     --background-color: var(--ion-color-primary);
   }
+
+  ion-badge {
+    font-size: 8px;
+    position: absolute;
+    margin-left: 25px;
+    margin-top: -15px;  
+  }

@@ -2,7 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import {
   IonAccordionGroup, IonAccordion,
-  IonItem, IonLabel, IonButton} from '@ionic/angular/standalone';
+  IonItem, IonLabel, IonButton
+} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CardDetails } from "src/app/Models/card-details.model";
@@ -57,8 +58,12 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
     if (changes['expenses'].previousValue !== undefined) {
       let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
       let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
+      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
+      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
+
       if (currentSelected.month != previousSelected.month
-        || currentSelected.year != previousSelected.year) {
+        || currentSelected.year != previousSelected.year
+        || currentSelectedCards.length != previousSelectedCards.length) {
         this.loadChartData();
         this.catBarChart.chart.data.labels = this.inputLabels;
         this.catBarChart.chart.data.datasets[0].data = this.inputData;

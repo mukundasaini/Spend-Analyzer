@@ -64,7 +64,7 @@
                                     <ion-checkbox
                                         [value]="includeExclude.value"
                                         [checked]="includeExclude.checked"
-                                        (ionChange)="slectedIsInclude = $event.detail.checked"
+                                        (ionChange)="onIncludeExcludeCheckboxChange($event)"
                                         justify="start" labelPlacement="end">
                                         {{includeExclude.value}}
                                     </ion-checkbox>

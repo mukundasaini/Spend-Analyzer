@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import {
   IonAccordionGroup,
-  IonAccordion, IonItem, IonLabel, IonButton} from '@ionic/angular/standalone';
+  IonAccordion, IonItem, IonLabel, IonButton
+} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Category } from "src/app/Models/category.model";
@@ -21,7 +22,7 @@ import { UtilityService } from "src/app/services/utility.service";
     IonAccordionGroup
   ],
 })
-export class CardsYearlyAnalyticsPage implements OnInit {
+export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
 
   chartData!: ChartData;
   chart!: Chart;
@@ -48,10 +49,32 @@ export class CardsYearlyAnalyticsPage implements OnInit {
     this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "constructor");
     Chart.register(ChartDataLabels);
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "ngOnChanges");
+
+    if (changes['expenses'].previousValue !== undefined) {
+      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
+      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
+
+      if (currentSelectedCards.length != previousSelectedCards.length) {
+        this.updateChartData();
+        this.loadTransactions();
+      }
+    }
+  }
+
   ngOnInit(): void {
     this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "ngOnInit");
     this.loadChartData();
     this.loadTransactions();
+  }
+
+  updateChartData() {
+    this.loadChartData();
+    this.cardBarChart.chart.data.labels = this.inputLabels;
+    this.cardBarChart.chart.data.datasets[0].data = this.inputData;
+    this.cardBarChart.chart.update();
   }
 
   loadChartData() {

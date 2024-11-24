@@ -3,6 +3,29 @@
     <ion-title>
       Analytics
     </ion-title>
+    <ion-buttons slot="end" class="ion-margin-end">
+      <ion-button fill="clear" id="analytics-filter-trigger">
+        <ion-icon slot="icon-only" name="filter">
+        </ion-icon>
+      </ion-button>
+      <ion-badge slot="start" class="ion-no-padding"
+        color="success">{{analyticsFilterIndeicator}}</ion-badge>
+      <ion-popover color="light" #popover
+        trigger="analytics-filter-trigger" triggerAction="click">
+        <ng-template>
+          <ion-content color="light" class="ion-padding">
+            <ion-radio-group [value]="selectedAnalytics" (ionChange)="onAnalyticsFilterChange($event);popover.dismiss()">
+              <ion-radio labelPlacement="start" alignment="start"
+                value="A">All</ion-radio><br />
+              <ion-radio labelPlacement="start" alignment="start"
+                value="C">Credit Cards</ion-radio><br />
+              <ion-radio labelPlacement="start" alignment="start"
+                value="D">Debit Cards</ion-radio><br />
+            </ion-radio-group>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
