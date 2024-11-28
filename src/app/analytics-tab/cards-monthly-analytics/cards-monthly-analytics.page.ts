@@ -52,22 +52,26 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CardsMonthlyAnalyticsPage.name, "ngOnChanges");
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
-      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
-      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
 
-      if (currentSelected.year != previousSelected.year
-        || currentSelectedCards.length != previousSelectedCards.length
-      ) {
-        this.loadChartData();
-        this.cardBarChart.chart.data.labels = this.inputLabels;
-        this.cardBarChart.chart.data.datasets[0].data = this.inputData;
-        this.cardBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
-        this.cardBarChart.chart.update();
-        this.loadTransactions();
-      }
+    let expenses = changes['expenses'];
+    let currentSelected = expenses === undefined ? <Expense>{} : (
+      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
+    let previousSelected = expenses === undefined ? <Expense>{} : (
+      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
+
+    let cards = changes['cards'];
+    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
+    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
+
+    if ((previousSelected != undefined && currentSelected.year != previousSelected.year)
+      || (previousSelectedCards != undefined
+        && currentSelectedCards.length != previousSelectedCards.length)) {
+      this.loadChartData();
+      this.cardBarChart.chart.data.labels = this.inputLabels;
+      this.cardBarChart.chart.data.datasets[0].data = this.inputData;
+      this.cardBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
+      this.cardBarChart.chart.update();
+      this.loadTransactions();
     }
   }
 
@@ -85,8 +89,8 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
       this.inputData.push(total);
       if (label !== undefined)
         this.inputLabels.push(label);
-      this.inputBackgroundColor.push(this.utility.getRandomColor());
     }
+    this.inputBackgroundColor = this.utility.getRandomColors(this.inputLabels.length);
   }
 
   loadTransactions() {

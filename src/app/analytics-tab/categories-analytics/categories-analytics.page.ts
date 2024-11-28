@@ -55,22 +55,27 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "ngOnChanges");
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
-      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
-      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
 
-      if (currentSelected.month != previousSelected.month
-        || currentSelected.year != previousSelected.year
-        || currentSelectedCards.length != previousSelectedCards.length) {
-        this.loadChartData();
-        this.catBarChart.chart.data.labels = this.inputLabels;
-        this.catBarChart.chart.data.datasets[0].data = this.inputData;
-        this.catBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
-        this.catBarChart.chart.update();
-        this.loadTransactions();
-      }
+    let expenses = changes['expenses'];
+    let currentSelected = expenses === undefined ? <Expense>{} : (
+      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
+    let previousSelected = expenses === undefined ? <Expense>{} : (
+      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
+
+    let cards = changes['cards'];
+    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
+    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
+
+    if ((previousSelected != undefined &&
+      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
+      || (previousSelectedCards != undefined
+        && currentSelectedCards.length != previousSelectedCards.length)) {
+      this.loadChartData();
+      this.catBarChart.chart.data.labels = this.inputLabels;
+      this.catBarChart.chart.data.datasets[0].data = this.inputData;
+      this.catBarChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
+      this.catBarChart.chart.update();
+      this.loadTransactions();
     }
   }
 
@@ -85,8 +90,8 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
       let catName = this.utility.getCategory(this.cats, catkey);
       this.inputData.push(total);
       this.inputLabels.push(catName);
-      this.inputBackgroundColor.push(this.utility.getRandomColor());
     }
+    this.inputBackgroundColor = this.utility.getRandomColors(this.inputLabels.length);
   }
 
   loadTransactions() {

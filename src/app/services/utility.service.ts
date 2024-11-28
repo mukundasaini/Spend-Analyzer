@@ -38,13 +38,21 @@ export class UtilityService {
     return true;
   }
 
-  getRandomColor() {
+  getRandomColor(): string {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  getRandomColors(count: number): string[] {
+    let colors: string[] = [];
+    for (let index = 0; index < count; index++) {
+      colors.push(this.getRandomColor());
+    }
+    return colors;
   }
 
   getCategory(cats: Category[], id: string) {
@@ -156,7 +164,7 @@ export class UtilityService {
   /** Ionic */
   async showLoading() {
     this.logger.trackEventCalls(UtilityService.name, 'showLoading');
-   // (await this.loading).present();
+    // (await this.loading).present();
   }
 
   async presentAlert(alertHeader: string, alertMessage: string, exption?: any) {

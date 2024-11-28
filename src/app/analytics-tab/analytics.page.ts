@@ -128,23 +128,29 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   }
 
   onAnalyticsFilterChange(ev: any) {
+    this.logger.trackEventCalls(AnalyticsPage.name, "onAnalyticsFilterChange");
     this.selectedAnalytics = ev.target.value;
-    let expenses = this.expensesCopy;
-    this.inputCardDetails = this.cardDetailsCopy;
-    this.analyticsFilterIndeicator = ev.target.value === 'A' ? '' : '.';
-    if (ev.target.value === 'C') {
-      expenses = expenses.filter(e => this.creditCardIds.includes(e.cardTypeId));
-      this.inputCardDetails = this.inputCardDetails.filter(card => this.creditCardIds.includes(card.id));
-    } else if (ev.target.value === 'D') {
-      expenses = expenses.filter(e => this.debitCardIds.includes(e.cardTypeId));
-      this.inputCardDetails = this.inputCardDetails.filter(card => this.debitCardIds.includes(card.id));
-    }
-
+    this.analyticsFilterIndeicator = this.selectedAnalytics === 'A' ? '' : '.';
+    let expenses = this.setAnalyticsFilter();
     this.inputAllYearsExpenses = expenses;
     this.inputAllMonthsExpenses = this.utility.getCurrentMonthExpenses(expenses, true);
     this.inputMonthExpenses = this.utility.getCurrentMonthExpenses(expenses);
     this.inputCardsYearMonthExpenses = Array.from(this.inputMonthExpenses);
     this.inputCatsYearMonthExpenses = Array.from(this.inputMonthExpenses);
+  }
+
+  setAnalyticsFilter() {
+    this.logger.trackEventCalls(AnalyticsPage.name, "setAnalyticsFilter");
+    let expenses = this.expensesCopy;
+    this.inputCardDetails = this.cardDetailsCopy;
+    if (this.selectedAnalytics === 'C') {
+      expenses = expenses.filter(e => this.creditCardIds.includes(e.cardTypeId));
+      this.inputCardDetails = this.inputCardDetails.filter(card => this.creditCardIds.includes(card.id));
+    } else if (this.selectedAnalytics === 'D') {
+      expenses = expenses.filter(e => this.debitCardIds.includes(e.cardTypeId));
+      this.inputCardDetails = this.inputCardDetails.filter(card => this.debitCardIds.includes(card.id));
+    }
+    return expenses;
   }
 
   onCardYearChange(event: any) {
@@ -186,11 +192,13 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   onAllMonthsYearChange(event: any) {
     this.logger.trackEventCalls(AnalyticsPage.name, "onAllMonthsYearChange");
     this.selectedAllMonthsYear = event.target.value;
+    this.inputAllMonthsExpenses= this.setAnalyticsFilter();
     this.inputAllMonthsExpenses = this.inputAllYearsExpenses.filter(
       exp => exp.year == this.selectedAllMonthsYear);
   }
 
   getExpensesByMonthYear(month: string, year: string) {
+    this.inputAllYearsExpenses= this.setAnalyticsFilter();
     return this.inputAllYearsExpenses.filter(
       exp => exp.month == month && exp.year == year);
   }

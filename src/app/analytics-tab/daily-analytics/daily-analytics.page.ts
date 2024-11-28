@@ -52,19 +52,22 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(DailyAnalyticsPage.name, "ngOnChanges");
+    let expenses = changes['expenses'];
+    let currentSelected = expenses === undefined ? <Expense>{} : (
+      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
+    let previousSelected = expenses === undefined ? <Expense>{} : (
+      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
 
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
-      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
-      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
+    let cards = changes['cards'];
+    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
+    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
 
-      if (currentSelected.month != previousSelected.month
-        || currentSelected.year != previousSelected.year
-        || currentSelectedCards.length != previousSelectedCards.length) {
-        this.updateChartData();
-        this.loadTransactions();
-      }
+    if ((previousSelected != undefined &&
+      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
+      || (previousSelectedCards != undefined
+        && currentSelectedCards.length != previousSelectedCards.length)) {
+      this.updateChartData();
+      this.loadTransactions();
     }
   }
   ngOnInit(): void {

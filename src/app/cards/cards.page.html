@@ -1,8 +1,9 @@
 <div id="app-cards">
   <ion-reorder-group  [disabled]="false"
     (ionItemReorder)="handleReorder($any($event))">
-    <ion-item  *ngFor="let item of cards"
-      class="ion-no-padding ion-nowrap card_item"
+    <ion-card *ngFor="let item of cards">
+    <ion-item  
+      class="ion-no-padding"
       shape="round"
       [id]="'open-cards-dialog_'+item.id">
       <ion-chip [class]="'DEFAULT_CARD '+ item.type+'_type'">
@@ -17,5 +18,6 @@
       <ion-reorder slot="end"></ion-reorder>
       <app-update-card [inputSelectedItemId]="item.id"></app-update-card>
     </ion-item>
+  </ion-card>
   </ion-reorder-group>
 </div>

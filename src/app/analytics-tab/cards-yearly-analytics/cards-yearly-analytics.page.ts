@@ -52,15 +52,13 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "ngOnChanges");
+    let cards = changes['cards'];
+    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
+    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
 
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
-      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
-
-      if (currentSelectedCards.length != previousSelectedCards.length) {
-        this.updateChartData();
-        this.loadTransactions();
-      }
+    if (previousSelectedCards != undefined && currentSelectedCards.length != previousSelectedCards.length) {
+      this.updateChartData();
+      this.loadTransactions();
     }
   }
 
@@ -87,8 +85,8 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
       let total = this.utility.getTotal(yearGroups[yearKey]);
       this.inputData.push(total);
       this.inputLabels.push(yearKey);
-      this.inputBackgroundColor.push(this.utility.getRandomColor());
     }
+    this.inputBackgroundColor = this.utility.getRandomColors(this.inputLabels.length);
   }
 
   loadTransactions() {

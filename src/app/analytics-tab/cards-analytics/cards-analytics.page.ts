@@ -8,7 +8,7 @@ import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Category } from "src/app/Models/category.model";
 import { Expense } from "src/app/Models/expense-model";
-import { PieChartDirective } from "../directives/pie-chart.directive";
+import { DoughNutChartDirective } from "../directives/doughnut-chart.directive";
 import { CardDetails } from "src/app/Models/card-details.model";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
@@ -20,22 +20,19 @@ import { remove } from "ionicons/icons";
   templateUrl: 'cards-analytics.page.html',
   styleUrls: ['cards-analytics.page.scss'],
   standalone: true,
-  imports: [IonIcon, CommonModule, PieChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
+  imports: [IonIcon, CommonModule, DoughNutChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
     IonAccordionGroup, IonGrid, IonRow, IonCol,
   ],
 })
 export class CardsAnalyticsPage implements OnInit, OnChanges {
 
-  chartData!: ChartData;
+  chartData: ChartData = <ChartData>{};
   chart!: Chart;
   config!: ChartConfiguration;
 
   cardsTotal: number = 0;
   showTransactions: boolean = false;
 
-  inputLabels: string[] = [];
-  inputData: number[] = [];
-  inputBackgroundColor: string[] = [];
   cardsExpenses: {
     cardTotal: number, cardId: string,
     expenses: {
@@ -48,7 +45,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
-  @ViewChild(PieChartDirective) cardPieChart!: PieChartDirective;
+  @ViewChild(DoughNutChartDirective) cardPieChart!: DoughNutChartDirective;
 
   constructor(private logger: LoggerService,
     public utility: UtilityService
@@ -60,18 +57,24 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnChanges");
-    if (changes['expenses'].previousValue !== undefined) {
-      let currentSelected = (changes['expenses'].currentValue as Expense[])[0];
-      let previousSelected = (changes['expenses'].previousValue as Expense[])[0];
-      let currentSelectedCards = (changes['cards'].currentValue as CardDetails[]);
-      let previousSelectedCards = (changes['cards'].previousValue as CardDetails[]);
+    
+    let expenses = changes['expenses'];
+    let currentSelected = expenses === undefined ? <Expense>{} : (
+      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
+    let previousSelected = expenses === undefined ? <Expense>{} : (
+      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
 
-      if (currentSelected.month != previousSelected.month
-        || currentSelected.year != previousSelected.year
-        || currentSelectedCards.length != previousSelectedCards.length) {
-        this.updateChartData();
-        this.loadTransactions();
-      }
+    let cards = changes['cards'];
+    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
+    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
+
+    if ((previousSelected != undefined &&
+      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
+      || (previousSelectedCards != undefined
+        && currentSelectedCards.length != previousSelectedCards.length)) {
+      this.updateChartData();
+      this.expensesTransactions = Array.from(this.expenses);
+      this.loadTransactions();
     }
   }
   ngOnInit(): void {
@@ -83,26 +86,30 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
   updateChartData() {
     this.loadChartData();
-    this.cardPieChart.chart.data.labels = this.inputLabels;
-    this.cardPieChart.chart.data.datasets[0].data = this.inputData;
-    this.cardPieChart.chart.data.datasets[0].backgroundColor = this.inputBackgroundColor;
     this.cardPieChart.chart.update();
   }
 
   loadChartData() {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "loadChartData");
-    this.inputBackgroundColor = [];
-    this.inputData = [];
-    this.inputLabels = [];
-
+    let labels = [];
+    this.chartData.datasets = [];
+    let data = [];
     var cardGroups = this.utility.expenseGroupBy(this.expenses, 'card');
     for (const key in cardGroups) {
-      let total = this.utility.getTotal(cardGroups[key]);
       let label = this.utility.getcard(this.cards, key);
-      this.inputData.push(total);
-      this.inputLabels.push(label);
-      this.inputBackgroundColor.push(this.utility.getRandomColor());
+      labels.push(label);
+      data.push(this.utility.getTotal(cardGroups[key]));
     }
+
+    this.chartData.datasets.push({
+      data: data,
+      backgroundColor: this.utility.getRandomColors(labels.length),
+      label: 'Rs',
+      hoverOffset: 20,
+      borderColor: '#f6f8fc'
+    });
+
+    this.chartData.labels = labels;
   }
 
   loadTransactions() {

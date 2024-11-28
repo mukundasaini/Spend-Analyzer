@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Category } from "../Models/category.model";
-import { IonButton, IonChip, IonSkeletonText, IonReorderGroup, IonReorder, IonItem } from "@ionic/angular/standalone";
+import { IonButton, IonChip, IonSkeletonText, IonReorderGroup, IonReorder, IonItem, IonCard } from "@ionic/angular/standalone";
 import { UpdateCategoryPage } from "./update-category/update-category.page";
 import { CommonModule } from "@angular/common";
 import { ItemReorderEventDetail } from '@ionic/angular';
@@ -14,7 +14,7 @@ import { AppConstants } from "../app.constants";
   templateUrl: 'category.page.html',
   styleUrls: ['category.page.scss'],
   standalone: true,
-  imports: [IonItem, IonReorder, IonReorderGroup, CommonModule, IonButton, IonChip, UpdateCategoryPage],
+  imports: [IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, IonButton, IonChip, UpdateCategoryPage],
 })
 export class CategoryPage {
   @Input() categories: Category[] = [];

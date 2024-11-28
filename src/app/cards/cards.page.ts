@@ -2,7 +2,7 @@ import { CardDetails } from "../Models/card-details.model";
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { UpdateCardPage } from "./update-card/update-card.page";
-import { IonButton, IonChip, IonReorderGroup, IonReorder, IonItem } from "@ionic/angular/standalone";
+import { IonButton, IonChip, IonReorderGroup, IonReorder, IonItem, IonCard } from "@ionic/angular/standalone";
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { AppConstants } from "../app.constants";
 import { LoggerService } from "../services/logger.service";
@@ -14,7 +14,7 @@ import { UtilityService } from "../services/utility.service";
   templateUrl: 'cards.page.html',
   styleUrls: ['cards.page.scss'],
   standalone: true,
-  imports: [IonItem, IonReorder, IonReorderGroup, CommonModule, UpdateCardPage, IonChip
+  imports: [IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, UpdateCardPage, IonChip
   ]
 })
 export class CardsPage {
