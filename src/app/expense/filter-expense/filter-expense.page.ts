@@ -6,7 +6,9 @@ import {
   IonToolbar, IonSegment, IonSegmentButton
 } from "@ionic/angular/standalone";
 import { Subject } from "rxjs";
+import { Bank } from "src/app/Models/bank.model";
 import { CardDetails } from "src/app/Models/card-details.model";
+import { CardType } from "src/app/Models/card-type.model";
 import { Category } from "src/app/Models/category.model";
 import { CheckBox } from "src/app/Models/checkbox.model";
 import { Expense } from "src/app/Models/expense-model";
@@ -44,7 +46,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   filterdData: Expense[] = [];
 
   onDestroy$: Subject<void> = new Subject();
-
+  @Input() banks: Bank[] = [];
+  @Input() cardTypeList: CardType[] = [];
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() years: CheckBox[] = [];
@@ -63,8 +66,8 @@ export class FilterExpensePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.trackEventCalls(FilterExpensePage.name, "ngOnInit");
-    this.cardBankNames = this.utility.getBankNamesCheckBox(this.cards);
-    this.cardTypes = this.utility.getCardTypesCheckBox(this.cards);
+    this.cardBankNames = this.utility.getBankNamesCheckBox(this.banks);
+    this.cardTypes = this.utility.getCardTypesCheckBox(this.cardTypeList);
     this.categories = this.utility.getCategoriesCheckBox(this.cats);
     this.months = this.utility.getMonthsCheckBox();
     this.includeExclude = <CheckBox>{ value: 'Exclude', checked: false };
@@ -257,7 +260,6 @@ export class FilterExpensePage implements OnInit, OnDestroy {
   onApplyFilters(modal: IonModal) {
     this.logger.trackEventCalls(FilterExpensePage.name, "onApplyFilters");
 
-    this.utility.showLoading();
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
     this.slectedIsInclude = this.slectedIsInclude === undefined ? false : this.slectedIsInclude;

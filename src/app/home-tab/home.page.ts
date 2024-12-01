@@ -17,6 +17,8 @@ import { CheckBox } from "../Models/checkbox.model";
 import { FirebaseService } from "../services/firebase.service";
 import { LoggerService } from "../services/logger.service";
 import { UtilityService } from "../services/utility.service";
+import { Bank } from "../Models/bank.model";
+import { CardType } from "../Models/card-type.model";
 
 @Component({
   selector: 'app-home',
@@ -35,6 +37,8 @@ export class HomePage implements OnInit, OnDestroy {
   inputPresetMonthExpenses: Expense[] = [];
   inputYears: CheckBox[] = [];
   inputFilterExpenses: Expense[] = [];
+  inputBanks: Bank[] = [];
+  inputCardTypes: CardType[] = [];
 
   expenseFilterIndeicator: string = '';
 
@@ -42,7 +46,11 @@ export class HomePage implements OnInit, OnDestroy {
   hasExpensesData: boolean = false;
   hasCardsData: boolean = false;
   hasCatsData: boolean = false;
-
+  hasBanksData: boolean = false;
+  hasCardTypesData: boolean = false;
+  
+  banks$: Observable<Bank[]>;
+  cardTypes$: Observable<CardType[]>;
   expenses$: Observable<Expense[]>;
   cardDetails$: Observable<CardDetails[]>;
   categories$: Observable<Category[]>;
@@ -53,6 +61,8 @@ export class HomePage implements OnInit, OnDestroy {
     private firebase: FirebaseService) {
     this.logger.trackEventCalls(HomePage.name, "constructor");
     addIcons({ filter, add });
+    this.banks$ = this.firebase.getBanksOrderByID();
+    this.cardTypes$ = this.firebase.getCardTypesOrderByID();
     this.expenses$ = this.firebase.getExpensesOrderByID();
     this.cardDetails$ = this.firebase.getCardsOrderByID();
     this.categories$ = this.firebase.getCategoriesOrderByID();
@@ -66,7 +76,19 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.trackEventCalls(HomePage.name, "ngOnInit");
-    this.utility.showLoading();
+    this.banks$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(banks => {
+        this.inputBanks = banks;
+        this.hasBanksData = banks.length > 0;
+      });
+
+    this.cardTypes$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(cardTypes => {
+        this.inputCardTypes = cardTypes;
+        this.hasCardTypesData = cardTypes.length > 0;
+      });
 
     this.expenses$
       .pipe(takeUntil(this.onDestroy$))

@@ -12,6 +12,7 @@ import { Expense } from "src/app/Models/expense-model";
 import { HorizentalBarChartDirective } from "../directives/horizental-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
+import { GROUPBY } from "src/app/app.constants";
 
 @Component({
   selector: 'app-categories-analytics',
@@ -84,7 +85,7 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
     this.inputBackgroundColor = [];
     this.inputData = [];
     this.inputLabels = [];
-    let catGroups = this.utility.expenseGroupBy(this.expenses, 'cat');
+    let catGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.cat);
     for (var catkey in catGroups) {
       let total = this.utility.getTotal(catGroups[catkey]);
       let catName = this.utility.getCategory(this.cats, catkey);
@@ -99,11 +100,11 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
     this.catsTotal = 0;
     this.categoriesExpenses = [];
 
-    let catGroups = this.utility.expenseGroupBy(this.expenses, 'cat');
+    let catGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.cat);
     for (var catkey in catGroups) {
       let total = this.utility.getTotal(catGroups[catkey]);
       let cardExpenses: Expense[] = [];
-      let cardGroups = this.utility.expenseGroupBy(catGroups[catkey], 'card');
+      let cardGroups = this.utility.expenseGroupBy(catGroups[catkey], GROUPBY.card);
       for (var cardkey in cardGroups) {
         let total = this.utility.getTotal(cardGroups[cardkey]);
         cardExpenses.push(<Expense>{ cardTypeId: cardkey, categoryId: catkey, amount: total });

@@ -1,6 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Category } from "../Models/category.model";
-import { IonButton, IonChip, IonSkeletonText, IonReorderGroup, IonReorder, IonItem, IonCard } from "@ionic/angular/standalone";
+import { IonChip, IonReorderGroup, IonReorder, IonItem, IonCard, IonLabel } from "@ionic/angular/standalone";
 import { UpdateCategoryPage } from "./update-category/update-category.page";
 import { CommonModule } from "@angular/common";
 import { ItemReorderEventDetail } from '@ionic/angular';
@@ -14,18 +14,26 @@ import { AppConstants } from "../app.constants";
   templateUrl: 'category.page.html',
   styleUrls: ['category.page.scss'],
   standalone: true,
-  imports: [IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, IonButton, IonChip, UpdateCategoryPage],
+  imports: [IonLabel, IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, IonChip, UpdateCategoryPage],
 })
-export class CategoryPage {
-  @Input() categories: Category[] = [];
+export class CategoryPage  implements OnInit{
+  colors: string[] = [];
 
+  @Input() categories: Category[] = [];
+  @Input() isEnabledReorder: boolean = false;
   constructor(private logger: LoggerService,
     public utility: UtilityService,
     private firebase: FirebaseService) {
   }
+  ngOnInit(): void {
+    this.logger.trackEventCalls(CategoryPage.name, 'ngOnInit');
+    for (var i in this.categories) {
+      this.colors.push(this.utility.getRandomIonColor());
+    }
+  }
 
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
-     this.logger.trackEventCalls(CategoryPage.name, "handleReorder");
+    this.logger.trackEventCalls(CategoryPage.name, "handleReorder");
     ev.detail.complete();
     let from = ev.detail.from;
     let to = ev.detail.to;

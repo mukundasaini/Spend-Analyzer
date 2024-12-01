@@ -1,0 +1,31 @@
+<ion-modal #updateBankModal
+  [trigger]="'open-bank-dialog_' +inputSelectedItemId"
+  [initialBreakpoint]="0.40"
+  [breakpoints]="[0,0.40, 0.75,0.90]"
+  handleBehavior="cycle" (willPresent)="onGetBankDetails(inputSelectedItemId)">
+  <ng-template>
+    <ion-content color="light" class="ion-padding">
+      <form [formGroup]="updateBankFG">
+        <ion-toolbar color="light">
+          <ion-button size="small" fill="clear" shape="round"
+            color="secondary"
+            (click)="onDelete(inputSelectedItemId);updateBankModal.dismiss()">Remove</ion-button>
+          <ion-buttons slot="end">
+            <ion-button size="small" shape="round"
+              color="secondary"
+              (click)="onUpdateSubmit(inputSelectedItemId);updateBankModal.dismiss()">Save</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-item color="light">
+          <ion-input
+            label="Bank Short Name *"
+            labelPlacement="stacked"
+            [counter]="true"
+            formControlName="name" type="text"
+            class="ion-text-uppercase"
+            maxlength="6" minlength="3" required></ion-input>
+        </ion-item>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

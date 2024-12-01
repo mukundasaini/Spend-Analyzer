@@ -14,6 +14,7 @@ import { UtilityService } from "src/app/services/utility.service";
 import { LineChartDirective } from "../directives/line-chart.directive";
 import { addIcons } from "ionicons";
 import { remove } from "ionicons/icons";
+import { GROUPBY } from "src/app/app.constants";
 
 @Component({
   selector: 'app-daily-analytics',
@@ -89,7 +90,7 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
     this.inputData = [];
     this.inputLabels = [];
 
-    var dayGroups = this.utility.expenseGroupBy(this.expenses, 'day');
+    var dayGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.day);
 
     for (const key in dayGroups) {
       let total = this.utility.getTotal(dayGroups[key]);
@@ -103,7 +104,7 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
     this.cardsExpenses = [];
     this.cardsTotal = 0;
 
-    var dayGroups = this.utility.expenseGroupBy(this.expenses, 'day');
+    var dayGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.day);
     for (const day in dayGroups) {
       let total = this.utility.getTotal(dayGroups[day]);
       this.cardsExpenses.push({ total: total, day: day, expenses: dayGroups[day] });

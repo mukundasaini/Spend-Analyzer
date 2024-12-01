@@ -26,7 +26,7 @@
             required interface="popover">
             <ion-select-option *ngFor="let item of cardDetails"
               [value]="item.id">
-              {{item.bankName+'-'+item.type}}
+              {{item.cardType}}
             </ion-select-option>
           </ion-select>
         </ion-item>

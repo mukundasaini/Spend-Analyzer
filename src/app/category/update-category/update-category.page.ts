@@ -20,10 +20,12 @@ import { UtilityService } from "src/app/services/utility.service";
   ]
 })
 export class UpdateCategoryPage {
-  @Input() inputSelectedItemId: string = '';
   updateCategoryFG = new FormGroup({
     name: new FormControl(''),
   });
+
+  @Input() inputSelectedItemId: string = '';
+  @Input() inputCats: Category[] = [];
 
   constructor(private logger: LoggerService,
     private utility: UtilityService,
@@ -36,18 +38,23 @@ export class UpdateCategoryPage {
       let categoryDetils = doc.data() as Category;
       this.updateCategoryFG.controls.name.setValue(categoryDetils.name);
     }).catch(x => {
-      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed);
+      this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed + ' with ' + x);
     });
   }
 
   onUpdateSubmit(id: string) {
     this.logger.trackEventCalls(UpdateCategoryPage.name, "onUpdateSubmit");
-    var categoryDetails = {
-      id: id,
-      name: this.updateCategoryFG.controls.name.value?.toString()?.toUpperCase()
-    };
-
-    this.firebase.updateRecordDetails(AppConstants.collections.category, categoryDetails);
+    let name = this.updateCategoryFG.controls.name.value?.toString()?.toUpperCase()
+    let catExisting = this.inputCats.find(cat => cat.name == name);
+    if (catExisting !== undefined && catExisting?.id != id) {
+      this.utility.presentToast(AppConstants.alertHeader.WARNING, AppConstants.alertMessage.update.warning);
+    } else {
+      var categoryDetails = {
+        id: id,
+        name: name
+      };
+      this.firebase.updateRecordDetails(AppConstants.collections.category, categoryDetails);
+    }
   }
 
   onDelete(id: string) {

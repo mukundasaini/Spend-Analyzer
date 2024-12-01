@@ -9,6 +9,7 @@ import { CardDetails } from "src/app/Models/card-details.model";
 import { VerticalBarChartDirective } from "../directives/vertical-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
+import { GROUPBY } from "src/app/app.constants";
 
 @Component({
   selector: 'app-cards-monthly-analytics',
@@ -81,7 +82,7 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
     this.inputData = [];
     this.inputBackgroundColor = [];
 
-    var monthGroups = this.utility.expenseGroupBy(this.expenses, 'month');
+    var monthGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.month);
 
     for (const key in monthGroups) {
       let total = this.utility.getTotal(monthGroups[key]);
@@ -97,12 +98,12 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
     this.logger.trackEventCalls(CardsMonthlyAnalyticsPage.name, "loadTransactions");
     this.monthlyExpenses = [];
 
-    var monthGroups = this.utility.expenseGroupBy(this.expenses, 'month');
+    var monthGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.month);
 
     for (const monthkey in monthGroups) {
       let total = this.utility.getTotal(monthGroups[monthkey]);
       let monthName = this.utility.getMonthName(monthkey);
-      var cardGroups = this.utility.expenseGroupBy(monthGroups[monthkey], 'card');
+      var cardGroups = this.utility.expenseGroupBy(monthGroups[monthkey], GROUPBY.card);
       var transactions: Expense[] = [];
       for (const cardkey in cardGroups) {
         let total = this.utility.getTotal(cardGroups[cardkey]);

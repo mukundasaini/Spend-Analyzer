@@ -1,30 +1,42 @@
 import { CardDetails } from "../Models/card-details.model";
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { UpdateCardPage } from "./update-card/update-card.page";
-import { IonButton, IonChip, IonReorderGroup, IonReorder, IonItem, IonCard } from "@ionic/angular/standalone";
+import { IonButton, IonChip, IonReorderGroup, IonReorder, IonItem, IonCard, IonLabel } from "@ionic/angular/standalone";
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { AppConstants } from "../app.constants";
 import { LoggerService } from "../services/logger.service";
 import { FirebaseService } from "../services/firebase.service";
 import { UtilityService } from "../services/utility.service";
+import { Bank } from "../Models/bank.model";
+import { CardType } from "../Models/card-type.model";
 
 @Component({
   selector: 'app-cards',
   templateUrl: 'cards.page.html',
   styleUrls: ['cards.page.scss'],
   standalone: true,
-  imports: [IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, UpdateCardPage, IonChip
+  imports: [IonLabel, IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, UpdateCardPage, IonChip
   ]
 })
-export class CardsPage {
+export class CardsPage implements OnInit {
+  colors: string[] = [];
 
   @Input() cards: CardDetails[] = [];
-
+  @Input() banks: Bank[] = [];
+  @Input() cardTypes: CardType[] = [];
+  @Input() isEnabledReorder: boolean = false;
   constructor(private logger: LoggerService,
     public utility: UtilityService,
     private firebase: FirebaseService) {
 
+  }
+
+  ngOnInit(): void {
+    this.logger.trackEventCalls(CardsPage.name, 'ngOnInit');
+    for (var i in this.cards) {
+      this.colors.push(this.utility.getRandomIonColor());
+    }
   }
 
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {

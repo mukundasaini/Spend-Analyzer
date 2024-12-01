@@ -13,7 +13,8 @@ import { CardDetails } from "src/app/Models/card-details.model";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
 import { addIcons } from "ionicons";
-import { remove } from "ionicons/icons";
+import { remove, card } from 'ionicons/icons';
+import { GROUPBY } from "src/app/app.constants";
 
 @Component({
   selector: 'app-cards-analytics',
@@ -94,7 +95,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     let labels = [];
     this.chartData.datasets = [];
     let data = [];
-    var cardGroups = this.utility.expenseGroupBy(this.expenses, 'card');
+    var cardGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.card);
     for (const key in cardGroups) {
       let label = this.utility.getcard(this.cards, key);
       labels.push(label);
@@ -117,7 +118,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
     this.cardsExpenses = [];
     this.cardsTotal = 0;
 
-    var cardGroups = this.utility.expenseGroupBy(this.expensesTransactions, 'card');
+    var cardGroups = this.utility.expenseGroupBy(this.expensesTransactions, GROUPBY.card);
 
     for (const cardId in cardGroups) {
       let total = this.utility.getTotal(cardGroups[cardId]);
@@ -125,7 +126,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
         transactions: Expense[], cardTypeId: string,
         categoryId: string, amount: number
       }[] = [];
-      var catGroups = this.utility.expenseGroupBy(cardGroups[cardId], 'cat');
+      var catGroups = this.utility.expenseGroupBy(cardGroups[cardId], GROUPBY.cat);
       for (const catId in catGroups) {
         let total = this.utility.getTotal(catGroups[catId]);
         cardsFilterData.push({

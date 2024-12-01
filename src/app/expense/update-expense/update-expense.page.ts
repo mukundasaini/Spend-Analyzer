@@ -3,8 +3,8 @@ import { Component, Input } from "@angular/core";
 import { DocumentSnapshot } from "@angular/fire/firestore";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import {
-  IonButton, IonDatetimeButton, IonDatetime, 
-  IonButtons, IonContent, IonInput, IonItem, IonModal, IonToolbar, IonSelectOption
+  IonButton, IonDatetimeButton, IonDatetime,
+  IonButtons, IonContent, IonInput, IonItem, IonSelect, IonModal, IonToolbar, IonSelectOption, IonToggle
 } from '@ionic/angular/standalone';
 import { UUID } from "angular2-uuid";
 import { AppConstants } from "src/app/app.constants";
@@ -20,11 +20,13 @@ import { UtilityService } from "src/app/services/utility.service";
   templateUrl: 'update-expense.page.html',
   styleUrls: ['update-expense.page.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonModal, IonContent, IonButton,
-    IonToolbar, IonButtons, IonItem, IonSelectOption, IonDatetimeButton, IonDatetime,
+  imports: [IonToggle, CommonModule, ReactiveFormsModule, IonModal, IonContent, IonButton,
+    IonToolbar, IonButtons, IonItem, IonSelect, IonSelectOption, IonDatetimeButton, IonDatetime,
     IonInput]
 })
 export class UpdateExpensePage {
+
+  showClone: boolean = false;
 
   updateExpenseFG = new FormGroup({
     cardTypeId: new FormControl(''),
@@ -33,6 +35,7 @@ export class UpdateExpensePage {
     fulldate: new FormControl(),
     isInclude: new FormControl(),
     note: new FormControl(''),
+    months: new FormControl('')
   });
 
   @Input() cardDetails: CardDetails[] = [];
@@ -45,6 +48,7 @@ export class UpdateExpensePage {
   }
 
   onGetExpense(id: string) {
+    this.showClone = false;
     this.logger.trackEventCalls(UpdateExpensePage.name, "onGetExpense");
     this.firebase.getRecordDetails(AppConstants.collections.expense, id).then((doc: DocumentSnapshot) => {
       let expenseDetils = doc.data() as Expense;
@@ -55,11 +59,12 @@ export class UpdateExpensePage {
       var isInclude = document.getElementById("isInclude") as HTMLIonToggleElement;
       isInclude.checked = expenseDetils.isInclude;
       this.updateExpenseFG.controls.isInclude.setValue(expenseDetils.isInclude);
-      this.updateExpenseFG.controls.fulldate.setValue(new Date(formatDate(expenseDetils.fullDate, 'yyyy-MM-ddThh:mm:ss.sss', 'en-US') + 'Z').toISOString());
+      this.updateExpenseFG.controls.fulldate.setValue(expenseDetils.fullDate);
+      this.updateExpenseFG.controls.months.setValue(expenseDetils.emiMonths.toString());
       this.updateExpenseFG.controls.note.setValue(expenseDetils.note == undefined ? '' : expenseDetils.note);
-
+      this.showClone = expenseDetils.emiMonths == 1;
     }).catch(x => {
-      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed);
+      this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed + ' with ' + x);
     });
   }
 
@@ -94,7 +99,7 @@ export class UpdateExpensePage {
           id: UUID.UUID(),
           cardTypeId: expenseDetils.cardTypeId,
           categoryId: expenseDetils.categoryId,
-          amount: expenseDetils.amount / months,
+          amount: +(expenseDetils.amount / months).toFixed(2),
           date: dateValues[2].substring(0, 2),
           month: dateValues[1],
           year: dateValues[0],
@@ -108,7 +113,7 @@ export class UpdateExpensePage {
       }
 
     }).catch(ex => {
-      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed, ex);
+      this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.get.failed + ' with ' + ex);
     });
   }
 

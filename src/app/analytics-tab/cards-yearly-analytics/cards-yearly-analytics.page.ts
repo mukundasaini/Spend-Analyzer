@@ -12,6 +12,7 @@ import { CardDetails } from "src/app/Models/card-details.model";
 import { VerticalBarChartDirective } from "../directives/vertical-bar-chart.directive";
 import { LoggerService } from "src/app/services/logger.service";
 import { UtilityService } from "src/app/services/utility.service";
+import { GROUPBY } from "src/app/app.constants";
 
 @Component({
   selector: 'app-cards-yearly-analytics',
@@ -80,7 +81,7 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
     this.inputLabels = [];
     this.inputData = [];
     this.inputBackgroundColor = [];
-    var yearGroups = this.utility.expenseGroupBy(this.expenses, 'year');
+    var yearGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.year);
     for (var yearKey in yearGroups) {
       let total = this.utility.getTotal(yearGroups[yearKey]);
       this.inputData.push(total);
@@ -94,11 +95,11 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
     this.transactions = [];
     this.total = 0;
 
-    let yearGroups = this.utility.expenseGroupBy(this.expenses, 'year');
+    let yearGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.year);
     for (var yearKey in yearGroups) {
       let yearTotal = this.utility.getTotal(yearGroups[yearKey]);
       let monthsTotals: { month: string, total: number }[] = [];
-      let monthGroups = this.utility.expenseGroupBy(yearGroups[yearKey], 'month');
+      let monthGroups = this.utility.expenseGroupBy(yearGroups[yearKey], GROUPBY.month);
       for (var monthKey in monthGroups) {
         let total = this.utility.getTotal(monthGroups[monthKey]);
         let monthName = this.utility.getMonthName(monthKey);

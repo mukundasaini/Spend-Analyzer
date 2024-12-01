@@ -1,0 +1,8 @@
+<div id="app-bank">
+    <ion-chip [color]="colors[i]"
+      [id]="'open-bank-dialog_'+item.id" *ngFor="let item of banks;let i=index">
+      {{item.name}}
+      <app-update-bank [inputSelectedItemId]="item.id"
+        [inputBanks]="banks"></app-update-bank>
+    </ion-chip>
+</div>

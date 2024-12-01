@@ -1,21 +1,43 @@
+export enum APPCOLORS {
+    primary = "primary",
+    secondary = "secondary",
+    tertiary = "tertiary",
+    success = "success",
+    danger = "danger",
+    warning = "warning",
+    light = "light",
+    medium = "medium",
+    dark = "dark",
+}
 
+export enum GROUPBY {
+    card = "card",
+    cat = "category",
+    month = "month",
+    year = "year",
+    day = "day"
+}
 export const AppConstants = {
     alertHeader: {
-        SUCCESS: 'Success',
-        FAILED: 'Warning',
+        SUCCESS: 'success',
+        FAILED: 'failed',
+        WARNING: 'warning'
     },
     alertMessage: {
         save: {
             success: 'saved successfully',
-            failed: 'saving failed'
+            failed: 'saving failed',
+            warning: 'record already existed'
         },
         update: {
             success: 'updaed successfully',
-            failed: 'updating failed'
+            failed: 'updating failed',
+            warning: 'record is existed with same name'
         },
         delete: {
             success: 'deleted successfully',
-            failed: 'deleting failed'
+            failed: 'deleting failed',
+            warning: 'no of records effected(0)'
         },
         get: {
             failed: 'fetching failed'
@@ -24,15 +46,9 @@ export const AppConstants = {
     collections: {
         cards: 'cardTypes',
         expense: 'expense',
-        category: 'categories'
-    },
-    timePeroids: {
-        ZeroMonth: '0M',
-        OneMonth: '1M',
-        ThreeMotns: '3M',
-        SixMonths: '6M',
-        Oneyear: '1Y',
-        ThreeYears: '3Y'
+        category: 'categories',
+        bank: 'bank',
+        cardType: 'cardType',
     },
     Months: [
         { name: 'JAN', value: '01' },

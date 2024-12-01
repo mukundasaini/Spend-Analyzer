@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, AlertController } from '@ionic/angular';
-import { AppConstants } from '../app.constants';
+import { LoadingController, AlertController, ToastController } from '@ionic/angular';
+import { APPCOLORS, AppConstants, GROUPBY } from '../app.constants';
 import { LoggerService } from './logger.service';
 import { Category } from '../Models/category.model';
 import { CardDetails } from '../Models/card-details.model';
 import { Expense } from '../Models/expense-model';
 import { formatDate } from '@angular/common';
 import { CheckBox } from '../Models/checkbox.model';
+import { Bank } from '../Models/bank.model';
+import { CardType } from '../Models/card-type.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +17,10 @@ export class UtilityService {
 
   categoryCollection = AppConstants.collections.category;
   cardCollection = AppConstants.collections.cards;
-  loading: Promise<HTMLIonLoadingElement>;
 
-  constructor(private logger: LoggerService, loadingCtrl: LoadingController,
-    private alertController: AlertController) {
-    this.loading = loadingCtrl.create({
-      message: 'Fetcing data...',
-      duration: 2000,
-      cssClass: 'custom-loading'
-    });
+  constructor(private logger: LoggerService,
+    private toastController: ToastController) {
   }
-
 
   /** Business logic */
   getPercentage(value: number, total: number) {
@@ -60,8 +55,7 @@ export class UtilityService {
   }
 
   getcard(cards: CardDetails[], id: string) {
-    let card = cards?.find(x => x.id == id);
-    return `${card?.bankName} - ${card?.type}`;
+    return cards?.find(x => x.id == id)?.cardType ?? '';
   }
 
   getCardDetails(cards: CardDetails[], id: string) {
@@ -90,9 +84,9 @@ export class UtilityService {
     return years;
   }
 
-  getBankNamesCheckBox(cards: CardDetails[]) {
+  getBankNamesCheckBox(cards: Bank[]) {
     let bankNames: CheckBox[] = [];
-    cards.map(item => item.bankName)
+    cards.map(item => item.name)
       .filter((value, index, self) => self.indexOf(value) === index)
       .forEach(bankName => {
         bankNames.push({ value: bankName, checked: false });
@@ -100,9 +94,9 @@ export class UtilityService {
     return bankNames;
   }
 
-  getCardTypesCheckBox(cards: CardDetails[]) {
+  getCardTypesCheckBox(cards: CardType[]) {
     let cardTypes: CheckBox[] = [];
-    cards.map(item => item.type)
+    cards.map(item => item.name)
       .filter((value, index, self) => self.indexOf(value) === index)
       .forEach(bankName => {
         cardTypes.push({ value: bankName, checked: false });
@@ -136,53 +130,53 @@ export class UtilityService {
       return groups;
     }, {} as Record<K, T[]>);
 
-  expenseGroupBy(expenses: Expense[], option: string) {
+  expenseGroupBy(expenses: Expense[], option: GROUPBY) {
     var groups: Record<string, Expense[]> = <Record<string, Expense[]>>{};
     switch (option) {
-      case 'card':
+      case GROUPBY.card:
         groups = this.groupBy(expenses, e => e.cardTypeId);
         break;
-      case 'cat':
+      case GROUPBY.cat:
         groups = this.groupBy(expenses, e => e.categoryId);
         break;
-      case 'month':
+      case GROUPBY.month:
         groups = this.groupBy(expenses, e => e.month);
         break;
-      case 'year':
+      case GROUPBY.year:
         groups = this.groupBy(expenses, e => e.year);
         break;
-      case 'day':
+      case GROUPBY.day:
         groups = this.groupBy(expenses, e => e.date);
         break;
     }
     return groups;
   }
 
+  getRandomIonColor() {
+    let colors = [APPCOLORS.primary, APPCOLORS.secondary, APPCOLORS.success, APPCOLORS.danger,
+    APPCOLORS.warning, APPCOLORS.medium, APPCOLORS.dark, APPCOLORS.tertiary, APPCOLORS.light];
+    return colors[Math.floor(Math.random() * 9)]
+  }
+
 
   /** Business logic */
 
   /** Ionic */
-  async showLoading() {
-    this.logger.trackEventCalls(UtilityService.name, 'showLoading');
-    // (await this.loading).present();
-  }
-
-  async presentAlert(alertHeader: string, alertMessage: string, exption?: any) {
-    this.logger.trackEventCalls(UtilityService.name, 'presentAlert');
-    this.logger.trackEventCalls(UtilityService.name, alertMessage);
-
-    if (exption != undefined)
-      this.logger.trackErrors(UtilityService.name, exption);
-
-    const alert = await this.alertController.create({
-      header: alertHeader,
-      message: alertMessage,
-      buttons: ['Close'],
-      cssClass: 'alert-custom',
-
+  async presentToast(messageType: string, message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: 'top',
+      cssClass: 'custom-toast-' + messageType,
+      buttons: [
+        {
+          text: 'Dismiss',
+          role: 'cancel',
+        },
+      ]
     });
 
-    await alert.present();
+    await toast.present();
   }
 
   handleRefresh(event: any) {

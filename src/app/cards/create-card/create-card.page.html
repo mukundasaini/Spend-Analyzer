@@ -17,38 +17,30 @@
           </ion-buttons>
         </ion-toolbar>
         <ion-item color="light">
-          <ion-input
+          <ion-select
+            label="Bank Name *"
+            formControlName="bankName"
             labelPlacement="stacked"
-            formControlName="bankName" type="text"
-            class="ion-text-uppercase"
-            [counter]="true"
-            placeholder="ICICI"
-            label="Bank Short Name *"
-            color="primary"
-            maxlength="6" minlength="3" required>
-          </ion-input>
+            (ionChange)="newCardsFG.controls.bankName.setValue($event.target.value)"
+            required interface="popover">
+            <ion-select-option *ngFor="let item of banks"
+              [value]="item.name">
+              {{item.name}}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item color="light">
-          <ion-input type="number"
-            label="Card Last Four Digits *"
-            placeholder="xxxx-xxxx-1234"
-            formControlName="cardNumber"
+          <ion-select
+            label="Card Type *"
+            formControlName="type"
             labelPlacement="stacked"
-            [counter]="true"
-            maxlength="4"
-            minlength="4"
-            (keypress)="utility.onKeyPress(newCardsFG.controls.cardNumber.value+'',3)"
-            required></ion-input>
-        </ion-item>
-        <ion-item color="light">
-          <ion-input
-            label="Type*"
-            formControlName="type" type="text"
-            class="ion-text-uppercase"
-            labelPlacement="stacked"
-            [counter]="true"
-            placeholder="CREDIT"
-            maxlength="6" minlength="6" required></ion-input>
+            (ionChange)="newCardsFG.controls.type.setValue($event.target.value)"
+            required interface="popover">
+            <ion-select-option *ngFor="let item of cardTypes"
+              [value]="item.name">
+              {{item.name}}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
       </form>
     </ion-content>

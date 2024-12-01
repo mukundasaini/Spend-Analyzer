@@ -89,7 +89,6 @@ export class AnalyticsPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.trackEventCalls(AnalyticsPage.name, "ngOnInit");
-    this.utility.showLoading();
     var date = new Date();
     const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
     this.selectedAllMonthsYear = this.selectedCatYear = this.selectedCardYear = this.presentYear = this.selectedYear = dateValues[0];

@@ -11,19 +11,67 @@
     <ion-row class="ion-no-padding">
       <ion-col>
         <ion-toolbar color="light" class="ion-no-padding">
+          <ion-title color="secondary" size="small">Banks</ion-title>
+          <ion-buttons slot="end" class="ion-margin-end">
+            <ion-button size="small"
+              id="open-create-dialog-bank"
+              shape="round"
+              color="secondary">
+              Add
+            </ion-button>
+            <app-create-bank [banks]="inputBanks"></app-create-bank>
+          </ion-buttons>
+        </ion-toolbar>
+        <app-bank *ngIf="hasBanksData"
+          [banks]="inputBanks"></app-bank>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-no-padding">
+      <ion-col>
+        <ion-toolbar color="light" class="ion-no-padding">
+          <ion-title color="secondary" size="small">Card Types</ion-title>
+          <ion-buttons slot="end" class="ion-margin-end">
+            <ion-button size="small"
+              id="open-create-dialog-card-type"
+              shape="round"
+              color="secondary">
+              Add
+            </ion-button>
+            <app-create-card-type
+              [cardTypes]="inputCardTypes"></app-create-card-type>
+          </ion-buttons>
+        </ion-toolbar>
+        <app-card-type *ngIf="hasCardTypesData"
+          [cardTypes]="inputCardTypes"></app-card-type>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-no-padding">
+      <ion-col>
+        <ion-toolbar color="light" class="ion-no-padding">
           <ion-title color="secondary" size="small">Cards</ion-title>
           <ion-buttons slot="end" class="ion-margin-end">
+            <ion-toggle
+              (ionChange)="onCardsReorderEnableToggle($event)">
+              <ion-text
+                color="secondary">
+                Reorder
+              </ion-text>
+            </ion-toggle>
             <ion-button size="small"
               id="open-create-dialog-card"
               shape="round"
               color="secondary">
               Add
             </ion-button>
-            <app-create-card [cardsLength]="inputCards.length"></app-create-card>
+            <app-create-card
+              [cards]="inputCards" [banks]="inputBanks"
+              [cardTypes]="inputCardTypes"></app-create-card>
           </ion-buttons>
         </ion-toolbar>
         <app-cards *ngIf="hasCardsData"
-          [cards]="inputCards"></app-cards>
+          [cards]="inputCards" [banks]="inputBanks"
+          [cardTypes]="inputCardTypes"
+          [isEnabledReorder]="isCardsReorderEnabled"></app-cards>
       </ion-col>
     </ion-row>
     <ion-row class="ion-no-padding">
@@ -31,17 +79,26 @@
         <ion-toolbar color="light" class="ion-no-padding">
           <ion-title size="small" color="secondary">Categories</ion-title>
           <ion-buttons slot="end" class="ion-margin-end">
+            <ion-toggle
+              (ionChange)="onCatsReorderEnableToggle($event)">
+              <ion-text
+                color="secondary">
+                Reorder
+              </ion-text>
+            </ion-toggle>
             <ion-button
               id="open-create-dialog-category"
               shape="round"
               color="secondary" size="small">
               Add
             </ion-button>
-            <app-create-category [catsLength]="inputCategories.length"></app-create-category>
+            <app-create-category
+              [cats]="inputCategories"></app-create-category>
           </ion-buttons>
         </ion-toolbar>
         <app-category *ngIf="hasCatsData"
-          [categories]="inputCategories"></app-category>
+          [categories]="inputCategories"
+          [isEnabledReorder]="isCatsReorderEnabled"></app-category>
       </ion-col>
     </ion-row>
   </ion-grid>

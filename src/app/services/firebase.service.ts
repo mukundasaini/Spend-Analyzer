@@ -8,6 +8,8 @@ import { UtilityService } from './utility.service';
 import { LoggerService } from './logger.service';
 import { Expense } from '../Models/expense-model';
 import { formatDate } from '@angular/common';
+import { Bank } from '../Models/bank.model';
+import { CardType } from '../Models/card-type.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,7 @@ export class FirebaseService {
     this.logger.trackEventCalls(FirebaseService.name, 'getCategoriesOrderByID')
     return collectionData(
       query(collection(this.firestore, AppConstants.collections.category),
-      orderBy('order', 'asc'))) as Observable<Category[]>;
+        orderBy('order', 'asc'))) as Observable<Category[]>;
   }
 
   getCardsOrderByID(): Observable<CardDetails[]> {
@@ -29,6 +31,20 @@ export class FirebaseService {
     return collectionData(
       query(collection(this.firestore, AppConstants.collections.cards),
         orderBy('order', 'asc'))) as Observable<CardDetails[]>
+  }
+
+  getBanksOrderByID(): Observable<Bank[]> {
+    this.logger.trackEventCalls(FirebaseService.name, 'getBanksOrderByID')
+    return collectionData(
+      query(collection(this.firestore, AppConstants.collections.bank),
+        orderBy('id', 'asc'))) as Observable<Bank[]>
+  }
+
+  getCardTypesOrderByID(): Observable<CardType[]> {
+    this.logger.trackEventCalls(FirebaseService.name, 'getCardTypesOrderByID')
+    return collectionData(
+      query(collection(this.firestore, AppConstants.collections.cardType),
+        orderBy('id', 'asc'))) as Observable<CardType[]>
   }
 
   getExpensesOrderByID(): Observable<Expense[]> {
@@ -51,10 +67,10 @@ export class FirebaseService {
     this.logger.trackEventCalls(FirebaseService.name, 'saveRecordDetails')
     setDoc(doc(this.firestore, collection, record.id), record).then(x => {
       if (index === undefined || index == 1)
-        this.utility.presentAlert(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.save.success);
+        this.utility.presentToast(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.save.success);
     }).catch(ex => {
       if (index === undefined || index == 1)
-        this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.save.failed, ex);
+        this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.save.failed + ' with ' + ex);
     });
   }
 
@@ -63,9 +79,9 @@ export class FirebaseService {
     this.logger.trackEventCalls(FirebaseService.name, 'updateRecordDetails')
     updateDoc(doc(this.firestore, collection, record.id), record).then(() => {
       if (displayAlert)
-        this.utility.presentAlert(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.update.success);
+        this.utility.presentToast(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.update.success);
     }).catch(ex => {
-      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.update.failed, ex);
+      this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.update.failed + ' with ' + ex);
     });
   }
 
@@ -77,9 +93,9 @@ export class FirebaseService {
   deleteRecordDetails(collection: string, id: string) {
     this.logger.trackEventCalls(FirebaseService.name, 'deleteRecordDetails')
     return deleteDoc(doc(this.firestore, collection, id)).then(() => {
-      this.utility.presentAlert(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.delete.success);
+      this.utility.presentToast(AppConstants.alertHeader.SUCCESS, AppConstants.alertMessage.delete.success);
     }).catch(ex => {
-      this.utility.presentAlert(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.delete.failed, ex);
+      this.utility.presentToast(AppConstants.alertHeader.FAILED, AppConstants.alertMessage.delete.failed + ' with ' + ex);
     });
 
   }
