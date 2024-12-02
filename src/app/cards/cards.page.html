@@ -4,7 +4,7 @@
       (ionItemReorder)="handleReorder($any($event))">
       <ion-card *ngFor="let item of cards">
         <ion-item>
-          <ion-label color="primary">
+          <ion-label>
             {{item.cardType}}
           </ion-label>
           <ion-reorder slot="end"></ion-reorder>
@@ -13,7 +13,7 @@
     </ion-reorder-group>
   </div>
   <div *ngIf="!isEnabledReorder">
-    <ion-chip [color]="colors[i]"
+    <ion-chip color="secondary"
       [id]="'open-cards-dialog_'+item.id"
       *ngFor="let item of cards;let i=index">
       {{item.cardType}}

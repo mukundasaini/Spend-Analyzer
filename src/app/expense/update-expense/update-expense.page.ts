@@ -70,15 +70,19 @@ export class UpdateExpensePage {
 
   onUpdateSubmit(id: string,) {
     this.logger.trackEventCalls(UpdateExpensePage.name, "onUpdateSubmit");
-
+    let fulldate = this.updateExpenseFG.controls.fulldate.value;
+    const dateValues = fulldate.split('-');
     let expense = {
       id: id,
       cardTypeId: this.updateExpenseFG.controls.cardTypeId.value?.toString(),
       categoryId: this.updateExpenseFG.controls.categoryId.value?.toString(),
       amount: this.updateExpenseFG.controls.amount.value,
       isInclude: this.updateExpenseFG.controls.isInclude.value,
-      fullDate: this.updateExpenseFG.controls.fulldate.value,
-      note: this.updateExpenseFG.controls.note.value
+      fullDate: fulldate,
+      note: this.updateExpenseFG.controls.note.value,
+      date: dateValues[2].substring(0, 2),
+      month: dateValues[1],
+      year: dateValues[0],
     }
 
     this.firebase.updateRecordDetails(AppConstants.collections.expense, expense);

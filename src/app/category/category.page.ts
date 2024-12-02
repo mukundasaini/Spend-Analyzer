@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Category } from "../Models/category.model";
 import { IonChip, IonReorderGroup, IonReorder, IonItem, IonCard, IonLabel } from "@ionic/angular/standalone";
 import { UpdateCategoryPage } from "./update-category/update-category.page";
@@ -16,8 +16,7 @@ import { AppConstants } from "../app.constants";
   standalone: true,
   imports: [IonLabel, IonCard, IonItem, IonReorder, IonReorderGroup, CommonModule, IonChip, UpdateCategoryPage],
 })
-export class CategoryPage  implements OnInit{
-  colors: string[] = [];
+export class CategoryPage{
 
   @Input() categories: Category[] = [];
   @Input() isEnabledReorder: boolean = false;
@@ -25,13 +24,6 @@ export class CategoryPage  implements OnInit{
     public utility: UtilityService,
     private firebase: FirebaseService) {
   }
-  ngOnInit(): void {
-    this.logger.trackEventCalls(CategoryPage.name, 'ngOnInit');
-    for (var i in this.categories) {
-      this.colors.push(this.utility.getRandomIonColor());
-    }
-  }
-
   handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
     this.logger.trackEventCalls(CategoryPage.name, "handleReorder");
     ev.detail.complete();
