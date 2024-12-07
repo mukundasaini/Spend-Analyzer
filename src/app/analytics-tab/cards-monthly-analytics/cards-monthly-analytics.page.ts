@@ -17,8 +17,7 @@ import { GROUPBY } from "src/app/app.constants";
   styleUrls: ['cards-monthly-analytics.page.scss'],
   standalone: true,
   imports: [CommonModule, VerticalBarChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
-    IonAccordionGroup
-  ],
+    IonAccordionGroup],
 })
 export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
 
@@ -97,7 +96,7 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
   loadTransactions() {
     this.logger.trackEventCalls(CardsMonthlyAnalyticsPage.name, "loadTransactions");
     this.monthlyExpenses = [];
-
+    this.cardsTotal = 0;
     var monthGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.month);
 
     for (const monthkey in monthGroups) {

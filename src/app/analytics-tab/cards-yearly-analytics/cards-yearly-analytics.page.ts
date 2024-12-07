@@ -20,8 +20,7 @@ import { GROUPBY } from "src/app/app.constants";
   styleUrls: ['cards-yearly-analytics.page.scss'],
   standalone: true,
   imports: [CommonModule, VerticalBarChartDirective, IonItem, IonButton, IonLabel, IonAccordion,
-    IonAccordionGroup
-  ],
+    IonAccordionGroup],
 })
 export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
 

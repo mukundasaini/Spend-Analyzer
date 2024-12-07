@@ -3,6 +3,7 @@ import { Component, Input } from "@angular/core";
 import { UpdateBankPage } from "./update-bank/update-bank.page";
 import { IonChip } from "@ionic/angular/standalone";
 import { Bank } from "../Models/bank.model";
+import { UtilityService } from '../services/utility.service';
 
 @Component({
   selector: 'app-bank',
@@ -16,6 +17,6 @@ export class BankPage {
 
   @Input() banks: Bank[] = [];
 
-  constructor() {
+  constructor(public utility: UtilityService) {
   }
 }

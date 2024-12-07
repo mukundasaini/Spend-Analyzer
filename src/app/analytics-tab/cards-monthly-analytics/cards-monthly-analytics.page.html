@@ -8,8 +8,8 @@
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
-  <ion-label color="secondary" class="ion-text-end">Rs.
-    Rs.{{cardsTotal}}</ion-label>
+  <ion-label color="secondary" class="ion-text-end">
+    {{cardsTotal |currency:'INR'}}</ion-label>
 </ion-item>
 
 <div *ngIf="showTransactions">
@@ -17,7 +17,7 @@
     <ion-accordion [value]="card.month">
       <ion-item slot="header" color="light">
         <ion-label color="secondary">{{card.month}}</ion-label>
-        <ion-label color="tertiary">Rs. {{card.total}}</ion-label>
+        <ion-label color="tertiary">{{card.total |currency:'INR'}}</ion-label>
         <ion-label color="tertiary">
           {{utility.getPercentage(card.total,cardsTotal)}}</ion-label>
       </ion-item>
@@ -28,7 +28,7 @@
           <ion-label
             class="ion-no-padding ion-padding-start">{{
             utility.getcard(cards,expense.cardTypeId)}}</ion-label>
-          <ion-label>Rs.{{expense.amount}}</ion-label>
+          <ion-label>{{expense.amount|currency:'INR'}}</ion-label>
           <ion-label class="ion-no-padding ion-text-end">
             {{utility.getPercentage(expense.amount,card.total)}}</ion-label>
         </ion-item>

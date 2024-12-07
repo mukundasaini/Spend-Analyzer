@@ -8,8 +8,8 @@
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions</u></ion-button>
-  <ion-label color="secondary" class="ion-text-end">Rs.
-    Rs.{{cardsTotal}}</ion-label>
+  <ion-label color="secondary"
+    class="ion-text-end">{{cardsTotal|currency:'INR'}}</ion-label>
 </ion-item>
 
 <div *ngIf="showTransactions">
@@ -20,7 +20,7 @@
           card.expenses.length
           +')'
           }}</ion-label>
-        <ion-label color="tertiary">Rs. {{card.total}}</ion-label>
+        <ion-label color="tertiary">{{card.total|currency:'INR'}}</ion-label>
         <ion-label color="tertiary">
           {{utility.getPercentage(card.total,cardsTotal)}}</ion-label>
         <ion-button color="tertiary" (click)="onGroupExcludeClick(i)"
@@ -44,7 +44,7 @@
               </ion-col>
               <ion-col size="2.5">
                 <ion-label
-                  color="secondary">Rs.{{transaction.amount}}</ion-label>
+                  color="secondary">{{transaction.amount|currency:'INR'}}</ion-label>
               </ion-col>
             </ion-row>
             <ion-row>

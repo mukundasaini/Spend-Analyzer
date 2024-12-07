@@ -13,7 +13,7 @@
     </ion-reorder-group>
   </div>
   <div *ngIf="!isEnabledReorder">
-    <ion-chip color="secondary"
+    <ion-chip [ngStyle]=" utility.getRandomStyleChip()"
       [id]="'open-category-dialog_'+item.id"
       *ngFor="let item of categories;let i=index">
       {{item.name}}

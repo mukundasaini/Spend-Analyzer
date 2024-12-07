@@ -1,5 +1,5 @@
 <div id="app-card-type">
-  <ion-chip color="secondary" *ngFor="let item of cardTypes;let i=index"
+  <ion-chip [ngStyle]=" utility.getRandomStyleChip()" *ngFor="let item of cardTypes;let i=index"
     [id]="'open-card-type-dialog_'+item.id">
     {{item.name}}
     <app-update-card-type [inputSelectedItemId]="item.id"

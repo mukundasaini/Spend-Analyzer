@@ -50,6 +50,19 @@ export class UtilityService {
     return colors;
   }
 
+  getRandomColorRGBA(opacity: number) {
+    let hexCode = this.getRandomColor();
+    var r = parseInt(hexCode.slice(1, 3), 16),
+      g = parseInt(hexCode.slice(3, 5), 16),
+      b = parseInt(hexCode.slice(5, 7), 16);
+
+    if (opacity > 0) {
+      return "rgba(" + r + ", " + g + ", " + b + ", " + opacity + ")";
+    } else {
+      return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+  }
+
   getCategory(cats: Category[], id: string) {
     return cats?.find(x => x.id == id)?.name ?? '';
   }
@@ -183,6 +196,11 @@ export class UtilityService {
     this.logger.trackEventCalls(UtilityService.name, 'handleRefresh');
     event.target.complete();
     window.location.reload();
+  }
+
+  getRandomStyleChip() {
+    let background = this.getRandomColorRGBA(0.8);
+    return { background: background, color: 'white' };
   }
   /** Ionic */
 }

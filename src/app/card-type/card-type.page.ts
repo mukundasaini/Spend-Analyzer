@@ -3,6 +3,7 @@ import { Component, Input } from "@angular/core";
 import { UpdateCardTypePage } from "./update-card-type/update-card-type.page";
 import { IonChip } from "@ionic/angular/standalone";
 import { CardType } from "../Models/card-type.model";
+import { UtilityService } from "../services/utility.service";
 
 @Component({
   selector: 'app-card-type',
@@ -15,6 +16,6 @@ import { CardType } from "../Models/card-type.model";
 export class CardTypePage {
 
   @Input() cardTypes: CardType[] = [];
-  constructor() {
+  constructor(public utility: UtilityService) {
   }
 }

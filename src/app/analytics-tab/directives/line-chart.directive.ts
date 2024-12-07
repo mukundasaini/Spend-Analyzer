@@ -33,6 +33,7 @@ export class LineChartDirective implements AfterViewInit, OnInit {
           data: this.data,
           label: '',
           fill: false,
+          stepped: true,
           tension: 0.1,
           borderColor: this.utility.getRandomColor(),
         }]
@@ -45,7 +46,7 @@ export class LineChartDirective implements AfterViewInit, OnInit {
             left: 10,
             top: 30,
             bottom: 30,
-            right: 10
+            right: 30
           },
         },
         plugins: {

@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Chart, ChartConfiguration, ChartData, ChartEvent, LegendElement, LegendItem } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { LoggerService } from 'src/app/services/logger.service';
 
@@ -13,10 +13,7 @@ export class PieChartDirective implements AfterViewInit, OnInit {
   chart!: Chart;
   config!: ChartConfiguration;
 
-  @Input() labels: string[] = [];
-  @Input() data: number[] = [];
-  @Input() backgroundColor: string[] = [];
-  @Output() legendItemClick = new EventEmitter<{ label: string, display: boolean }>();
+  @Input() inputChartData: ChartData = <ChartData>{};
 
   constructor(private logger: LoggerService,
     private elementRef: ElementRef<HTMLCanvasElement>) {
@@ -24,19 +21,9 @@ export class PieChartDirective implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.logger.trackEventCalls(PieChartDirective.name, "ngOnInit");
 
-    const pieDoughnutLegendClickHandler = Chart.overrides.doughnut.plugins.legend.onClick;
     this.config = <ChartConfiguration>{
-      type: 'doughnut',
-      data: {
-        labels: this.labels,
-        datasets: [{
-          data: this.data,
-          backgroundColor: this.backgroundColor,
-          label: 'Rs',
-          hoverOffset: 20,
-          borderColor: "#f6f8fc"
-        }]
-      },
+      type: 'pie',
+      data: this.inputChartData,
       options: {
         responsive: false,
         layout: {
@@ -50,10 +37,6 @@ export class PieChartDirective implements AfterViewInit, OnInit {
         },
         plugins: {
           legend: {
-            onClick: (e, legendItem, legend) => {
-              pieDoughnutLegendClickHandler.call(legend, e, legendItem, legend);
-              this.legendItemClick.emit({ label: legendItem.text, display: legendItem.hidden ?? false });
-            },
             position: "left",
             align: 'start',
             fullSize: true,
@@ -66,7 +49,6 @@ export class PieChartDirective implements AfterViewInit, OnInit {
               color: '#2a9d8f',
               font: {
                 size: 12,
-
               }
             }
           },
@@ -105,5 +87,4 @@ export class PieChartDirective implements AfterViewInit, OnInit {
     this.logger.trackEventCalls(PieChartDirective.name, "ngAfterViewInit");
     this.chart = new Chart(this.elementRef.nativeElement, this.config);
   }
-
 }

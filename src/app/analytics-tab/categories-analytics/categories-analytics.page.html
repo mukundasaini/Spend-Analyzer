@@ -1,15 +1,13 @@
-<canvas appHorizentalBarChart
-  [labels]="inputLabels"
-  [backgroundColor]="inputBackgroundColor"
-  [data]="inputData"
+<canvas appPieChart
+  [inputChartData]="chartData"
   width="475" height="310"></canvas>
 
 <ion-item lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions </u></ion-button>
-  <ion-label class="ion-text-end" color="secondary">Rs.
-    Rs.{{catsTotal}}</ion-label>
+  <ion-label class="ion-text-end" color="secondary">
+  {{catsTotal|currency:'INR'}}</ion-label>
 </ion-item>
 
 <div *ngIf="showTransactions">
@@ -19,7 +17,7 @@
       <ion-item slot="header" color="light">
         <ion-label color="secondary">{{utility.getCategory(cats,
           cat.catId)}}</ion-label>
-        <ion-label color="tertiary">Rs. {{cat.total}}</ion-label>
+        <ion-label color="tertiary">{{cat.total |currency:'INR'}}</ion-label>
         <ion-label color="tertiary">
           {{utility.getPercentage(cat.total,catsTotal)}}</ion-label>
       </ion-item>
@@ -30,7 +28,7 @@
             class="ion-no-padding ion-padding-start">{{utility.getcard(cards,
             expense.cardTypeId)}}</ion-label>
           <ion-label
-            class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
+            class="ion-no-padding ion-text-end">{{expense.amount|currency:'INR'}}</ion-label>
         </ion-item>
       </div>
     </ion-accordion>

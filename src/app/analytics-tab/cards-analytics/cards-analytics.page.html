@@ -1,14 +1,14 @@
 <canvas appDoughNutChart
-[inputChartData]="chartData"
+  [inputChartData]="chartData"
   (legendItemClick)="onLegendItemClick($event)"
   width="475" height="310"></canvas>
-  
+
 <ion-item id="cards-trans" lines="full" color="light">
   <ion-button fill="clear" color="tertiary"
     (click)="showTransactions = !showTransactions">
     <u>{{showTransactions?'Hide':'Show'}} Transactions</u></ion-button>
-  <ion-label color="secondary" class="ion-text-end">Rs.
-    Rs.{{cardsTotal}}</ion-label>
+  <ion-label color="secondary"
+    class="ion-text-end">{{cardsTotal|currency:'INR'}}</ion-label>
 </ion-item>
 
 <div *ngIf="showTransactions">
@@ -19,7 +19,8 @@
           card.expenses.length
           +')'
           }}</ion-label>
-        <ion-label color="tertiary">Rs. {{card.cardTotal}}</ion-label>
+        <ion-label color="tertiary">{{card.cardTotal
+          |currency:'INR'}}</ion-label>
         <ion-label color="tertiary">
           {{utility.getPercentage(card.cardTotal,cardsTotal)}}</ion-label>
         <ion-button color="tertiary"
@@ -41,7 +42,7 @@
                 expense.transactions.length
                 +')'}}</ion-label>
               <ion-label
-                class="ion-no-padding ion-text-end">Rs.{{expense.amount}}</ion-label>
+                class="ion-no-padding ion-text-end">{{expense.amount|currency:'INR'}}</ion-label>
               <ion-label class="ion-no-padding ion-text-end">
                 {{utility.getPercentage(expense.amount,card.cardTotal)}}</ion-label>
               <ion-button color="tertiary"
@@ -62,7 +63,7 @@
                     </ion-col>
                     <ion-col size="2.5">
                       <ion-label
-                        color="secondary">Rs.{{transaction.amount}}</ion-label>
+                        color="secondary">{{transaction.amount|currency:'INR'}}</ion-label>
                     </ion-col>
                   </ion-row>
                   <ion-row>

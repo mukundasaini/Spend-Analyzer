@@ -91,7 +91,6 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
     this.inputLabels = [];
 
     var dayGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.day);
-
     for (const key in dayGroups) {
       let total = this.utility.getTotal(dayGroups[key]);
       this.inputData.push(total);
@@ -103,7 +102,6 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
     this.logger.trackEventCalls(DailyAnalyticsPage.name, "loadTransactions");
     this.cardsExpenses = [];
     this.cardsTotal = 0;
-
     var dayGroups = this.utility.expenseGroupBy(this.expenses, GROUPBY.day);
     for (const day in dayGroups) {
       let total = this.utility.getTotal(dayGroups[day]);
