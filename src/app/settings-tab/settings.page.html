@@ -102,4 +102,17 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-toolbar color="light" class="ion-no-padding">
+    <ion-title size="small" color="secondary">Analytics</ion-title>
+  </ion-toolbar>
+  <ion-item color="light" *ngFor="let item of settings">
+    <ion-toggle [checked]="item.value"
+      (ionChange)="onSettingsToggle($event,item.id)">
+      <ion-text
+        color="secondary">
+        {{item.key}}
+      </ion-text>
+    </ion-toggle>
+  </ion-item>
 </ion-content>

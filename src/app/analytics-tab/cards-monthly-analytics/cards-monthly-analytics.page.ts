@@ -90,7 +90,7 @@ export class CardsMonthlyAnalyticsPage implements OnInit, OnChanges {
       if (label !== undefined)
         this.inputLabels.push(label);
     }
-    this.inputBackgroundColor = this.utility.getRandomColors(this.inputLabels.length);
+    this.inputBackgroundColor = this.utility.getRandomRGBAColors(this.inputLabels.length, 0.5);
   }
 
   loadTransactions() {

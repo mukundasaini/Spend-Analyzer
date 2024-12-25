@@ -10,6 +10,7 @@ import { Expense } from '../Models/expense-model';
 import { formatDate } from '@angular/common';
 import { Bank } from '../Models/bank.model';
 import { CardType } from '../Models/card-type.model';
+import { Settings } from '../Models/settings.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,12 @@ export class FirebaseService {
 
   constructor(private firestore: Firestore, private logger: LoggerService,
     private utility: UtilityService,) { }
+
+  getSettings(): Observable<Settings[]> {
+    this.logger.trackEventCalls(FirebaseService.name, 'getSettings')
+    return collectionData(
+      query(collection(this.firestore, AppConstants.collections.settings))) as Observable<Settings[]>;
+  }
 
   getCategoriesOrderByID(): Observable<Category[]> {
     this.logger.trackEventCalls(FirebaseService.name, 'getCategoriesOrderByID')

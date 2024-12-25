@@ -58,7 +58,7 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnChanges");
-    
+
     let expenses = changes['expenses'];
     let currentSelected = expenses === undefined ? <Expense>{} : (
       expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
@@ -104,10 +104,11 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
     this.chartData.datasets.push({
       data: data,
-      backgroundColor: this.utility.getRandomColors(labels.length),
+      backgroundColor: this.utility.getRandomRGBAColors(labels.length, 0.5),
       label: 'Rs',
       hoverOffset: 20,
-      borderColor: '#f6f8fc'
+      borderColor: this.utility.getRandomColor(),
+      borderWidth: 2
     });
 
     this.chartData.labels = labels;

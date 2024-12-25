@@ -21,6 +21,7 @@ import { UtilityService } from "../services/utility.service";
 import { DailyAnalyticsPage } from "./daily-analytics/daily-analytics.page";
 import { addIcons } from "ionicons";
 import { filter } from "ionicons/icons";
+import { Settings } from "../Models/settings.model";
 
 @Component({
   selector: 'app-analytics',
@@ -47,6 +48,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   expenses$: Observable<Expense[]>;
   cardDetails$: Observable<CardDetails[]>;
   categories$: Observable<Category[]>;
+  settings$: Observable<Settings[]>;
   onDestroy$: Subject<void> = new Subject();
 
   hasCardsData: boolean = false;
@@ -64,12 +66,14 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   debitCardIds: string[] = [];
   creditCardIds: string[] = [];
   months = AppConstants.Months;
-  hideMonthAnalytics: boolean = false;
-  hideCardsAnalytics: boolean = false;
-  hideCatsAnalytics: boolean = false;
-  hideAllMonthsAnalytics: boolean = false;
+  hideMonthAnalytics: boolean = true;
+  hideCardsAnalytics: boolean = true;
+  hideCatsAnalytics: boolean = true;
+  hideAllMonthsAnalytics: boolean = true;
+  hideAllYearsAnalytics: boolean = true;
   selectedAnalytics: string = 'A';
   analyticsFilterIndeicator: string = '';
+  settings: Settings[] = [];
 
   constructor(private logger: LoggerService,
     public utility: UtilityService,
@@ -79,6 +83,7 @@ export class AnalyticsPage implements OnInit, OnDestroy {
     this.expenses$ = this.firebase.getIncludeExpenses();
     this.cardDetails$ = this.firebase.getCardsOrderByID();
     this.categories$ = this.firebase.getCategoriesOrderByID();
+    this.settings$ = this.firebase.getSettings();
   }
 
   ngOnDestroy(): void {
@@ -123,6 +128,16 @@ export class AnalyticsPage implements OnInit, OnDestroy {
       .subscribe(categories => {
         this.inputCategories = categories;
         this.hasCatsData = this.inputCategories.length > 0;
+      });
+
+    this.settings$.pipe(takeUntil(this.onDestroy$))
+      .subscribe(settings => {
+        this.settings = settings;
+        this.hideMonthAnalytics = !this.settings.find(s => s.key == AppConstants.settings.EDA)?.value;
+        this.hideCardsAnalytics = !this.settings.find(s => s.key == AppConstants.settings.ECDA)?.value;
+        this.hideCatsAnalytics = !this.settings.find(s => s.key == AppConstants.settings.ECTA)?.value;
+        this.hideAllMonthsAnalytics = !this.settings.find(s => s.key == AppConstants.settings.EMA)?.value;
+        this.hideAllYearsAnalytics = !this.settings.find(s => s.key == AppConstants.settings.EYA)?.value;
       });
   }
 
@@ -191,13 +206,13 @@ export class AnalyticsPage implements OnInit, OnDestroy {
   onAllMonthsYearChange(event: any) {
     this.logger.trackEventCalls(AnalyticsPage.name, "onAllMonthsYearChange");
     this.selectedAllMonthsYear = event.target.value;
-    this.inputAllMonthsExpenses= this.setAnalyticsFilter();
+    this.inputAllMonthsExpenses = this.setAnalyticsFilter();
     this.inputAllMonthsExpenses = this.inputAllYearsExpenses.filter(
       exp => exp.year == this.selectedAllMonthsYear);
   }
 
   getExpensesByMonthYear(month: string, year: string) {
-    this.inputAllYearsExpenses= this.setAnalyticsFilter();
+    this.inputAllYearsExpenses = this.setAnalyticsFilter();
     return this.inputAllYearsExpenses.filter(
       exp => exp.month == month && exp.year == year);
   }

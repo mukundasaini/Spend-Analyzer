@@ -86,7 +86,7 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
       this.inputData.push(total);
       this.inputLabels.push(yearKey);
     }
-    this.inputBackgroundColor = this.utility.getRandomColors(this.inputLabels.length);
+    this.inputBackgroundColor = this.utility.getRandomRGBAColors(this.inputLabels.length, 0.5);
   }
 
   loadTransactions() {

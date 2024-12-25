@@ -50,6 +50,14 @@ export class UtilityService {
     return colors;
   }
 
+  getRandomRGBAColors(count: number, opacity: number): string[] {
+    let colors: string[] = [];
+    for (let index = 0; index < count; index++) {
+      colors.push(this.getRandomColorRGBA(opacity));
+    }
+    return colors;
+  }
+
   getRandomColorRGBA(opacity: number) {
     let hexCode = this.getRandomColor();
     var r = parseInt(hexCode.slice(1, 3), 16),

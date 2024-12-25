@@ -32,9 +32,8 @@ export class LineChartDirective implements AfterViewInit, OnInit {
         datasets: [{
           data: this.data,
           label: '',
-          fill: false,
-          stepped: true,
-          tension: 0.1,
+          fill: true,
+          backgroundColor:this.utility.getRandomColorRGBA(0.5),
           borderColor: this.utility.getRandomColor(),
         }]
       },
@@ -58,8 +57,8 @@ export class LineChartDirective implements AfterViewInit, OnInit {
             boxWidth: 8,
             boxPadding: 5,
             usePointStyle: true,
-            borderColor: '#2a9d8f',
-            backgroundColor: '#2a9d8f'
+            borderColor: this.utility.getRandomColor(),
+            backgroundColor: this.utility.getRandomColor()
           },
         }
       },

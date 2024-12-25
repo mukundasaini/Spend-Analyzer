@@ -69,6 +69,8 @@ Note: Andoird folder will create in roo folder
 
 5. Copy .apk file in phone and install it
 
+For android icon generation follow this link https://www.appicon.co/
+
 
 
 

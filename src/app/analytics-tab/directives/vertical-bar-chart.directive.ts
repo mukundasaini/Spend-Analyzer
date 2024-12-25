@@ -2,6 +2,7 @@ import { AfterViewInit, Directive, ElementRef, Input, OnInit } from '@angular/co
 import { Chart, ChartConfiguration, ChartData, ChartDataset } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { LoggerService } from 'src/app/services/logger.service';
+import { UtilityService } from 'src/app/services/utility.service';
 
 @Directive({
   selector: 'canvas[appVerticalBarChart]',
@@ -16,7 +17,7 @@ export class VerticalBarChartDirective implements AfterViewInit, OnInit {
   @Input() data: number[] = [];
   @Input() backgroundColor: string[] = [];
 
-  constructor(private logger: LoggerService,
+  constructor(private logger: LoggerService, private utility: UtilityService,
     private elementRef: ElementRef<HTMLCanvasElement>) {
   }
 
@@ -30,6 +31,8 @@ export class VerticalBarChartDirective implements AfterViewInit, OnInit {
         datasets: [{
           data: this.data,
           backgroundColor: this.backgroundColor,
+          borderColor: this.utility.getRandomColor(),
+          borderWidth: 2,
           label: 'Rs',
         }]
       },
@@ -56,7 +59,7 @@ export class VerticalBarChartDirective implements AfterViewInit, OnInit {
               padding: 5,
               boxWidth: 8,
               boxHeight: 8,
-              color: '#2a9d8f',
+              color: this.utility.getRandomColor(),
               font: {
                 size: 12
               }
@@ -67,8 +70,8 @@ export class VerticalBarChartDirective implements AfterViewInit, OnInit {
             boxWidth: 8,
             boxPadding: 5,
             usePointStyle: true,
-            borderColor: '#2a9d8f',
-            backgroundColor: '#2a9d8f'
+            borderColor: this.utility.getRandomColor(),
+            backgroundColor: this.utility.getRandomColor()
           },
           datalabels: {
             display: false

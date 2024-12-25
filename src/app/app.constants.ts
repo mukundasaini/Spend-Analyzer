@@ -18,6 +18,13 @@ export enum GROUPBY {
     day = "day"
 }
 export const AppConstants = {
+    settings: {
+        EDA: 'Enable Daily Analytics',
+        EMA: 'Enable Monthly Analytics',
+        EYA: 'Enable Yearly Analytics',
+        ECDA: 'Enable Cards Analytics',
+        ECTA: 'Enable Categories Analytics',
+    },
     alertHeader: {
         SUCCESS: 'success',
         FAILED: 'failed',
@@ -47,6 +54,7 @@ export const AppConstants = {
         cards: 'cardTypes',
         expense: 'expense',
         category: 'categories',
+        settings: 'settings',
         bank: 'bank',
         cardType: 'cardType',
     },

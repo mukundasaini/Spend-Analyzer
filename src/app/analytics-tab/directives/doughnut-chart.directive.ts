@@ -2,6 +2,7 @@ import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnInit, Outp
 import { Chart, ChartConfiguration, ChartData } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { LoggerService } from 'src/app/services/logger.service';
+import { UtilityService } from 'src/app/services/utility.service';
 
 @Directive({
   selector: 'canvas[appDoughNutChart]',
@@ -16,7 +17,7 @@ export class DoughNutChartDirective implements AfterViewInit, OnInit {
   @Input() inputChartData: ChartData = <ChartData>{};
   @Output() legendItemClick = new EventEmitter<{ label: string, display: boolean }>();
 
-  constructor(private logger: LoggerService,
+  constructor(private logger: LoggerService, private utility: UtilityService,
     private elementRef: ElementRef<HTMLCanvasElement>) {
   }
   ngOnInit(): void {
@@ -53,7 +54,7 @@ export class DoughNutChartDirective implements AfterViewInit, OnInit {
               padding: 5,
               boxWidth: 8,
               boxHeight: 8,
-              color: '#2a9d8f',
+              color: this.utility.getRandomColor(),
               font: {
                 size: 12,
               }
@@ -64,8 +65,8 @@ export class DoughNutChartDirective implements AfterViewInit, OnInit {
             boxWidth: 8,
             boxPadding: 5,
             usePointStyle: true,
-            borderColor: '#2a9d8f',
-            backgroundColor: '#2a9d8f'
+            borderColor: this.utility.getRandomColor(),
+            backgroundColor: this.utility.getRandomColor()
           },
           datalabels: {
             formatter: (value, context) => {
