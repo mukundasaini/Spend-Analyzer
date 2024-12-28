@@ -14,6 +14,7 @@ import { GROUPBY } from "src/app/app.constants";
 import { PieChartDirective } from "../directives/pie-chart.directive";
 import { addIcons } from "ionicons";
 import { remove } from "ionicons/icons";
+import { UpdateExpensePage } from "../../expense/update-expense/update-expense.page";
 
 @Component({
   selector: 'app-categories-analytics',
@@ -21,8 +22,7 @@ import { remove } from "ionicons/icons";
   styleUrls: ['categories-analytics.page.scss'],
   standalone: true,
   imports: [IonGrid, IonRow, IonCol, IonIcon, CommonModule, PieChartDirective, IonItem, IonButton, IonLabel, IonAccordionGroup,
-    IonAccordion
-  ],
+    IonAccordion, UpdateExpensePage],
 })
 export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 
@@ -31,7 +31,7 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
   config!: ChartConfiguration;
 
   catsTotal: number = 0;
-  showTransactions: boolean = true;
+  showTransactions: boolean = false;
   expensesTransactions: Expense[] = [];
 
   categoriesExpenses: {

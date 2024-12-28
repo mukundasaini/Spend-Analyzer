@@ -83,16 +83,36 @@ export class UtilityService {
     return cards?.find(x => x.id == id);
   }
 
+  getCurrentYear() {
+    return formatDate(new Date(), 'yyyy-MM', 'en-US').split('-')[0];
+  }
+
+  getCurrentMonth() {
+    return formatDate(new Date(), 'yyyy-MM', 'en-US').split('-')[1];
+  }
+
   getMonthName(value: string) {
     return AppConstants.Months.find(m => m.value == value)?.name ?? '';
   }
 
-  getCurrentMonthExpenses(expenses: Expense[], onlyYear: boolean = false): Expense[] {
-    var date = new Date();
-    const dateValues = formatDate(date, 'yyyy-MM', 'en-US').split('-');
-    let result = onlyYear ? expenses.filter(ex => ex.year == dateValues[0])
-      : expenses.filter(ex => ex.year == dateValues[0] && ex.month == dateValues[1]);
-    return result.sort((a, b) => new Date(b.fullDate).getTime() - new Date(a.fullDate).getTime());
+  getExpensesByYearOrMonth(expenses: Expense[], month?: string, year?: string) {
+    let resultExpenses: Expense[] = []
+    if (month === undefined && year !== undefined) {
+      resultExpenses = expenses.filter(ex => ex.year == year);
+    }
+
+    if (month !== undefined && year === undefined) {
+      resultExpenses = expenses.filter(ex => ex.month == month);
+    }
+
+    if (month !== undefined && year !== undefined) {
+      resultExpenses = expenses.filter(ex => ex.year == year && ex.month == month);
+    }
+
+    if (month === undefined && year === undefined) {
+      resultExpenses = expenses.filter(ex => ex.year == this.getCurrentYear() && ex.month == this.getCurrentMonth());
+    }
+    return resultExpenses.sort((a, b) => new Date(b.fullDate).getTime() - new Date(a.fullDate).getTime());
   }
 
   getYearsCheckBox(expenses: Expense[]) {

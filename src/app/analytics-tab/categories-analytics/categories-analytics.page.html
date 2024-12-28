@@ -32,7 +32,8 @@
           <ion-accordion
             [value]="utility.getcard(cards,
             expense.cardTypeId)">
-            <ion-item color="primary" slot="header" class="ion-no-padding" lines="full">
+            <ion-item color="primary" slot="header" class="ion-no-padding"
+              lines="full">
               <ion-label
                 class="ion-no-padding ion-padding-start">{{utility.getcard(cards,
                 expense.cardTypeId)}}</ion-label>
@@ -47,36 +48,43 @@
             </ion-item>
 
             <div slot="content">
-              <ion-item color="light" lines="full"
-                *ngFor="let transaction of expense.transactions">
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
-                      <ion-label color="secondary">{{transaction.fullDate
-                        | date:'short'}}</ion-label>
-                    </ion-col>
-                    <ion-col size="2.5">
-                      <ion-label
-                        color="secondary">{{transaction.amount|currency:'INR'}}</ion-label>
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col>
-                      <ion-label
-                        color="secondary">
-                        <i> {{transaction.note}} </i></ion-label>
-                    </ion-col>
-                    <ion-col size="2">
-                      <ion-button color="tertiary"
-                        (click)="onItemExcludeClick(transaction.id)"
-                        fill="clear">
-                        <ion-icon slot="icon-only" name="remove">
-                        </ion-icon>
-                      </ion-button>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-item>
+              <div *ngFor="let transaction of expense.transactions">
+                <ion-item color="light" lines="full"
+                  [id]="'category-analytics-open-expense-update-dialog_'+transaction.id">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col>
+                        <ion-label color="secondary">{{transaction.fullDate
+                          | date:'short'}}</ion-label>
+                      </ion-col>
+                      <ion-col size="2.5">
+                        <ion-label
+                          color="secondary">{{transaction.amount|currency:'INR'}}</ion-label>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col>
+                        <ion-label
+                          color="secondary">
+                          <i> {{transaction.note}} </i></ion-label>
+                      </ion-col>
+                      <ion-col size="2">
+                        <ion-button color="tertiary"
+                          (click)="onItemExcludeClick(transaction.id)"
+                          fill="clear">
+                          <ion-icon slot="icon-only" name="remove">
+                          </ion-icon>
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-item>
+                <app-update-expense
+                  [categories]="cats"
+                  [cardDetails]="cards"
+                  [triggerFrom]="'category-analytics-open-expense-update-dialog_'+transaction.id"
+                  [inputSelectedItemId]="transaction.id"></app-update-expense>
+              </div>
             </div>
           </ion-accordion>
         </ion-accordion-group>

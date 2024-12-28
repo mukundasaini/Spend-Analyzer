@@ -12,7 +12,7 @@ export class LoggerService {
   constructor() { }
 
   trackEventCalls(title: string, value: any) {
-    console.info(`${title}:`, value);
+    // console.info(`${title}:`, value);
   }
 
   trackErrors(title: string, error: any) {

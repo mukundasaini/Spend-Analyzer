@@ -41,6 +41,7 @@ export class UpdateExpensePage {
   @Input() cardDetails: CardDetails[] = [];
   @Input() categories: Category[] = [];
   @Input() inputSelectedItemId: string = '';
+  @Input() triggerFrom: string = '';
 
   constructor(private logger: LoggerService,
     public utility: UtilityService,

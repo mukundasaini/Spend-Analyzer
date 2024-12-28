@@ -71,5 +71,8 @@ export const AppConstants = {
         { name: 'OCT', value: '10' },
         { name: 'NOV', value: '11' },
         { name: 'DEC', value: '12' }
-    ]
+    ],
+    CardTypes: [{ name: 'All', value: 'A' },
+    { name: 'Credit', value: 'C' },
+    { name: 'Debit', value: 'D' }]
 }

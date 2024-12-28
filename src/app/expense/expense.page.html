@@ -2,7 +2,7 @@
   <div
     *ngFor="let item of expenses;let i=index;">
     <ion-card>
-      <ion-item [id]="'open-expense-update-dialog_'+item.id"
+      <ion-item [id]="'expenses-open-expense-update-dialog_'+item.id"
         class="ion-no-padding ion-activatable"
         lines="none">
         <ion-ripple-effect></ion-ripple-effect>
@@ -18,7 +18,7 @@
                 }}</ion-label>
             </ion-col>
             <ion-col size="5" class="ion-text-end">
-              <ion-label class="expense_amount" color="secondary"> 
+              <ion-label class="expense_amount" color="secondary">
                 {{item.amount |currency:'INR'}}</ion-label>
             </ion-col>
           </ion-row>
@@ -36,6 +36,7 @@
       <app-update-expense
         [categories]="categories"
         [cardDetails]="cardDetails"
+        [triggerFrom]="'expenses-open-expense-update-dialog_'+item.id"
         [inputSelectedItemId]="item.id"></app-update-expense>
     </ion-card>
   </div>

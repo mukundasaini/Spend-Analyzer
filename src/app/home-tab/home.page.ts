@@ -95,7 +95,7 @@ export class HomePage implements OnInit, OnDestroy {
       .subscribe(expenses => {
         this.inputFilterExpenses = expenses;
         this.hasExpensesData = this.inputFilterExpenses.length > 0;
-        this.inputPresetMonthExpenses = this.utility.getCurrentMonthExpenses(expenses);
+        this.inputPresetMonthExpenses = this.utility.getExpensesByYearOrMonth(expenses);
         this.hasPresetMonthExpenseData = this.inputPresetMonthExpenses.length > 0;
         this.inputYears = this.utility.getYearsCheckBox(expenses);
       });
