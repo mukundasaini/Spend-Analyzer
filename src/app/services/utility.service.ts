@@ -161,6 +161,17 @@ export class UtilityService {
     return months;
   }
 
+  getMonths(expenses: Expense[]) {
+    let monthStrings = expenses.map(e => e.month).filter((value, index, self) => self.indexOf(value) === index);
+    monthStrings = monthStrings.sort((a, b) => parseInt(a) - parseInt(b));
+
+    let months: { value: string, name: string }[] = [];
+    monthStrings.forEach(month => {
+      months.push({ value: month, name: this.getMonthName(month) });
+    });
+    return months;
+  }
+
   getTotal(expenses: Expense[]) {
     return expenses.reduce((sum, e) => sum + e.amount, 0);
   }
@@ -199,6 +210,34 @@ export class UtilityService {
     return colors[Math.floor(Math.random() * 9)]
   }
 
+  getCardIds(Cards: CardDetails[], type: string) {
+    let cardIds: string[] = [];
+    if (type === 'C') {
+      cardIds = Cards.filter(card => ['CREDIT', 'AMAZON', 'RUPAY']
+        .includes(card.type.trim().toUpperCase())).map(card => card.id);
+    } else if (type === 'D') {
+      cardIds = Cards.filter(card => ['DEBIT', 'FOOD']
+        .includes(card.type.trim().toUpperCase())).map(card => card.id);
+    } else if (type === 'A') {
+      cardIds = Cards.filter(card => ['DEBIT', 'FOOD', 'CREDIT', 'AMAZON', 'RUPAY']
+        .includes(card.type.trim().toUpperCase())).map(card => card.id);
+    }
+    return cardIds;
+  }
+
+  getCardsByExpense(expenses: Expense[], cardDetails: CardDetails[]) {
+    let cards: CardDetails[] = [];
+    let cardIds = expenses.map(e => e.cardTypeId).filter((value, index, self) => self.indexOf(value) === index);
+    cards = cardDetails.filter(c => cardIds.includes(c.id));
+    return cards;
+  }
+
+  getCatsByExpense(expenses: Expense[], categories: Category[]) {
+    let cats: Category[] = [];
+    let catIds = expenses.map(e => e.categoryId).filter((value, index, self) => self.indexOf(value) === index);
+    cats = categories.filter(c => catIds.includes(c.id));
+    return cats;
+  }
 
   /** Business logic */
 

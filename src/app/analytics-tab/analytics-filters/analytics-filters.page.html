@@ -1,0 +1,87 @@
+<ion-item lines="full">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-no-padding">
+      <ion-col size="2" *ngIf="!disableYear">
+        <ion-select
+          class="ion-no-padding"
+          [placeholder]="selectedYear"
+          interface="popover"
+          [(ngModel)]="selectedYear"
+          (ionChange)="onYearChange($event)">
+          <ion-select-option
+            value="ALL">
+            ALL
+          </ion-select-option>
+          <ion-select-option *ngFor="let item of years;"
+            [value]="item">
+            {{item}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="2" *ngIf="!disableMonth">
+        <ion-select
+          class="ion-no-padding"
+          [placeholder]="selectedMonth"
+          interface="popover"
+          [(ngModel)]="selectedMonth"
+          (ionChange)="onMonthChange($event)">
+          <ion-select-option
+            value="ALL">
+            ALL
+          </ion-select-option>
+          <ion-select-option *ngFor="let item of months;"
+            [value]="item.value">
+            {{item.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="2">
+        <ion-select
+          class="ion-no-padding"
+          [placeholder]="selectedCardType"
+          interface="popover"
+          [(ngModel)]="selectedCardType"
+          (ionChange)="onCardTypeChange($event)">
+          <ion-select-option *ngFor="let item of cardTypes;"
+            [value]="item.value">
+            {{item.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="3">
+        <ion-select
+          class="ion-no-padding"
+          [placeholder]="selectedCard"
+          interface="popover"
+          [(ngModel)]="selectedCard"
+          (ionChange)="onCardChange($event)">
+          <ion-select-option
+            value="ALL">
+            ALL
+          </ion-select-option>
+          <ion-select-option *ngFor="let item of cardDetails;"
+            [value]="item.id">
+            {{item.cardType}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="3">
+        <ion-select
+          class="ion-no-padding"
+          [placeholder]="selectedCategory"
+          interface="popover"
+          [(ngModel)]="selectedCategory"
+          (ionChange)="onCategoryChange($event)">
+          <ion-select-option
+            value="ALL">
+            ALL
+          </ion-select-option>
+          <ion-select-option *ngFor="let item of categories;"
+            [value]="item.id">
+            {{item.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-item>

@@ -53,23 +53,8 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(DailyAnalyticsPage.name, "ngOnChanges");
-    let expenses = changes['expenses'];
-    let currentSelected = expenses === undefined ? <Expense>{} : (
-      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
-    let previousSelected = expenses === undefined ? <Expense>{} : (
-      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
-
-    let cards = changes['cards'];
-    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
-    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
-
-    if ((previousSelected != undefined &&
-      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
-      || (previousSelectedCards != undefined
-        && currentSelectedCards.length != previousSelectedCards.length)) {
-      this.updateChartData();
-      this.loadTransactions();
-    }
+    this.updateChartData();
+    this.loadTransactions();
   }
   ngOnInit(): void {
     this.logger.trackEventCalls(DailyAnalyticsPage.name, "ngOnInit");
@@ -80,9 +65,11 @@ export class DailyAnalyticsPage implements OnInit, OnChanges {
 
   updateChartData() {
     this.loadChartData();
-    this.lineChart.chart.data.labels = this.inputLabels;
-    this.lineChart.chart.data.datasets[0].data = this.inputData;
-    this.lineChart.chart.update();
+    if (this.lineChart !== undefined) {
+      this.lineChart.chart.data.labels = this.inputLabels;
+      this.lineChart.chart.data.datasets[0].data = this.inputData;
+      this.lineChart.chart.update();
+    }
   }
 
   loadChartData() {

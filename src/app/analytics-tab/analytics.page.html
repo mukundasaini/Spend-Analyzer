@@ -10,223 +10,79 @@
   <ion-refresher slot="fixed" (ionRefresh)="utility.handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
   <!-- Category Chart division start -->
   <div *ngIf="!hideCatsAnalytics">
-    <ion-item lines="full" class="ion-no-padding">
-      <ion-grid class="ion-no-padding">
-        <ion-row class="ion-no-padding">
-          <ion-col class="ion-align-self-center">
-            <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Categories</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardTypeCat"
-              interface="popover"
-              (ionChange)="onCardTypeChangeCat($event)">
-              <ion-select-option *ngFor="let item of cardTypes;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCatMonth"
-              interface="popover"
-              (ionChange)="onCatMonthChange($event)">
-              <ion-select-option *ngFor="let item of months;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCatYear"
-              interface="popover"
-              (ionChange)="onCatYearChange($event)">
-              <ion-select-option *ngFor="let item of years;"
-                [value]="item">
-                {{item}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <app-analytics-filters
+      *ngIf="hasCardsData && hasCatsData && expenses.length>0"
+      [cards]="cardDetails" [cats]="categories"
+      [xpenses]="expenses" [selectedMonth]="selectedMonth"
+      [selectedYear]="selectedYear"
+      (filteredExpenses)="onFiltersApplied($event,'CAT')">
+    </app-analytics-filters>
     <div>
       <app-categories-analytics
-        *ngIf="hasCardsData && hasCatsData && inputCatsYearMonthExpenses.length>0"
-        [cats]="inputCategories"
-        [cards]="inputCardDetails"
-        [expenses]="inputCatsYearMonthExpenses"></app-categories-analytics>
+        *ngIf="hasCardsData && hasCatsData && catsAnalyticsExpenses.length>0"
+        [cats]="categories"
+        [cards]="cardDetails"
+        [expenses]="catsAnalyticsExpenses"></app-categories-analytics>
     </div>
   </div>
   <!-- Category Chart division end -->
 
   <!-- Card Chart division start -->
   <div *ngIf="!hideCardsAnalytics">
-    <ion-item lines="full" class="ion-no-padding">
-      <ion-grid class="ion-no-padding">
-        <ion-row class="ion-no-padding">
-          <ion-col class="ion-align-self-center">
-            <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Cards</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardTypeCard"
-              interface="popover"
-              (ionChange)="onCardTypeChangeCard($event)">
-              <ion-select-option *ngFor="let item of cardTypes;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardMonth"
-              interface="popover"
-              (ionChange)="onCardMonthChange($event)">
-              <ion-select-option *ngFor="let item of months;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardYear"
-              interface="popover"
-              (ionChange)="onCardYearChange($event)">
-              <ion-select-option *ngFor="let item of years;"
-                [value]="item">
-                {{item}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <app-analytics-filters
+      *ngIf="hasCardsData && hasCatsData && expenses.length>0"
+      [cards]="cardDetails" [cats]="categories"
+      [xpenses]="expenses" [selectedMonth]="selectedMonth"
+      [selectedYear]="selectedYear"
+      (filteredExpenses)="onFiltersApplied($event,'CARD')">
+    </app-analytics-filters>
     <div>
       <app-cards-analytics
-        *ngIf="hasCardsData && hasCatsData && inputCardsYearMonthExpenses.length>0"
-        [cats]="inputCategories"
-        [cards]="inputCardDetails"
-        [expenses]="inputCardsYearMonthExpenses"></app-cards-analytics>
+        *ngIf="hasCardsData && hasCatsData && cardsAnalyticsExpenses.length>0"
+        [cats]="categories"
+        [cards]="cardDetails"
+        [expenses]="cardsAnalyticsExpenses"></app-cards-analytics>
     </div>
   </div>
   <!-- Card Chart division end -->
 
   <!-- Dialy Chart division start -->
   <div *ngIf="!hideMonthAnalytics">
-    <ion-item lines="full" class="ion-no-padding">
-      <ion-grid class="ion-no-padding">
-        <ion-row class="ion-no-padding">
-          <ion-col class="ion-align-self-center">
-            <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Daily</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardTypeMonth"
-              interface="popover"
-              (ionChange)="onCardTypeChangeMonth($event)">
-              <ion-select-option *ngFor="let item of cardTypes;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedMonth"
-              interface="popover"
-              (ionChange)="onMonthChange($event)">
-              <ion-select-option *ngFor="let item of months;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedYear"
-              interface="popover"
-              (ionChange)="onYearChange($event)">
-              <ion-select-option *ngFor="let item of years;"
-                [value]="item">
-                {{item}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <app-analytics-filters
+      *ngIf="hasCardsData && hasCatsData && expenses.length>0"
+      [cards]="cardDetails" [cats]="categories"
+      [xpenses]="expenses" [selectedMonth]="selectedMonth"
+      [selectedYear]="selectedYear"
+      (filteredExpenses)="onFiltersApplied($event,'MONTH')">
+    </app-analytics-filters>
     <div>
       <app-daily-analytics
-        *ngIf="hasCardsData && hasCatsData && inputMonthExpenses.length>0"
-        [cats]="inputCategories"
-        [cards]="inputCardDetails"
-        [expenses]="inputMonthExpenses"></app-daily-analytics>
+        *ngIf="hasCardsData && hasCatsData && monthAnalyticsExpenses.length>0"
+        [cats]="categories"
+        [cards]="cardDetails"
+        [expenses]="monthAnalyticsExpenses"></app-daily-analytics>
     </div>
   </div>
   <!-- Dialy Chart division end -->
 
   <!-- Year Chart division start -->
   <div *ngIf="!hideAllMonthsAnalytics">
-    <ion-item lines="full" class="ion-no-padding">
-      <ion-grid class="ion-no-padding">
-        <ion-row class="ion-no-padding">
-          <ion-col class="ion-align-self-center">
-            <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Year</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardTypeYear"
-              interface="popover"
-              (ionChange)="onCardTypeChangeYear($event)">
-              <ion-select-option *ngFor="let item of cardTypes;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedAllMonthsYear"
-              interface="popover"
-              (ionChange)="onAllMonthsYearChange($event)">
-              <ion-select-option *ngFor="let item of years;"
-                [value]="item">
-                {{item}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <app-analytics-filters
+      *ngIf="hasCardsData && hasCatsData && expenses.length>0"
+      [cards]="cardDetails" [cats]="categories"
+      [xpenses]="expenses"
+      [selectedYear]="selectedYear"
+      [disableMonth]="true"
+      (filteredExpenses)="onFiltersApplied($event,'YEAR')">
+    </app-analytics-filters>
     <div>
       <app-cards-monthly-analytics
-        *ngIf="hasCardsData && hasCatsData && inputAllMonthsExpenses.length>0"
-        [cats]="inputCategories"
-        [cards]="inputCardDetails"
-        [expenses]="inputAllMonthsExpenses">
+        *ngIf="hasCardsData && hasCatsData && yearsAnalyticsExpenses.length>0"
+        [cats]="categories"
+        [cards]="cardDetails"
+        [expenses]="yearAnalyticsExpenses">
       </app-cards-monthly-analytics>
     </div>
   </div>
@@ -234,50 +90,18 @@
 
   <!-- Years Chart division start -->
   <div *ngIf="!hideAllYearsAnalytics">
-    <ion-item lines="full" class="ion-no-padding">
-      <ion-grid class="ion-no-padding">
-        <ion-row class="ion-no-padding">
-          <ion-col class="ion-align-self-center">
-            <ion-label color="secondary"
-              class="ion-padding-start ion-text-start">Years</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedCardTypeYears"
-              interface="popover"
-              (ionChange)="onCardTypeChangeYears($event)">
-              <ion-select-option *ngFor="let item of cardTypes;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="2">
-            <ion-select
-              class="ion-no-padding"
-              [placeholder]="selectedAllyearsMonth"
-              interface="popover"
-              (ionChange)="onAllYearsMonthChange($event)">
-              <ion-select-option value="ALL">
-                ALL
-              </ion-select-option>
-              <ion-select-option *ngFor="let item of months;"
-                [value]="item.value">
-                {{item.name}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+    <app-analytics-filters
+      *ngIf="hasCardsData && hasCatsData && expenses.length>0"
+      [cards]="cardDetails" [cats]="categories"
+      [xpenses]="expenses" [disableYear]="true" [disableMonth]="true"
+      (filteredExpenses)="onFiltersApplied($event,'YEARS')">
+    </app-analytics-filters>
     <div>
       <app-cards-yearly-analytics
-        *ngIf="hasCardsData && hasCatsData && inputAllYearsExpenses.length>0"
-        [cats]="inputCategories"
-        [cards]="inputCardDetails"
-        [expenses]="inputAllYearsExpenses"
-        [years]="years">
+        *ngIf="hasCardsData && hasCatsData && yearsAnalyticsExpenses.length>0"
+        [cats]="categories"
+        [cards]="cardDetails"
+        [expenses]="yearsAnalyticsExpenses">
       </app-cards-yearly-analytics>
     </div>
   </div>

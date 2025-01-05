@@ -58,25 +58,9 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnChanges");
-
-    let expenses = changes['expenses'];
-    let currentSelected = expenses === undefined ? <Expense>{} : (
-      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
-    let previousSelected = expenses === undefined ? <Expense>{} : (
-      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
-
-    let cards = changes['cards'];
-    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
-    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
-
-    if ((previousSelected != undefined &&
-      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
-      || (previousSelectedCards != undefined
-        && currentSelectedCards.length != previousSelectedCards.length)) {
-      this.updateChartData();
-      this.expensesTransactions = Array.from(this.expenses);
-      this.loadTransactions();
-    }
+    this.updateChartData();
+    this.expensesTransactions = Array.from(this.expenses);
+    this.loadTransactions();
   }
   ngOnInit(): void {
     this.logger.trackEventCalls(CardsAnalyticsPage.name, "ngOnInit");
@@ -87,7 +71,8 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
 
   updateChartData() {
     this.loadChartData();
-    this.cardPieChart.chart.update();
+    if (this.cardPieChart !== undefined)
+      this.cardPieChart.chart.update();
   }
 
   loadChartData() {
@@ -102,16 +87,17 @@ export class CardsAnalyticsPage implements OnInit, OnChanges {
       data.push(this.utility.getTotal(cardGroups[key]));
     }
 
-    this.chartData.datasets.push({
-      data: data,
-      backgroundColor: this.utility.getRandomRGBAColors(labels.length, 0.5),
-      label: 'Rs',
-      hoverOffset: 20,
-      borderColor: this.utility.getRandomColor(),
-      borderWidth: 2
-    });
-
-    this.chartData.labels = labels;
+    if (data.length > 0) {
+      this.chartData.datasets.push({
+        data: data,
+        backgroundColor: this.utility.getRandomRGBAColors(labels.length, 0.5),
+        label: 'Rs',
+        hoverOffset: 20,
+        borderColor: this.utility.getRandomColor(),
+        borderWidth: 2
+      });
+      this.chartData.labels = labels;
+    }
   }
 
   loadTransactions() {

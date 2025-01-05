@@ -2,7 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import {
   IonAccordionGroup, IonAccordion,
-  IonItem, IonLabel, IonButton, IonIcon, IonCol, IonRow, IonGrid } from '@ionic/angular/standalone';
+  IonItem, IonLabel, IonButton, IonIcon, IonCol, IonRow, IonGrid
+} from '@ionic/angular/standalone';
 import Chart, { ChartConfiguration, ChartData } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CardDetails } from "src/app/Models/card-details.model";
@@ -59,30 +60,15 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.logger.trackEventCalls(CategoriesAnalyticsPage.name, "ngOnChanges");
-
-    let expenses = changes['expenses'];
-    let currentSelected = expenses === undefined ? <Expense>{} : (
-      expenses.currentValue === undefined ? <Expense>{} : (expenses.currentValue as Expense[])[0]);
-    let previousSelected = expenses === undefined ? <Expense>{} : (
-      expenses.previousValue === undefined ? undefined : (expenses.previousValue as Expense[])[0]);
-
-    let cards = changes['cards'];
-    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
-    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
-
-    if ((previousSelected != undefined &&
-      (currentSelected.month != previousSelected.month || currentSelected.year != previousSelected.year))
-      || (previousSelectedCards != undefined
-        && currentSelectedCards.length != previousSelectedCards.length)) {
-      this.expensesTransactions = Array.from(this.expenses);
-      this.updateChartData();
-      this.loadTransactions();
-    }
+    this.expensesTransactions = Array.from(this.expenses);
+    this.updateChartData();
+    this.loadTransactions();
   }
 
   updateChartData() {
     this.loadChartData();
-    this.catChart.chart.update();
+    if (this.catChart !== undefined)
+      this.catChart.chart.update();
   }
 
   loadChartData() {
@@ -98,15 +84,16 @@ export class CategoriesAnalyticsPage implements OnInit, OnChanges {
       labels.push(catName);
     }
 
-    this.chartData.datasets.push({
-      data: data,
-      backgroundColor: this.utility.getRandomRGBAColors(labels.length, 0.5),
-      label: 'Rs',
-      hoverOffset: 20,
-      borderColor: this.utility.getRandomColor()
-    });
-
-    this.chartData.labels = labels;
+    if (data.length > 0) {
+      this.chartData.datasets.push({
+        data: data,
+        backgroundColor: this.utility.getRandomRGBAColors(labels.length, 0.5),
+        label: 'Rs',
+        hoverOffset: 20,
+        borderColor: this.utility.getRandomColor()
+      });
+      this.chartData.labels = labels;
+    }
   }
 
   loadTransactions() {

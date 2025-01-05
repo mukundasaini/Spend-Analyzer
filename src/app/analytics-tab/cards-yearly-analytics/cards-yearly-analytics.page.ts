@@ -39,8 +39,6 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
   @Input() cards: CardDetails[] = [];
   @Input() cats: Category[] = [];
   @Input() expenses: Expense[] = [];
-  @Input() years: string[] = [];
-
   @ViewChild(VerticalBarChartDirective) cardBarChart!: VerticalBarChartDirective;
 
   constructor(private logger: LoggerService,
@@ -51,21 +49,8 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.logger.trackEventCalls(CardsYearlyAnalyticsPage.name, "ngOnChanges");
-    let cards = changes['cards'];
-    let currentSelectedCards = cards === undefined ? [] : (cards.currentValue as CardDetails[]);
-    let previousSelectedCards = cards === undefined ? undefined : (cards.previousValue as CardDetails[]);
-
-    let expenses = changes['expenses'];
-    let currentSelectedexpenses = expenses === undefined ? [] : (expenses.currentValue as Expense[]);
-    let previousSelectedexpenses = expenses === undefined ? undefined : (expenses.previousValue as Expense[]);
-
-    if (previousSelectedCards != undefined && currentSelectedCards.length != previousSelectedCards.length ||
-      previousSelectedexpenses != undefined && currentSelectedexpenses.length != previousSelectedexpenses.length
-    ) {
-      this.updateChartData();
-      this.loadTransactions();
-    }
+    this.updateChartData();
+    this.loadTransactions();
   }
 
   ngOnInit(): void {
@@ -76,9 +61,11 @@ export class CardsYearlyAnalyticsPage implements OnInit, OnChanges {
 
   updateChartData() {
     this.loadChartData();
-    this.cardBarChart.chart.data.labels = this.inputLabels;
-    this.cardBarChart.chart.data.datasets[0].data = this.inputData;
-    this.cardBarChart.chart.update();
+    if (this.cardBarChart !== undefined) {
+      this.cardBarChart.chart.data.labels = this.inputLabels;
+      this.cardBarChart.chart.data.datasets[0].data = this.inputData;
+      this.cardBarChart.chart.update();
+    }
   }
 
   loadChartData() {
